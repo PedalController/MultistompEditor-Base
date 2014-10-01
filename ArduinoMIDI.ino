@@ -1,3 +1,6 @@
+// Estudar protocolo MIDI
+//http://compmus.ime.usp.br/sbcm/2005/cache2/www.cefala.org/sbcm2005/papers/12452.pdf
+
 //
 //   ZOOM G3 Patch Change using MIDI over USB
 //           (c)2013, Antonis Maglaras
