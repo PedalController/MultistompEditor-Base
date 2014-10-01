@@ -1,5 +1,7 @@
 // Estudar protocolo MIDI
 //http://compmus.ime.usp.br/sbcm/2005/cache2/www.cefala.org/sbcm2005/papers/12452.pdf
+// Protocolo Zoom G2nu
+// http://www.loopers-delight.com/LDarchive/201104/msg00195.html
 
 //
 //   ZOOM G3 Patch Change using MIDI over USB
