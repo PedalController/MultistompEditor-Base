@@ -3,10 +3,16 @@ package br.com.srmourasilva.zoom;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.ShortMessage;
 import br.com.srmourasilva.zoom.effect.Effect;
 import br.com.srmourasilva.zoom.effect.ZoomGenericEffect;
 
 public class ZoomG2Nu extends ZoomPedal {
+
+	public static int STATE_ON = 0x7f;
+	public static int STATE_OFF= 0x00;
 
 	private static int SIZE_PATCHS = 100;
 
@@ -39,5 +45,19 @@ public class ZoomG2Nu extends ZoomPedal {
 	@Override
 	protected int getSizePaths() {
 		return ZoomG2Nu.SIZE_PATCHS;
+	}
+
+	@Override
+	protected List<MidiMessage> getMessagesSetState(int index, boolean state, Effect effect) {
+		List<MidiMessage> messages = new ArrayList<MidiMessage>();
+		int stateCode = state ? STATE_ON : STATE_OFF;
+
+		try {
+			messages.add(new ShortMessage(SET_STATE_EFFECT, 0, effect.getMidiId(), stateCode));
+		} catch (InvalidMidiDataException e) {
+			e.printStackTrace();
+		}
+
+		return messages;
 	}
 }

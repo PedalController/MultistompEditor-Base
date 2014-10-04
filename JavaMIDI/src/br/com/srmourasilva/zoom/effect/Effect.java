@@ -11,13 +11,14 @@ public interface Effect {
 	 */
 	//boolean isActived();
 
-	/**
-	 * @return State updated
-	 */
 	void active();
+
 	void disable();
+
 	void setState(boolean state);
+
 	boolean getState();
 
 	String getName();
+
 }

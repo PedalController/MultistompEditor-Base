@@ -16,11 +16,11 @@ public class Main {
 		MidiSender sender = new MidiSender(pedaleira);
 		sender.start();
 
-		pedaleira.activeEffect(0);
+		pedaleira.setPatch(0);
 
-		for (int i = 0; i < 7; i++) {
-		//	pedaleira.activeEffect(i);
-			//pedaleira.disableEffect(i);
+		for (int i = 0; i < 6; i++) {
+			pedaleira.activeEffect(i);
+		//	pedaleira.disableEffect(i);
 		}
 
 		// Mute

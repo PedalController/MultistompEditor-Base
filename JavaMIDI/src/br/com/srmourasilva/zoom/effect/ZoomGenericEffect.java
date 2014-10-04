@@ -21,11 +21,6 @@ public class ZoomGenericEffect implements Effect {
 	}
 
 	@Override
-	public String toString() {
-		return this.getClass().getSimpleName() + ":"+ this.midiId + " - " + this.name;
-	}
-
-	@Override
 	public void active() {
 		state = true;
 	}
@@ -43,5 +38,13 @@ public class ZoomGenericEffect implements Effect {
 	@Override
 	public void setState(boolean state) {
 		this.state = state;
+	}
+
+	@Override
+	public String toString() {
+		String retorno = this.getClass().getSimpleName() + ": "+ midiId + " " + name + " - ";
+		retorno += state ? "Actived" : "Disabled";
+
+		return retorno;
 	}
 }

@@ -6,7 +6,6 @@ import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
-import javax.sound.midi.ShortMessage;
 
 import br.com.srmourasilva.zoom.Pedal;
 import br.com.srmourasilva.zoom.architecture.Observer;
@@ -14,6 +13,7 @@ import br.com.srmourasilva.zoom.architecture.Observer;
 public class MidiSender implements Observer {
 	private MidiDevice inputDevice;
 	private MidiDevice outputDevice;
+	private Pedal pedal;
 
 	public MidiSender(Pedal pedal) {
 		try {
@@ -22,6 +22,7 @@ public class MidiSender implements Observer {
 			e.printStackTrace();
 		}
 		pedal.addObserver(this);
+		this.pedal = pedal;
 	}
 
 	private void searchMidiPedalController(Pedal pedal) throws MidiUnavailableException {
@@ -30,7 +31,7 @@ public class MidiSender implements Observer {
 
 		for (int i=0;i<infos.length;i++)	{
 			device = infos[i];
-			//System.out.println(device + " -" + device.getDescription());
+			//System.out.println(device + " - " + device.getDescription());
 			if (device.getName().contains(pedal.getUSBName())) {
 
 				if (inputDevice == null) {
@@ -56,6 +57,9 @@ public class MidiSender implements Observer {
 			inputDevice.open();
 			outputDevice.open();
 
+		} catch (NullPointerException e) {
+			throw new RuntimeException("Midi devices not found: " + pedal.getClass().getSimpleName() + " ("+pedal.getUSBName()+")");
+
 		} catch (MidiUnavailableException e) {
 			e.printStackTrace();
 		}
@@ -71,10 +75,12 @@ public class MidiSender implements Observer {
 		try {
 			receiver = outputDevice.getReceiver();
 			receiver.send(message, -1);
-			
+
+			/*
 			for (byte mensagem : message.getMessage()) {
 				System.out.println(String.format("0x%H", mensagem));
 			}
+			*/
 
 		} catch (MidiUnavailableException e) {
 			e.printStackTrace();
