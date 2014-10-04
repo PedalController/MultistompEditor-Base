@@ -95,6 +95,32 @@ public class ZoomGSeries extends ZoomPedal {
 			//04 F0 52 00 | 04 5A 31 01 | 04 00 01 00 | 05 F7 53 00 // Sequência que liga o 2° pedal
 			//04 F0 52 00 | 04 5A 31 01 | 04 00 00 00 | 05 F7 53 00 // Sequência que desliga o 2° pedal
 
+			/*
+			04 F0 52 00 | 04 5A 17 45 | 04 00 00 00 | 06 00 F7 00 // Pedaleira me disse: Vou tagarelar bem muito uma conversa sem sentido
+			04 F0 52 00
+			04 5A 28 64
+			04 15 1C 40
+			04 07 20 00                                                                                              
+			04 00 02 00
+			04 00 00 00
+			04 00 43 28
+			04 50 40 11
+			04 00 02 34
+			04 27 3A 06
+			04 18 12 00
+			04 4d 18 40
+			04 09 00 08
+			04 04 16 00
+			04 00 00 00
+			04 12 00 71
+			04 64 43 07
+			04 68 01 01
+			
+			...
+			04 44 22 20
+			06 00 f7 00
+			*/
+
 		} catch (InvalidMidiDataException e) {
 			e.printStackTrace();
 		}

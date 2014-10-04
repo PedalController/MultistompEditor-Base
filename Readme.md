@@ -2,6 +2,8 @@ JavaMIDI
 =============
 Java Version of https://github.com/vegos/ArduinoMIDI
 
+Example: https://www.youtube.com/watch?v=yWB6dpbQ1xc
+
 Support:
 --------
 * PedalType.G2Nu
