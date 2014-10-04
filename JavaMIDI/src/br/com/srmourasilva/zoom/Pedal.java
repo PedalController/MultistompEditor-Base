@@ -10,8 +10,12 @@ import br.com.srmourasilva.zoom.architecture.Observer;
 import br.com.srmourasilva.zoom.effect.Effect;
 import br.com.srmourasilva.zoom.effect.Patch;
 
-/**
- * A pedal is a Multi-Effects Processing
+/** A pedal is a Multi-Effects Processing
+ * 
+ * This a FAÇADE of System
+ * 
+ * FIXME - Pedal não deve possuir efeitos
+ * Os efeitos pertencem ao PATCH
  */
 public abstract class Pedal implements Observable {
 
@@ -19,6 +23,7 @@ public abstract class Pedal implements Observable {
 
 	private List<Patch> patchs = new ArrayList<Patch>();
 
+	@Deprecated
 	private List<Effect> effects = new ArrayList<Effect>();
 
 	int idCurrentPatch;
@@ -91,6 +96,7 @@ public abstract class Pedal implements Observable {
 		setStatePedal(index, false);
 	}
 
+	// FIXME
 	private final void setStatePedal(int index, boolean state) {
 		if (index >= effects.size() || index < 0) {
 			return;
@@ -137,6 +143,7 @@ public abstract class Pedal implements Observable {
 
 	/*************************************************/
 
+	// FIXME
 	@Override
 	public final String toString() {
 		StringBuffer retorno = new StringBuffer();

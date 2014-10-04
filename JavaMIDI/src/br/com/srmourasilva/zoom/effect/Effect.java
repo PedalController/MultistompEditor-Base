@@ -1,5 +1,7 @@
 package br.com.srmourasilva.zoom.effect;
 
+import br.com.srmourasilva.zoom.effect.param.Param;
+
 public interface Effect {
 	/** Midi Id for send message */
 	int getMidiId();
@@ -15,10 +17,15 @@ public interface Effect {
 
 	void disable();
 
-	void setState(boolean state);
+	String getName();
 
 	boolean getState();
 
-	String getName();
+	void setState(boolean state);
 
+	Param getParam(int id);
+
+	/** Set the 'id' param with the new 'value'
+	 */
+	void setParamValue(int id, int value);
 }

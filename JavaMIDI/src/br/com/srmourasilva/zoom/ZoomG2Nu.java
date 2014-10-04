@@ -16,6 +16,13 @@ public class ZoomG2Nu extends ZoomPedal {
 
 	private static int SIZE_PATCHS = 100;
 
+	/** Number of parameters that can have an Effect
+	 *
+	 *  Equalizer have 6
+	 *  All other have max 3
+	 */
+	public static int SIZE_PARAMS = 6;
+
 	protected ZoomG2Nu() {}
 
 	/** Very thanks for: 
@@ -23,16 +30,16 @@ public class ZoomG2Nu extends ZoomPedal {
 	 */
 	protected List<Effect> createEffects() {
 		List<Effect> effects = new ArrayList<Effect>();
-		effects.add(new ZoomGenericEffect(65, "Comp"));
-		effects.add(new ZoomGenericEffect(66, "Efx"));
-		effects.add(new ZoomGenericEffect(68, "Drive"));
-		effects.add(new ZoomGenericEffect(69, "EQ"));
-		effects.add(new ZoomGenericEffect(70, "ZNR"));
-		effects.add(new ZoomGenericEffect(71, "Modulation"));
-		effects.add(new ZoomGenericEffect(72, "Delay"));
-		effects.add(new ZoomGenericEffect(73, "Reverb"));
-		effects.add(new ZoomGenericEffect(74, "Mute"));
-		effects.add(new ZoomGenericEffect(75, "Bypass"));
+		effects.add(new ZoomGenericEffect(65, "Comp",       SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(66, "Efx",        SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(68, "Drive",      SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(69, "EQ",         SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(70, "ZNR",        SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(71, "Modulation", SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(72, "Delay",      SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(73, "Reverb",     SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(74, "Mute",       SIZE_PARAMS));
+		effects.add(new ZoomGenericEffect(75, "Bypass",     SIZE_PARAMS));
 
 		return effects;
 	}

@@ -32,7 +32,7 @@ public class KeyboardControl {
 
 	private void init() {
 		this.in = new Scanner(System.in);
-		this.pedal = ZoomFactory.getPedal(PedalType.G3);
+		this.pedal = ZoomFactory.getPedal(PedalType.G2Nu);
 
 		sender = new MidiSender(this.pedal);
 		sender.start();

@@ -1,13 +1,23 @@
 package br.com.srmourasilva.zoom.effect;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.srmourasilva.zoom.effect.param.Param;
+
+// TODO - Converter para abstract class
 public class ZoomGenericEffect implements Effect {
 	private int midiId;
 	private String name;
 	private boolean state = false;
+	private int effectsLength;
+
+	private List<Param> params = new ArrayList<Param>();
 	
-	public ZoomGenericEffect(int midiId, String name) {
+	public ZoomGenericEffect(int midiId, String name, int effectsLength) {
 		this.midiId = midiId;
 		this.name = name;
+		this.effectsLength = effectsLength;
 	}
 
 	@Override
@@ -46,5 +56,15 @@ public class ZoomGenericEffect implements Effect {
 		retorno += state ? "Actived" : "Disabled";
 
 		return retorno;
+	}
+
+	@Override
+	public Param getParam(int id) {
+		return params.get(id);
+	}
+
+	@Override
+	public void setParamValue(int id, int value) {
+		params.get(id).setValue(value);
 	}
 }
