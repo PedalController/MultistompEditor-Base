@@ -1,39 +1,55 @@
 JavaMIDI
 =============
-Java Version of https://github.com/vegos/ArduinoMIDI
+
+This ambitious project aims to provide a single API for MIDI control pedal ANY multi-effect
+
+
 
 Example: https://www.youtube.com/watch?v=yWB6dpbQ1xc
 
 Support:
 --------
-* PedalType.G2Nu
+* PedalCompany.ZoomCorp
+ * PedalType.G2Nu
+ * PedalType.G3
 
 How to use:
 -----------
 
 ```java
-Pedal pedaleira = ZoomFactory.getPedal(PedalType.G2Nu);
+PedalController pedaleira = PedalControllerFactory.searchPedal();
 
-MidiSender sender = new MidiSender(pedaleira);
-sender.start();
+// Init the system, not your pedal hihi
+pedaleira.on();
 
 // TO ZOOM G2Nu
-
 // 0 to 7: Comp to Reverb
+// 8 Mute
+// 9 Bypass
+
 pedaleira.activeEffect(0);
 pedaleira.disableEffect(1);
 
-// Mute
-pedaleira.activeEffect(8);
-// Bypass
-pedaleira.activeEffect(9);
+// TO ZOOM G3
+// 0 to 5 (6 Pedals)
+// ...
 
 // Set Patch
-pedaleira.beforePatch(); // -1
-pedaleira.nextPatch();   // -1
+pedaleira.beforePatch();
+pedaleira.nextPatch();
 pedaleira.setPatch(99);
 
 System.out.println(pedaleira);
 
-sender.stop();
+// Turn down the system, not your pedal :P
+pedaleira.off();
 ```
+
+For all commands, please view:
+br.com.srmourasilva.multieffects.controller.PedalController.java
+
+Thanks for:
+-----------
+* https://github.com/vegos/ArduinoMIDI
+* http://www.onicos.com/staff/iz/formats/midi-event.html
+* http://www.loopers-delight.com/LDarchive/201104/msg00195.html
