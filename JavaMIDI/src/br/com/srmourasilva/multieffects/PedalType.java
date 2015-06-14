@@ -1,6 +1,6 @@
 package br.com.srmourasilva.multieffects;
 
-import br.com.srmourasilva.multieffects.controller.PedalCompany;
+import br.com.srmourasilva.multistomp.controller.PedalCompany;
 
 public enum PedalType {
 	Null(0, "Unknown Pedal", PedalCompany.NULL, "Pedal Unknown is unimplemented"),
@@ -31,11 +31,11 @@ public enum PedalType {
 		return this.name + " - " + this.company.toString();
 	}
 
-	/** Return the USBName Device
+	/** 
+	 * @return USBName Device
 	 * 
 	 * The name will be used to find out which is the USB which is connected to the PC
 	 * that is corresponding Pedal
-	 * @return
 	 */
 	public String getUSBName() {
 		return USBName;

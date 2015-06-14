@@ -10,28 +10,30 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 
-import br.com.srmourasilva.architecture.DeviceNotFoundException;
-import br.com.srmourasilva.multieffects.Pedal;
+import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
+import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multieffects.PedalType;
 
 /**
- * FIXME - Why MidiSender have a input?!
- * Criar MidiReceive - O código é o comentado
- * 
- * MidiSender observa Pedal
+ * Send the messages to real Multistomp
  */
-public class MidiSender implements MidiObserver {
+public class MidiSender {
 	private MidiDevice inputDevice;
 	private MidiDevice outputDevice;
-	private Pedal pedal;
 
-	public MidiSender(Pedal pedal) {
+	public MidiSender(Multistomp pedal) {
+		List<Info> devices = findDevices(pedal.getPedalType());
+
 		try {
-			searchMidiPedalController(pedal);
+			inputDevice = locateInputDeviceIn(devices);
+			outputDevice = locateOutputDeviceIn(devices);
+
+		} catch (DeviceNotFoundException e) {
+			throw new DeviceNotFoundException("Midi devices not found for: " + pedal.getClass().getSimpleName() + " ("+pedal.getPedalType().getUSBName()+")");
+
 		} catch (MidiUnavailableException e) {
-			e.printStackTrace();
+			throw new DeviceNotFoundException(e);
 		}
-		this.pedal = pedal;
 	}
 
 	/** Return all devices that corresponding
@@ -46,29 +48,33 @@ public class MidiSender implements MidiObserver {
 		for (int i=0; i<infos.length; i++) {
 			device = infos[i];
 
-			if (device.getName().contains(type.getUSBName())) {
+			if (device.getName().contains(type.getUSBName()))
 				devices.add(device);
-			}
 		}
 
 		return devices;
 	}
 
-	private void searchMidiPedalController(Pedal pedal) throws MidiUnavailableException {
-		List<Info> devices = findDevices(pedal.getPedalType());
-
-		MidiDevice tempDevice;
-
+	private MidiDevice locateInputDeviceIn(List<Info> devices) throws MidiUnavailableException {
 		for (Info device : devices) {
-			tempDevice = MidiSystem.getMidiDevice(device);
+			MidiDevice tempDevice = MidiSystem.getMidiDevice(device);
 
-			if (inputDevice == null && tempDevice.getMaxTransmitters() != 0) {
-				inputDevice = tempDevice;
-			}
-			if (outputDevice == null && tempDevice.getMaxReceivers() != 0) {
-				outputDevice = MidiSystem.getMidiDevice(device);
-			}
+			if (tempDevice.getMaxTransmitters() != 0)
+				return tempDevice;
 		}
+
+		throw new DeviceNotFoundException("Input midi devices not found");
+	}
+	
+	private MidiDevice locateOutputDeviceIn(List<Info> devices) throws MidiUnavailableException {
+		for (Info device : devices) {
+			MidiDevice tempDevice = MidiSystem.getMidiDevice(device);
+
+			if (tempDevice.getMaxReceivers() != 0)
+				return tempDevice;
+		}
+
+		throw new DeviceNotFoundException("Output midi devices not found");
 	}
 
 	public void start() {
@@ -76,11 +82,8 @@ public class MidiSender implements MidiObserver {
 			inputDevice.open();
 			outputDevice.open();
 
-		} catch (NullPointerException e) {
-			throw new DeviceNotFoundException("Midi devices not found: " + pedal.getClass().getSimpleName() + " ("+pedal.getPedalType().getUSBName()+")");
-
 		} catch (MidiUnavailableException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -89,18 +92,16 @@ public class MidiSender implements MidiObserver {
 		outputDevice.close();
 	}
 
-	@Override
-	public void update(MidiMessage message) {
+	public void send(MidiMessage message) {
 		Receiver receiver;
 		try {
 			receiver = outputDevice.getReceiver();
 			receiver.send(message, -1);
 
-			/*
 			for (byte mensagem : message.getMessage()) {
-				System.out.println(String.format("0x%H", mensagem));
+				System.out.print(String.format("0x%H ", mensagem));
 			}
-			*/
+			System.out.println();
 
 		} catch (MidiUnavailableException e) {
 			e.printStackTrace();

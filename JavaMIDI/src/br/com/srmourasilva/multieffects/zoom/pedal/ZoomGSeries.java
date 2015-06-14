@@ -7,11 +7,11 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.SysexMessage;
 
-import br.com.srmourasilva.multieffects.Effect;
-import br.com.srmourasilva.multieffects.Patch;
+import br.com.srmourasilva.domain.multistomp.Effect;
+import br.com.srmourasilva.domain.multistomp.Patch;
 import br.com.srmourasilva.multieffects.PedalType;
-import br.com.srmourasilva.multieffects.zoom.ZoomGenericEffect;
 import br.com.srmourasilva.multieffects.zoom.ZoomPedal;
+import br.com.srmourasilva.multistomp.zoom.ZoomGenericEffect;
 import br.com.srmourasilva.util.Util;
 
 /** For:
@@ -45,7 +45,7 @@ public class ZoomGSeries extends ZoomPedal {
 	 * 
 	 * To: 04 F0 52 00 | 07 5A 16 F7
 	 */
-	public static byte[] LET_IT_BE = {
+	public static byte[] YOUR_TURN = {
 		(byte) 0xF0, 0x52, 0x00,
 		0x5A, 0x16, (byte) 0xF7
 	};
@@ -77,10 +77,11 @@ public class ZoomGSeries extends ZoomPedal {
 
 		for (int i = 0; i < sizePatchs; i++) {
 			patch = new Patch(i);
-			patch.addAllEffects(effects);
+			for (Effect effect : effects)
+				patch.addEffect(effect);
 
 			this.addPatch(patch);
-			patch.addObserver(this);
+			//patch.addObserver(this);
 		}
 	}
 
@@ -183,6 +184,8 @@ public class ZoomGSeries extends ZoomPedal {
 //04 F0 52 00 | 04 5A 31 04 | 04 06 13 01 | 05 F7 6C 6F
 
 THE VIBE
+//04 F0 52 00   04 5A 31 05   04 00 01 00  05 F7 00 00
+//04 F0 52 00   04 5A 31 05   04 00 01 00  05 F7 00 00
 //04 F0 52 00 | 04 5A 31 04 | 04 02 00 00 | 05 F7 6C 6F SPEED 1°
 //04 F0 52 00 | 04 5A 31 04 | 04 03 3A 00 | 05 F7 6C 6F depth 2°
 //04 F0 52 00 | 04 5A 31 04 | 04 04 28 00 | 05 F7 6C 6F BIAS  3°
