@@ -1,8 +1,9 @@
 package br.com.srmourasilva.multistomp.controller;
 
+import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multieffects.PedalType;
-import br.com.srmourasilva.multieffects.midi.MidiSender;
+import br.com.srmourasilva.multistomp.midi.MidiTransmition;
 import br.com.srmourasilva.multistomp.nulo.NullMultistomp;
 import br.com.srmourasilva.multistomp.zoom.ZoomMultistompFactory;
 
@@ -11,7 +12,7 @@ public class PedalControllerFactory {
 	/** 
 	 * Search the pedal connected on PC
 	 */
-	public static PedalController searchPedal() {
+	public static PedalController searchPedal() throws DeviceNotFoundException {
 		for (PedalType multistomp : PedalType.values())
 			if (isConnected(multistomp))
 				return getPedal(multistomp);
@@ -20,10 +21,10 @@ public class PedalControllerFactory {
 	}
 	
 	private static boolean isConnected(PedalType multistomp) {
-		return MidiSender.findDevices(multistomp).size() != 0;
+		return MidiTransmition.findDevices(multistomp).size() != 0;
 	}
 
-	public static PedalController getPedal(PedalType pedalType) {
+	public static PedalController getPedal(PedalType pedalType) throws DeviceNotFoundException {
 		Multistomp pedal;
 		PedalCompany company = pedalType.getCompany();
 

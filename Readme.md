@@ -17,9 +17,11 @@ How to use:
 -----------
 
 ```java
+// Throws DeviceNotFoundException
 PedalController multistomp = PedalControllerFactory.searchPedal();
 
 // Init the system, not your pedal hihi
+// Throws MidiUnavailableException
 multistomp.on();
 
 // TO ZOOM G2Nu
