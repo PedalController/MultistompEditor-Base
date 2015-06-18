@@ -5,7 +5,7 @@ import javax.sound.midi.MidiMessage;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 
-public class ZoomGSeriesToogleEffectDecoder extends ZoomGSeriesEffectParamDecoder {
+public class ZoomGSeriesDisableEffectDecoder extends ZoomGSeriesEffectParamDecoder {
 
 	@Override
 	public boolean isForThis(MidiMessage message) {

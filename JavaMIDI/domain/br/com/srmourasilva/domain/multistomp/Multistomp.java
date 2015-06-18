@@ -77,12 +77,12 @@ public abstract class Multistomp implements OnChangeListenner<Patch> {
 	@Override
 	public final String toString() {
 		StringBuffer retorno = new StringBuffer();
-		retorno.append("Pedaleira: "   + this.getClass().getSimpleName() + "\n");
+		retorno.append("Multistomp: "  + this.getClass().getSimpleName() + "\n");
 		retorno.append(" - Current Patch: " + this.currentPatch().toString() + "\n");
 		retorno.append(" - Effects: \n");
-		for (Effect effect : this.currentPatch().effects()) {
+
+		for (Effect effect : this.currentPatch().effects())
 			retorno.append("  |- " + effect.toString() + "\n");
-		}
 
 		return retorno.toString();
 	}
@@ -92,6 +92,10 @@ public abstract class Multistomp implements OnChangeListenner<Patch> {
 
 	public void addListenner(OnChangeListenner<Multistomp> listenner) {
 		this.listenners.add(listenner);
+	}
+	
+	public List<OnChangeListenner<Multistomp>> listenners() {
+		return this.listenners;
 	}
 
 	@Override

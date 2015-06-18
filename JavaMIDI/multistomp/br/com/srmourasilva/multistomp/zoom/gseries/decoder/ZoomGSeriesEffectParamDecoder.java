@@ -22,7 +22,7 @@ public abstract class ZoomGSeriesEffectParamDecoder implements MessageDecoder {
 		};
 		
 		final byte[] end = new byte[] {
-			0x00, (byte) 0xf7
+			(byte) 0xf7
 		};
 
 		MidiMessageTester tester = new MidiMessageTester(message);
@@ -37,11 +37,14 @@ public abstract class ZoomGSeriesEffectParamDecoder implements MessageDecoder {
 	@Override
 	public void decode(MidiMessage message, Multistomp multistomp) {
 		int effect = message.getMessage()[EFFECT];
-		int param = message.getMessage()[PARAM];
-		int value = message.getMessage()[VALUE];
+		int param = message.getMessage()[PARAM] - 2;
+		int value = 0;
+		if (message.getMessage()[VALUE + 1] != 00)
+			value += 128;
+		value += message.getMessage()[VALUE];
 
-		multistomp.currentPatch().effects().get(effect).params().get(param).setValue(value);
+		decode(multistomp, effect, param, value);
 	}
-	
+
 	protected abstract void decode(Multistomp multistomp, int effect, int param, int value);
 }

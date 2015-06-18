@@ -7,7 +7,6 @@ import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Patch;
 import br.com.srmourasilva.multieffects.PedalType;
-import br.com.srmourasilva.multistomp.zoom.ZoomGenericEffect;
 
 /** For:
  *  - Zoom G3
@@ -27,7 +26,7 @@ public class ZoomGSeries extends Multistomp {
 	 * @param sizePatchs   Max Patches that Pedal may have  
 	 * @param totalEffects Max Effects that Patches may have
 	 */
-	public ZoomGSeries(int totalPatchs, int totalEffects, int totalParams) {
+	public ZoomGSeries(int totalPatchs, int totalEffects, @Deprecated int totalParams) {
 		TOTAL_PATCHS = totalPatchs;
 		TOTAL_EFFECTS = totalEffects;
 		SIZE_PARAMS = totalParams;
@@ -56,7 +55,8 @@ public class ZoomGSeries extends Multistomp {
 		List<Effect> effects = new ArrayList<Effect>();
 
 		for (int i=0; i < totalEffects; i++)
-			effects.add(new ZoomGenericEffect(i, "Position "+i, SIZE_PARAMS));
+			//effects.add(new ZoomGenericEffect(i, "Position "+i, SIZE_PARAMS));
+			effects.add(ZoomGSeriesEffect.COMP.generate());
 
 		return effects;
 	}

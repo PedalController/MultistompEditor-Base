@@ -1,5 +1,7 @@
 package br.com.srmourasilva.multistomp.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.sound.midi.MidiMessage;
@@ -16,6 +18,7 @@ import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.midi.MidiReader;
 import br.com.srmourasilva.multistomp.midi.MidiSender;
 import br.com.srmourasilva.multistomp.midi.MidiTransmition;
+import br.com.srmourasilva.multistomp.simulator.Log;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessageDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessageEncoder;
 
@@ -32,6 +35,7 @@ public class PedalController implements OnChangeListenner<Multistomp> {
 		this.reader = new MidiReader(pedal.getPedalType(), new MidiInputReceiver());
 
 		this.pedal.addListenner(this);
+		this.pedal.addListenner(new Log());
 	}
 
 	/*************************************************/
@@ -157,7 +161,13 @@ public class PedalController implements OnChangeListenner<Multistomp> {
 	    	System.out.println(" " + decoder.getClass().getSimpleName());
 	    	System.out.print(" > ");
 
+	    	Collection<OnChangeListenner<Multistomp>> listenners = new ArrayList<>(pedal.listenners());
+	    	pedal.listenners().clear();
+
 	    	decoder.decode(message, pedal);
+
+	    	for (OnChangeListenner<Multistomp> listenner : listenners)
+	    		pedal.addListenner(listenner);
 	    }
 
 	    public void close() {}

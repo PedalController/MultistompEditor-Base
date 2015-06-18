@@ -7,7 +7,7 @@ import br.com.srmourasilva.domain.multistomp.Multistomp;
 public class Log implements OnChangeListenner<Multistomp> {
 	@Override
 	public void onChange(ChangeMessage<Multistomp> message) {
-		System.out.println("Ocorreu alguma mudança");
-		System.out.println(message);
+		System.out.println("LOG:: Ocorreu alguma mudança");
+		System.out.println("LOG:: " + message);
 	}
 }

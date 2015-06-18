@@ -2,14 +2,16 @@ package br.com.srmourasilva.multistomp.zoom.gseries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sound.midi.MidiMessage;
 
 import br.com.srmourasilva.domain.message.MessageDecoder;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
-import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesParamDecoder;
+import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesActiveEffectDecoder;
+import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSetValueParamDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSelectPatchDecoder;
-import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesToogleEffectDecoder;
+import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesDisableEffectDecoder;
 
 public class ZoomGSeriesMessageDecoder implements MessageDecoder {
 
@@ -17,28 +19,36 @@ public class ZoomGSeriesMessageDecoder implements MessageDecoder {
 
 	public ZoomGSeriesMessageDecoder() {
 		decoders = new ArrayList<>();
-		decoders.add(new ZoomGSeriesToogleEffectDecoder());
+
+		decoders.add(new ZoomGSeriesActiveEffectDecoder());
+		decoders.add(new ZoomGSeriesDisableEffectDecoder());
 		decoders.add(new ZoomGSeriesSelectPatchDecoder());
-		decoders.add(new ZoomGSeriesParamDecoder());
+		decoders.add(new ZoomGSeriesSetValueParamDecoder());
 	}
 	
 	@Override
 	public boolean isForThis(MidiMessage message) {
-		for (MessageDecoder decoder : decoders)
-			if (decoder.isForThis(message)) {
-				System.out.println(decoder.getClass().getSimpleName());
-				return true;
-			}
-
-		return false;
+		return decodeFor(message).isPresent();
 	}
 
 	@Override
 	public void decode(MidiMessage message, Multistomp multistomp) {
+		Optional<MessageDecoder> decoder = decodeFor(message);
+		
+		if (decoder.isPresent()) {
+			System.out.println(decoder.get().getClass().getSimpleName());
+			decoder.get().decode(message, multistomp);
+			return;
+		}
+		
+		System.out.println("Code unknown");
+	}
+
+	private Optional<MessageDecoder> decodeFor(MidiMessage message) {
 		for (MessageDecoder decoder : decoders)
-			if (decoder.isForThis(message)) {
-				//decoder.decode(message, multistomp);
-				System.out.println(decoder.getClass().getSimpleName());
-			}
+			if (decoder.isForThis(message))
+				return Optional.of(decoder);
+
+		return Optional.empty();
 	}
 }

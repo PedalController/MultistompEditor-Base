@@ -1,8 +1,5 @@
 package br.com.srmourasilva.main;
 
-import br.com.srmourasilva.multieffects.PedalType;
-import br.com.srmourasilva.multistomp.controller.PedalController;
-import br.com.srmourasilva.multistomp.controller.PedalControllerFactory;
 
 /**
  * Thanks for:
@@ -11,6 +8,10 @@ import br.com.srmourasilva.multistomp.controller.PedalControllerFactory;
  */
 public class Demonstration {
 	public static void main(String[] args) {
+		System.err.println("This demonstration can change any patch effect!");
+		return;
+
+		/*
 		System.out.println("Pedals Supported: ");
 		for (PedalType type : PedalType.values()) {
 			System.out.println(" - " + type);
@@ -83,6 +84,7 @@ public class Demonstration {
 		pedaleira.off();
 		sleep(1);
 		System.out.println(pedaleira);
+		*/
 	}
 
 	public static void sleep(double seconds) {

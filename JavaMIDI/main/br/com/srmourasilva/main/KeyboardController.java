@@ -20,7 +20,7 @@ public class KeyboardController {
 	}
 
 	public KeyboardController() {
-		init();
+		this.pedal = init();
 
 		String command = "";
 		while (!command.toUpperCase().equals("EXIT")) {
@@ -28,30 +28,31 @@ public class KeyboardController {
 
 			command = getCommand();
 			execute(command);
+			
+			System.out.println("\n" + pedal);
 		}
 
 		this.pedal.off();
 	}
 
-	private void init() {
+	private PedalController init() {
+		PedalController pedal = null;
 		this.in = new Scanner(System.in);
 
 		try {
 			//this.pedal = PedalControllerFactory.getPedal(PedalType.G2Nu);
-			this.pedal = PedalControllerFactory.searchPedal();
+			pedal = PedalControllerFactory.searchPedal();
+			pedal.on();
+
 		} catch (DeviceNotFoundException e) {
 			System.out.println("Pedal not found! You connected any?");
-			e.printStackTrace();
+			System.exit(1);
+		} catch (MidiUnavailableException e) {
+			System.out.println("This Pedal has been used by other process program");
 			System.exit(1);
 		}
 
-		try {
-			this.pedal.on();
-		} catch (MidiUnavailableException e) {
-			System.out.println("This Pedal has been used by other process program");
-			e.printStackTrace();
-			System.exit(1);
-		}
+		return pedal;
 	}
 
 	private void menu() {
@@ -61,6 +62,9 @@ public class KeyboardController {
 		System.out.println(" - 'DB number': Disable 'number' effect'");
 		System.out.println(" - 'R': Receiver");
 		System.out.println(" - 'T': Transmitter");
+		System.out.println(" - 'C': Get Number of Current Patch");
+		System.out.println(" - 'I': Get Current Patch info");
+		System.out.println(" - 'IO': Pedal info of 'number' patch");
 		System.out.println(" - 'Exit': To exit");
 	}
 
@@ -73,38 +77,63 @@ public class KeyboardController {
 		command = command.toUpperCase();
 		String commands[] = command.split(" ");
 
-		if (commands[0].equals("GT"))
+		String action = commands[0];
+		
+		if (action.equals("GT"))
 			pedal.setPatch(Integer.parseInt(commands[1]));
 
-		else if (commands[0].equals("AC"))
+		else if (action.equals("AC"))
 			pedal.activeEffect(Integer.parseInt(commands[1]));
 
-		else if (commands[0].equals("DB"))
+		else if (action.equals("DB"))
 			pedal.disableEffect(Integer.parseInt(commands[1]));
 
-		else if (commands[0].equals("R")) {
+		else if (action.equals("R")) {
 			byte[] LISSEN_ME = {
 				(byte) 0xF0, 0x52, 0x00,
 				0x5A, 0x16, (byte) 0xF7
 			};
 
-			try {
-				pedal.sendMessage(new SysexMessage(LISSEN_ME, LISSEN_ME.length));
-			} catch (InvalidMidiDataException e) {
-				e.printStackTrace();
-			}
+			pedal.sendMessage(customMessage(LISSEN_ME));
 
-		} else if (commands[0].equals("T")) {
+		} else if (action.equals("T")) {
 			byte[] YOU_CAN_TALK = {
-					(byte) 0xF0, 0x52, 0x00,
-					0x5A, 0x50, (byte) 0xF7
-				};
+				(byte) 0xF0, 0x52, 0x00,
+				0x5A, 0x50, (byte) 0xF7
+			};
 
-				try {
-					pedal.sendMessage(new SysexMessage(YOU_CAN_TALK, YOU_CAN_TALK.length));
-				} catch (InvalidMidiDataException e) {
-					e.printStackTrace();
-				}
-			}
+			pedal.sendMessage(customMessage(YOU_CAN_TALK));
+		} else if (action.equals("C")) {
+			byte[] CURRENT_PATCH = {
+				(byte) 0xF0, 0x52, 0x00,
+				0x5A, 0x33, (byte) 0xF7
+			};
+			
+			pedal.sendMessage(customMessage(CURRENT_PATCH));
+		} else if (action.equals("I")) {
+			byte[] CURRENT_PATCH = {
+				(byte) 0xF0, 0x52, 0x00,
+				0x5A, 0x29, (byte) 0xF7
+			};
+			
+			pedal.sendMessage(customMessage(CURRENT_PATCH));
+
+		} else if (action.equals("IO")) {
+			byte[] CURRENT_PATCH = {
+				(byte) 0xF0, 0x52, 0x00,
+				0x5A, 0x09, (byte) 0x00,
+				0x00, (byte) Integer.parseInt(commands[1]), (byte) 0xF7
+			};
+			
+			pedal.sendMessage(customMessage(CURRENT_PATCH));
+		}	
+	}
+
+	private SysexMessage customMessage(byte[] message) {
+		try {
+			return new SysexMessage(message, message.length);
+		} catch (InvalidMidiDataException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
