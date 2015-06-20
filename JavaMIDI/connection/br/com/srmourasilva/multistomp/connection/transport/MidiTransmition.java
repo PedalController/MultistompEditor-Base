@@ -1,4 +1,4 @@
-package br.com.srmourasilva.multistomp.midi;
+package br.com.srmourasilva.multistomp.connection.transport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import javax.sound.midi.MidiDevice.Info;
 import javax.sound.midi.MidiUnavailableException;
 
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
-import br.com.srmourasilva.multieffects.PedalType;
+import br.com.srmourasilva.domain.PedalType;
 
 public abstract class MidiTransmition {
 	
@@ -79,12 +79,5 @@ public abstract class MidiTransmition {
 		}
 
 		return devices;
-	}
-	
-	public static String byteArrayToHex(byte[] a) {
-		StringBuilder sb = new StringBuilder(a.length * 2);
-		for (byte b: a)
-			sb.append(String.format("%02x ", b & 0xff));
-		return sb.toString();
 	}
 }

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.srmourasilva.architecture.OnChangeListenner;
+import br.com.srmourasilva.domain.OnChangeListenner;
 import br.com.srmourasilva.domain.message.ChangeMessage;
 import br.com.srmourasilva.domain.message.CommonCause;
+import br.com.srmourasilva.domain.message.Details;
+import br.com.srmourasilva.domain.message.Details.TypeChange;
 
 public class Effect implements OnChangeListenner<Param> {
 
@@ -49,8 +51,10 @@ public class Effect implements OnChangeListenner<Param> {
 
 	private void setState(boolean state) {
 		this.state = state;
+		
+		Details details = new Details(TypeChange.PEDAL_STATUS, state ? 1 : 0);
 
-		ChangeMessage<Effect> message = new ChangeMessage<>(CommonCause.EFFECT, this);
+		ChangeMessage<Effect> message = new ChangeMessage<>(CommonCause.EFFECT, this, details);
 		notify(message);
 	}
 
@@ -68,10 +72,16 @@ public class Effect implements OnChangeListenner<Param> {
 	}
 
 	public String toString() {
-		String retorno = this.getClass().getSimpleName() + ": "+ midiId + " " + name + " - ";
-		retorno += state ? "Actived" : "Disabled";
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName() + ": "+ midiId + " " + name + " - ");
+		builder.append(state ? "Actived" : "Disabled");
 
-		return retorno;
+		builder.append(" ( ");
+		for (Param param : params)
+			builder.append(param + " ");
+		builder.append(")");
+
+		return builder.toString();
 	}
 
 	/*************************************************/

@@ -3,10 +3,10 @@ package br.com.srmourasilva.multistomp.zoom.g2nu;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Patch;
-import br.com.srmourasilva.multieffects.PedalType;
 import br.com.srmourasilva.multistomp.zoom.ZoomGenericEffect;
 
 /** For:
@@ -63,12 +63,6 @@ public class ZoomG2Nu extends Multistomp {
 
 		return effects;
 	}
-
-	@Override
-	public void initialize() {}
-
-	@Override
-	public void terminate() {}
 
 	@Override
 	public PedalType getPedalType() {

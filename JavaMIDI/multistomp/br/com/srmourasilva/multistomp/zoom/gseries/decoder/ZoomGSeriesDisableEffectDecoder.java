@@ -2,8 +2,12 @@ package br.com.srmourasilva.multistomp.zoom.gseries.decoder;
 
 import javax.sound.midi.MidiMessage;
 
+import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.message.Details;
+import br.com.srmourasilva.domain.message.Details.TypeChange;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
+import br.com.srmourasilva.domain.multistomp.Patch;
 
 public class ZoomGSeriesDisableEffectDecoder extends ZoomGSeriesEffectParamDecoder {
 
@@ -14,12 +18,12 @@ public class ZoomGSeriesDisableEffectDecoder extends ZoomGSeriesEffectParamDecod
 	}
 
 	@Override
-	protected void decode(Multistomp multistomp, int effect, int param, int value) {
+	protected ChangeMessage<Multistomp> decode(Multistomp multistomp, int effect, int param, int value) {
+		Patch patch = multistomp.currentPatch();
 		Effect efeito = multistomp.currentPatch().effects().get(effect);
 
-		if (value == 1)
-			efeito.active();
-		else
-			efeito.disable();
+		Details details = new Details(TypeChange.PEDAL_STATUS, 0);
+	
+		return ChangeMessage.For(multistomp, patch, efeito, details);
 	}
 }

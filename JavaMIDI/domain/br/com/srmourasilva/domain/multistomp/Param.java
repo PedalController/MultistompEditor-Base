@@ -2,10 +2,12 @@ package br.com.srmourasilva.domain.multistomp;
 
 import java.util.Optional;
 
-import br.com.srmourasilva.architecture.OnChangeListenner;
 import br.com.srmourasilva.architecture.exception.ParamException;
+import br.com.srmourasilva.domain.OnChangeListenner;
 import br.com.srmourasilva.domain.message.ChangeMessage;
 import br.com.srmourasilva.domain.message.CommonCause;
+import br.com.srmourasilva.domain.message.Details;
+import br.com.srmourasilva.domain.message.Details.TypeChange;
 
 public class Param {
 
@@ -35,8 +37,10 @@ public class Param {
 			throw new ParamException("Invalid new value: " + newValue + ". MinValue: " + minValue + " MaxValue: " + maxValue);
 
 		this.currentValue = newValue;
+		
+		Details details = new Details(TypeChange.PARAM, currentValue);
 
-		ChangeMessage<Param> message = new ChangeMessage<>(CommonCause.PATCH, this);
+		ChangeMessage<Param> message = new ChangeMessage<>(CommonCause.PATCH, this, details);
 		notify(message);
 	}
 
@@ -72,8 +76,6 @@ public class Param {
 
 		setValue(newValue);
 	}
-
-	// FIXME - implements removeValue();
 	
 	public final int getMinValue() {
 		return minValue;
@@ -86,5 +88,10 @@ public class Param {
 
 	public void setOnChangeListenner(OnChangeListenner<Param> listenner) {
 		this.listenner = Optional.of(listenner);
+	}
+	
+	@Override
+	public String toString() {
+		return name + "=" + currentValue + "[" + minValue + "-" + maxValue + "]";
 	}
 }

@@ -9,23 +9,29 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.SysexMessage;
 
 import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
-import br.com.srmourasilva.multistomp.zoom.ZoomMessageEncoder;
+import br.com.srmourasilva.domain.multistomp.Patch;
+import br.com.srmourasilva.multistomp.connection.codification.MessageEncoder;
 
-public class ZoomGSeriesMessageEncoder extends ZoomMessageEncoder {
+
+public class ZoomGSeriesMessageEncoder implements MessageEncoder {
 
 	@Override
 	public List<MidiMessage> encode(ChangeMessage<Multistomp> message) {
 		try {
-			if (hasMultistompChange(message))
+			if (message.is(CommonCause.MULTISTOMP))
 				return encodeMultistompChange(message);
 	
-			if (hasPatchChange(message.nextMessage()))
-				return null;
-	
-			if (hasEffectChange(message.nextMessage().nextMessage()))
+			else if (message.is(CommonCause.PATCH))
+				throw new RuntimeException();
+
+			else if (message.is(CommonCause.EFFECT))
 				return encodeEffectChange(message);
+
+			else if (message.is(CommonCause.PARAM))
+				throw new RuntimeException();
 
 		} catch (InvalidMidiDataException e) {
 			throw new RuntimeException(e);
@@ -44,11 +50,15 @@ public class ZoomGSeriesMessageEncoder extends ZoomMessageEncoder {
 	}
 
 	private List<MidiMessage> encodeEffectChange(ChangeMessage<Multistomp> message) throws InvalidMidiDataException {
-		ChangeMessage<Effect> effectMessage = (ChangeMessage<Effect>) message.nextMessage().nextMessage();
+		ChangeMessage<Patch> patchMessage = (ChangeMessage<Patch>) message.nextMessage();
+		ChangeMessage<Effect> effectMessage = (ChangeMessage<Effect>) patchMessage.nextMessage();
 
-		int index = effectMessage.causer().getMidiId();
+		Effect effect = effectMessage.causer();
+		int index = patchMessage.causer().effects().indexOf(effect);
+
 		boolean actived = effectMessage.causer().hasActived();
-		
+
+
 		int byteActived = actived ? 0x01 : 0x00;
 
 		List<MidiMessage> mensagens = new ArrayList<>();

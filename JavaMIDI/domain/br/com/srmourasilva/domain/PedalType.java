@@ -1,4 +1,4 @@
-package br.com.srmourasilva.multieffects;
+package br.com.srmourasilva.domain;
 
 import br.com.srmourasilva.multistomp.controller.PedalCompany;
 

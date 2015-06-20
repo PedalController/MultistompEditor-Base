@@ -56,9 +56,10 @@ Understand the structure:
 * Archicheture: The utils of the system;
 * Controller: It offers a simple API to use;
 * Domain: The multistomp structure and message structure;
+* Connection: The connection with Real Multistomp and this lib;
 * Multistomp: Specific implementation for pedals;
 * Test: Junit unit tests;
-* Main: Use demonstrations.
+* Main: User demonstrations.
 
 ### Define
 

@@ -1,8 +1,8 @@
 package br.com.srmourasilva.multistomp.zoom;
 
+import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
-import br.com.srmourasilva.multieffects.MultistompFactory;
-import br.com.srmourasilva.multieffects.PedalType;
+import br.com.srmourasilva.domain.multistomp.MultistompFactory;
 import br.com.srmourasilva.multistomp.zoom.g2nu.ZoomG2Nu;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeries;
 

@@ -4,10 +4,10 @@ import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.simulator.Log;
 import br.com.srmourasilva.multistomp.simulator.MultistompSimulator;
 
-public class Main {
+public class Simulator {
 
 	public static void main(String[] args) {
-		Log log = new Log();
+		Log log = new Log("Test");
 		
 		Multistomp pedal = new MultistompSimulator(5);
 		pedal.addListenner(log);

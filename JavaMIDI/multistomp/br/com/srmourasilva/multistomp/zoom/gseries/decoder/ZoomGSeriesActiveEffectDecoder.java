@@ -1,12 +1,15 @@
 package br.com.srmourasilva.multistomp.zoom.gseries.decoder;
 
+import java.util.List;
+
 import javax.sound.midi.MidiMessage;
 
-import br.com.srmourasilva.arvore.util.Mensagem;
-import br.com.srmourasilva.domain.message.MessageDecoder;
+import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.message.Details;
+import br.com.srmourasilva.domain.message.Details.TypeChange;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
-import br.com.srmourasilva.domain.multistomp.Patch;
+import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.util.MidiMessageTester;
 
 /**
@@ -95,18 +98,23 @@ public class ZoomGSeriesActiveEffectDecoder implements MessageDecoder {
 	}
 
 	@Override
-	public void decode(MidiMessage message, Multistomp multistomp) {
+	public ChangeMessage<Multistomp> decode(MidiMessage message, Multistomp multistomp) {
 		final int[] PATCHES = new int[] {6, 19, 33, 47, 60, 74};
 
+		List<Effect> effects = multistomp.currentPatch().effects();
+		
+		Details details = new Details(TypeChange.PEDAL_STATUS, 1);
 		for (int i = 0; i < PATCHES.length; i++) {
 			int patch = PATCHES[i];
 
-			if (isActived(message, patch))
-				multistomp.currentPatch().effects().get(i).active();
+			if (hasActived(message, patch) && !effects.get(i).hasActived())
+				return ChangeMessage.For(multistomp, multistomp.currentPatch(), effects.get(i), details);
 		}
+
+		return ChangeMessage.None(multistomp);
 	}
 
-	private boolean isActived(MidiMessage message, int position) {
+	private boolean hasActived(MidiMessage message, int position) {
 		final int LSB = 0x01; // Least Significant Bit
 
 		int actived = message.getMessage()[position] & LSB;

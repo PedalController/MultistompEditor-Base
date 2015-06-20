@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.srmourasilva.architecture.OnChangeListenner;
+import br.com.srmourasilva.domain.OnChangeListenner;
 import br.com.srmourasilva.domain.message.ChangeMessage;
 import br.com.srmourasilva.domain.message.CommonCause;
 

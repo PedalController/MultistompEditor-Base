@@ -6,8 +6,9 @@ import java.util.Optional;
 
 import javax.sound.midi.MidiMessage;
 
-import br.com.srmourasilva.domain.message.MessageDecoder;
+import br.com.srmourasilva.domain.message.ChangeMessage;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
+import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesActiveEffectDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSetValueParamDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSelectPatchDecoder;
@@ -32,16 +33,13 @@ public class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	}
 
 	@Override
-	public void decode(MidiMessage message, Multistomp multistomp) {
+	public ChangeMessage<Multistomp> decode(MidiMessage message, Multistomp multistomp) {
 		Optional<MessageDecoder> decoder = decodeFor(message);
 		
-		if (decoder.isPresent()) {
-			System.out.println(decoder.get().getClass().getSimpleName());
-			decoder.get().decode(message, multistomp);
-			return;
-		}
-		
-		System.out.println("Code unknown");
+		if (decoder.isPresent())
+			return decoder.get().decode(message, multistomp);
+
+		throw new RuntimeException("The message isn't for this implementation");
 	}
 
 	private Optional<MessageDecoder> decodeFor(MidiMessage message) {

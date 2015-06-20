@@ -3,10 +3,10 @@ package br.com.srmourasilva.multistomp.zoom.gseries;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Patch;
-import br.com.srmourasilva.multieffects.PedalType;
 
 /** For:
  *  - Zoom G3
@@ -60,12 +60,6 @@ public class ZoomGSeries extends Multistomp {
 
 		return effects;
 	}
-
-	@Override
-	public void initialize() {}
-
-	@Override
-	public void terminate() {}
 
 	@Override
 	public PedalType getPedalType() {

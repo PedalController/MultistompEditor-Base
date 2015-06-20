@@ -1,27 +1,34 @@
-package br.com.srmourasilva.multistomp.midi;
+package br.com.srmourasilva.multistomp.connection.transport;
 
 import javax.sound.midi.MidiDevice;
+import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.Transmitter;
 
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
-import br.com.srmourasilva.multieffects.PedalType;
+import br.com.srmourasilva.domain.PedalType;
 
 /*
  * http://stackoverflow.com/questions/6937760/java-getting-input-from-midi-keyboard
  */
-public class MidiReader extends MidiTransmition {
+public class MidiReader extends MidiTransmition implements Receiver {
 
-	public MidiReader(PedalType pedalType, Receiver receiver) throws DeviceNotFoundException {
+	public static interface MidiReaderListenner {
+		void onDataReceived(MidiMessage message);
+	}
+	
+	private MidiReaderListenner listenner;
+
+	public MidiReader(PedalType pedalType) throws DeviceNotFoundException {
 		super(pedalType);
 		
 		MidiDevice device = device();
 
 		try {
-			vincule(device, receiver);
+			vincule(device, this);
 		} catch (MidiUnavailableException e) {
-			e.printStackTrace();
+			throw new DeviceNotFoundException(e);
 		}
 	}
 
@@ -40,5 +47,18 @@ public class MidiReader extends MidiTransmition {
 	@Override
 	protected String deviceType() {
 		return "input";
+	}
+
+	/*************************************************/
+
+	public void setListenner(MidiReaderListenner listenner) {
+		this.listenner = listenner;
+	}
+
+	@Override public void close() {}
+
+	@Override
+	public void send(MidiMessage message, long arg1) {
+		listenner.onDataReceived(message);
 	}
 }

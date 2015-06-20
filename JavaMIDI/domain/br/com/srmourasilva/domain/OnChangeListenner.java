@@ -1,4 +1,4 @@
-package br.com.srmourasilva.architecture;
+package br.com.srmourasilva.domain;
 
 import br.com.srmourasilva.domain.message.ChangeMessage;
 

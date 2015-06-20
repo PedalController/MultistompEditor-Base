@@ -3,11 +3,11 @@ package br.com.srmourasilva.multistomp.simulator;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Param;
 import br.com.srmourasilva.domain.multistomp.Patch;
-import br.com.srmourasilva.multieffects.PedalType;
 
 public class MultistompSimulator extends Multistomp {
 
@@ -37,16 +37,6 @@ public class MultistompSimulator extends Multistomp {
 		effect.addParam(new Param("Volume", 0, 25, 0, 1));
 		
 		return effect;
-	}
-
-	@Override
-	public void initialize() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void terminate() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

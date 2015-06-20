@@ -29,7 +29,7 @@ public class KeyboardController {
 			command = getCommand();
 			execute(command);
 			
-			System.out.println("\n" + pedal);
+			//System.out.println("\n" + pedal);
 		}
 
 		this.pedal.off();
@@ -80,7 +80,7 @@ public class KeyboardController {
 		String action = commands[0];
 		
 		if (action.equals("GT"))
-			pedal.setPatch(Integer.parseInt(commands[1]));
+			pedal.toPatch(Integer.parseInt(commands[1]));
 
 		else if (action.equals("AC"))
 			pedal.activeEffect(Integer.parseInt(commands[1]));
