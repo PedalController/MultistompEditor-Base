@@ -20,18 +20,26 @@ public class ZoomGSeriesMessageEncoder implements MessageEncoder {
 	public List<MidiMessage> encode(Messages messages) {
 		List<MidiMessage> retorno = new ArrayList<>();
 
-		messages.get(CommonCause.TO_PATCH).forEach(message -> retorno.add(encodeCurrentPatch(message)));
+		messages.get(CommonCause.TO_PATCH).forEach(message -> retorno.add(toPatch(message)));
 
-		messages.get(CommonCause.ACTIVE_EFFECT).forEach(message -> retorno.addAll(encodeStatusEffect(message, CommonCause.ACTIVE_EFFECT)));
-		messages.get(CommonCause.DISABLE_EFFECT).forEach(message -> retorno.addAll(encodeStatusEffect(message, CommonCause.DISABLE_EFFECT)));
+		messages.get(CommonCause.ACTIVE_EFFECT).forEach(message -> retorno.addAll(statusEffect(message, CommonCause.ACTIVE_EFFECT)));
+		messages.get(CommonCause.DISABLE_EFFECT).forEach(message -> retorno.addAll(statusEffect(message, CommonCause.DISABLE_EFFECT)));
 
-		messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER).forEach(message -> retorno.add(requestCurrentPatch(message)));
-		messages.get(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS).forEach(message -> retorno.add(requestPatchDetails(message)));
+		messages.get(CommonCause.SET_PARAM).forEach(message -> retorno.add(setParam(message)));
+
+		messages.get(ZoomGSeriesCause.SET_EFFECT).forEach(message -> retorno.add(setEffect(message)));
+		
+		messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER).forEach(message -> retorno.add(requestCurrentPatchNumber(message)));
+		messages.get(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_DETAILS).forEach(message -> retorno.add(requestCurrentPatchDetails(message)));
+		messages.get(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS).forEach(message -> retorno.add(requestSpecificPatchDetails(message)));
+
+		messages.get(ZoomGSeriesCause.LISSEN_ME).forEach(message -> retorno.add(lissenMe()));
+		messages.get(ZoomGSeriesCause.YOU_CAN_TALK).forEach(message -> retorno.add(youCanTalk()));
 
 		return retorno;
 	}
 
-	private MidiMessage encodeCurrentPatch(Message message) {
+	private MidiMessage toPatch(Message message) {
 		final int SET_PATH = ShortMessage.PROGRAM_CHANGE;
 		
 		int patch = message.details().patch;
@@ -43,55 +51,89 @@ public class ZoomGSeriesMessageEncoder implements MessageEncoder {
 		}
 	}
 
-	private List<MidiMessage> encodeStatusEffect(Message message, CommonCause cause) {
+	private List<MidiMessage> statusEffect(Message message, CommonCause cause) {
 		int effect = message.details().effect;
 
 		boolean actived = cause == CommonCause.ACTIVE_EFFECT;
-
 		int byteActived = actived ? 0x01 : 0x00;
 
-		return group(myTurn(), effect(effect, byteActived));
+		return group(lissenMe(), manupuleEffect(effect, SET_STATUS, byteActived));
 	}
-	
-	private MidiMessage myTurn() {
-		final byte[] MY_TURN = {
-			(byte) 0xF0, 0x52, 0x00,
-			0x5A, 0x50, (byte) 0xF7
-		};
 
-		return customMessageFor(MY_TURN);
+	private MidiMessage setParam(Message message) {
+		int effect = message.details().effect;
+		int param  = message.details().param;
+		int value  = message.details().value;
+
+		return manupuleEffect(effect, param + PARAM_EFFECT, value);
 	}
-	
-	private MidiMessage effect(int idParam, int newValue) {
-		byte[] setState = {
-			(byte) 0xF0, 0x52, 0x00,
-			0x5A, 0x31, (byte) idParam,
-			0x00, (byte) newValue, 0x00,
+
+	private MidiMessage setEffect(Message message) {
+		int effect = message.details().effect;
+		int value  = message.details().value;
+
+		return manupuleEffect(effect, CHANGE_EFFECT, value);
+	}
+
+	private final int SET_STATUS = 0;
+	private final int CHANGE_EFFECT = 1;
+	private final int PARAM_EFFECT = 2; // Base
+
+	private MidiMessage manupuleEffect(int effect, int type, int value) {
+		int value2 = value / 128;
+		value = value % 128;
+
+		return customMessageFor(new byte[] {
+			(byte) 0xF0, (byte)  0x52, (byte)   0x00,
+			(byte) 0x5A, (byte)  0x31, (byte) effect,
+			(byte) type, (byte) value, (byte) value2,
 			(byte) 0xF7
-		};
-		
-		return customMessageFor(setState);
+		});
 	}
 
-	private MidiMessage requestCurrentPatch(Message message) {
-		byte[] NUMBER_CURRENT_PATCH = {
-			(byte) 0xF0, 0x52, 0x00,
-			0x5A, 0x33, (byte) 0xF7
-		};
 
-		return customMessageFor(NUMBER_CURRENT_PATCH);
+	///////////////////////////////////////
+	// SPECIFIC ZOOM
+	///////////////////////////////////////
+
+	private MidiMessage requestCurrentPatchNumber(Message message) {
+		return customMessageFor(new byte[] {
+			(byte) 0xF0, (byte) 0x52, (byte) 0x00,
+			(byte) 0x5A, (byte) 0x33, (byte) 0xF7
+		});
 	}
 
-	private MidiMessage requestPatchDetails(Message message) {
+	private MidiMessage requestCurrentPatchDetails(Message message) {
+		return customMessageFor(new byte[] {
+			(byte) 0xF0, (byte) 0x52, (byte) 0x00,
+			(byte) 0x5A, (byte) 0x29, (byte) 0xF7
+		});
+	}
+
+	private MidiMessage requestSpecificPatchDetails(Message message) {
 		int patch = message.details().patch;
 
 		byte[] CURRENT_PATCH = {
-			(byte) 0xF0, 0x52, 0x00,
-			0x5A, 0x09, (byte) 0x00,
-			0x00, (byte) patch, (byte) 0xF7
+			(byte) 0xF0, (byte)  0x52, (byte) 0x00,
+			(byte) 0x5A, (byte)  0x09, (byte) 0x00,
+			(byte) 0x00, (byte) patch, (byte) 0xF7
 		};
 
 		return customMessageFor(CURRENT_PATCH);
+	}
+
+	private MidiMessage lissenMe() {
+		return customMessageFor(new byte[] {
+			(byte) 0xF0, (byte) 0x52, (byte) 0x00,
+			(byte) 0x5A, (byte) 0x50, (byte) 0xF7
+		});
+	}
+
+	private MidiMessage youCanTalk() {
+		return customMessageFor(new byte[] {
+			(byte) 0xF0, (byte) 0x52, (byte) 0x00,
+			(byte) 0x5A, (byte) 0x16, (byte) 0xF7
+		});
 	}
 
 	private List<MidiMessage> group(MidiMessage ... messages) {

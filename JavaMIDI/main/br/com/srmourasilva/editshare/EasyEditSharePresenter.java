@@ -6,11 +6,10 @@ import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
 import br.com.srmourasilva.domain.OnMultistompListenner;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
-import br.com.srmourasilva.domain.message.Messages.Details;
 import br.com.srmourasilva.domain.message.Messages.Message;
 import br.com.srmourasilva.multistomp.controller.PedalController;
 import br.com.srmourasilva.multistomp.controller.PedalControllerFactory;
-import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesCause;
+import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessages;
 
 public class EasyEditSharePresenter implements OnMultistompListenner {
 
@@ -35,9 +34,8 @@ public class EasyEditSharePresenter implements OnMultistompListenner {
 			System.out.println("This Pedal has been used by other process program");
 			System.exit(1);
 		}
-		
-		Messages messages = detectCurrentPatch();
-		pedal.sendMessage(messages);
+
+		pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
 	}
 
 	@Override
@@ -66,9 +64,8 @@ public class EasyEditSharePresenter implements OnMultistompListenner {
 	private void setPatch(Message message) {
 		int idPatch = message.details().patch;
 		view.setTitle("Patch: " + idPatch);
-		
-		Messages messages = loadPatch(idPatch);
-		pedal.sendMessage(messages);
+
+		pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
 	}
 
 	public void toogleEffectOf(int effect) {
@@ -76,26 +73,6 @@ public class EasyEditSharePresenter implements OnMultistompListenner {
 	}
 	
 	/////////////////////////////////////////////////////
-
-	private Messages detectCurrentPatch() {
-		return group(new Message(ZoomGSeriesCause.REQUEST_CURRENT_PATCH_NUMBER));
-	}
-	
-	private Messages loadPatch(int idPatch) {
-		Details details = new Details();
-		details.patch = idPatch;
-
-		return group(new Message(ZoomGSeriesCause.REQUEST_SPECIFIC_PATCH_DETAILS, details));
-	}
-	
-	private Messages group(Message ... messages) {
-		Messages returned = new Messages();
-		
-		for (Message message : messages)
-			returned.add(message);
-
-		return returned;
-	}
 
 	public void nextPatch() {
 		this.pedal.nextPatch();

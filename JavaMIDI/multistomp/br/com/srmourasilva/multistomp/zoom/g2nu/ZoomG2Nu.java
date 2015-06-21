@@ -48,7 +48,7 @@ public class ZoomG2Nu extends Multistomp {
 
 	@Override
 	public Messages start() {
-		return new Messages();
+		return Messages.Empty();
 	}
 
 	/** Very thanks for: 

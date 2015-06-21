@@ -5,6 +5,7 @@ import javax.sound.midi.MidiMessage;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Details;
+import br.com.srmourasilva.domain.message.Messages.Message;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.util.MidiMessageTester;
@@ -33,9 +34,6 @@ public class ZoomGSeriesSelectPatchDecoder implements MessageDecoder {
 		Details details = new Details();
 		details.patch = message.getMessage()[PATCH];
 
-		Messages messages = new Messages();
-		messages.add(CommonCause.TO_PATCH, details);
-
-		return messages;
+		return Messages.For(new Message(CommonCause.TO_PATCH, details));
 	}
 }

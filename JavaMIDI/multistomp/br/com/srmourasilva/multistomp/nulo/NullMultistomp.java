@@ -21,6 +21,6 @@ public class NullMultistomp extends Multistomp {
 
 	@Override
 	public Messages start() {
-		return new Messages();
+		return Messages.Empty();
 	}
 }

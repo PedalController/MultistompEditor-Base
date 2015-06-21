@@ -6,8 +6,6 @@ import java.util.List;
 import br.com.srmourasilva.architecture.exception.ImplemetationException;
 import br.com.srmourasilva.domain.OnMultistompListenner;
 import br.com.srmourasilva.domain.PedalType;
-import br.com.srmourasilva.domain.message.Cause;
-import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
 import br.com.srmourasilva.domain.multistomp.message.Details;
@@ -107,47 +105,10 @@ public abstract class Multistomp implements OnChangeListenner<Patch> {
 	}
 
 	private void notify(ChangeMessage<Multistomp> message) {
-		Messages messages = convertToMessages(message);
+		Messages messages = MultistompMessagesConverter.convert(message);
 
 		listenners.forEach(listenner -> listenner.onChange(messages));
 	}
-
-	private Messages convertToMessages(ChangeMessage<Multistomp> message) {
-		Messages messages = new Messages();
-		br.com.srmourasilva.domain.message.Messages.Details details = new br.com.srmourasilva.domain.message.Messages.Details();
-
-		if (message.is(MultistompCause.MULTISTOMP)) {			
-			details.patch = message.causer().getIdCurrentPatch();
-
-			messages.add(CommonCause.TO_PATCH, details);
-
-		} else if (message.is(MultistompCause.EFFECT)) {
-			Patch patch = (Patch) message.nextMessage().causer();
-			details.patch = message.causer().patchs().indexOf(patch);
-
-			Effect effect = (Effect) message.realMessage().causer();
-			int idEffect = patch.effects().indexOf(effect);
-			
-			details.effect = idEffect;
-			Cause cause = effect.hasActived() ? CommonCause.ACTIVE_EFFECT : CommonCause.DISABLE_EFFECT;
-			
-			messages.add(cause, details);
-
-		} else if (message.is(MultistompCause.PATCH)) {
-			Patch patch = (Patch) message.nextMessage().causer();
-			Effect effect = (Effect) message.nextMessage().nextMessage().causer();
-			int idEffect = patch.effects().indexOf(effect);
-			
-			details.effect = idEffect;
-			details.param = effect.params().indexOf(message.realMessage().causer());
-			details.value = ((Param) message.realMessage().causer()).getValue();
-
-			messages.add(CommonCause.SET_PARAM, details);
-		}
-
-		return messages;
-	}
-
 
 	/*************************************************/
 

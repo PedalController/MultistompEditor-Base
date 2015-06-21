@@ -5,6 +5,7 @@ import javax.sound.midi.MidiMessage;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Details;
+import br.com.srmourasilva.domain.message.Messages.Message;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 
 public class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectParamDecoder {
@@ -20,8 +21,6 @@ public class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectPa
 		details.param = Details.NULL;
 		details.value = Details.NULL;
 
-		Messages messages = new Messages();
-		messages.add(CommonCause.DISABLE_EFFECT, details);
-		return messages;
+		return Messages.For(new Message(CommonCause.DISABLE_EFFECT, details));
 	}
 }

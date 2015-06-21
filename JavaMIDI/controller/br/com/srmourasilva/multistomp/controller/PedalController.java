@@ -176,7 +176,7 @@ public class PedalController implements OnMultistompListenner, OnUpdateListenner
 		this.connection.send(sysexMessage);
 	}
 	
-	public void sendMessage(Messages messages) {
+	public void send(Messages messages) {
 		this.connection.send(messages);
 		this.realChange = true;
 	}

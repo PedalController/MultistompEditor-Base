@@ -65,7 +65,11 @@ public class ZoomGSeries extends Multistomp {
 
 	@Override
 	public Messages start() {
-		return new Messages();
+		Messages messages = Messages.Empty();
+		messages.concatWith(ZoomGSeriesMessages.LISSEN_ME());
+		messages.concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
+
+		return messages;
 	}
 
 	@Override

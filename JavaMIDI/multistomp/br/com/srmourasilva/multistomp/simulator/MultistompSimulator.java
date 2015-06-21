@@ -42,7 +42,7 @@ public class MultistompSimulator extends Multistomp {
 
 	@Override
 	public Messages start() {
-		return new Messages();
+		return Messages.Empty();
 	}
 
 	@Override

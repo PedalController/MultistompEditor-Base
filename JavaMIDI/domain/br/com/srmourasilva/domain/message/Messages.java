@@ -71,6 +71,21 @@ public class Messages implements Iterable<Messages.Message> {
 
 	List<Message> messages = new ArrayList<>();
 
+	public static Messages Empty() {
+		return new Messages();
+	}
+
+	public static Messages For(Message ... messages) {
+		Messages returned = new Messages();
+
+		for (Message message : messages)
+			returned.add(message);
+		
+		return returned;
+	}
+
+	private Messages() {}
+
 	public void add(Cause cause) {
 		add(cause, new Details());		
 	}
@@ -81,6 +96,10 @@ public class Messages implements Iterable<Messages.Message> {
 
 	public void add(Message message) {
 		messages.add(message);
+	}
+
+	public void concatWith(Messages messages) {
+		messages.forEach(message -> this.add(message));
 	}
 
 	@Override

@@ -106,7 +106,7 @@ public abstract class AbstractZoomGSeriesPatchDecoder implements MessageDecoder 
 
 		List<Effect> effects = multistomp.currentPatch().effects();
 
-		Messages messages = new Messages(); 
+		Messages messages = Messages.Empty(); 
 		for (int i = 0; i < PATCHES.length; i++) {
 			int patch = PATCHES[i];
 
