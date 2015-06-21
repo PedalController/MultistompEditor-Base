@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.srmourasilva.domain.PedalType;
+import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Param;
@@ -37,6 +38,11 @@ public class MultistompSimulator extends Multistomp {
 		effect.addParam(new Param("Volume", 0, 25, 0, 1));
 		
 		return effect;
+	}
+
+	@Override
+	public Messages start() {
+		return new Messages();
 	}
 
 	@Override

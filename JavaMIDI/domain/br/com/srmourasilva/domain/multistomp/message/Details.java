@@ -1,4 +1,7 @@
-package br.com.srmourasilva.domain.message;
+package br.com.srmourasilva.domain.multistomp.message;
+
+import br.com.srmourasilva.domain.message.Cause;
+
 
 public class Details implements Cause {
 	public enum TypeChange {

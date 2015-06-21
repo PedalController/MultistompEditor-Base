@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.srmourasilva.domain.PedalType;
+import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Patch;
@@ -43,6 +44,11 @@ public class ZoomG2Nu extends Multistomp {
 		}
 
 		return patchs;
+	}
+
+	@Override
+	public Messages start() {
+		return new Messages();
 	}
 
 	/** Very thanks for: 

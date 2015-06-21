@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.srmourasilva.domain.OnChangeListenner;
-import br.com.srmourasilva.domain.message.ChangeMessage;
-import br.com.srmourasilva.domain.message.CommonCause;
+import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
+import br.com.srmourasilva.domain.multistomp.message.MultistompCause;
+import br.com.srmourasilva.domain.multistomp.message.OnChangeListenner;
 
 public class Patch implements OnChangeListenner<Effect> {
 	private int id;
@@ -29,18 +29,18 @@ public class Patch implements OnChangeListenner<Effect> {
 
 	public final void addEffect(Effect effect) {
 		this.effects.add(effect);
-		effect.setOnChangeListenner(this);
+		effect.setListenner(this);
 	}
 
 	/*************************************************/
 
-	public void setOnChangeListenner(OnChangeListenner<Patch> listenner) {
+	public void setListenner(OnChangeListenner<Patch> listenner) {
 		this.listenner = Optional.of(listenner);
 	}
 
 	@Override
 	public void onChange(ChangeMessage<Effect> message) {
-		ChangeMessage<Patch> newMessage = new ChangeMessage<>(CommonCause.SUPER, this, message);
+		ChangeMessage<Patch> newMessage = new ChangeMessage<>(MultistompCause.SUPER, this, message);
 		notify(newMessage);
 	}
 

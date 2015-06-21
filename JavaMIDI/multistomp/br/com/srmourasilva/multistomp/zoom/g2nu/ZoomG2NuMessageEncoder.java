@@ -7,10 +7,10 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
 
-import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.message.Cause;
 import br.com.srmourasilva.domain.message.CommonCause;
-import br.com.srmourasilva.domain.multistomp.Effect;
-import br.com.srmourasilva.domain.multistomp.Multistomp;
+import br.com.srmourasilva.domain.message.Messages;
+import br.com.srmourasilva.domain.message.Messages.Message;
 import br.com.srmourasilva.multistomp.connection.codification.MessageEncoder;
 
 public class ZoomG2NuMessageEncoder implements MessageEncoder {
@@ -22,42 +22,38 @@ public class ZoomG2NuMessageEncoder implements MessageEncoder {
 	private static final int SET_STATE_EFFECT= ShortMessage.CONTROL_CHANGE;
 
 	@Override
-	public List<MidiMessage> encode(ChangeMessage<Multistomp> message) {
-		try {
-			if (message.is(CommonCause.MULTISTOMP))
-				return encodeMultistompChange(message);
-	
-			if (message.is(CommonCause.PATCH))
-				return null;
-	
-			if (message.is(CommonCause.EFFECT))
-				return encodeEffectChange(message);
+	public List<MidiMessage> encode(Messages messages) {
+		List<MidiMessage> retorno = new ArrayList<>();
 
+		messages.get(CommonCause.TO_PATCH).forEach(message -> retorno.add(encodeMultistompChange(message)));
+
+		messages.get(CommonCause.ACTIVE_EFFECT).forEach(message -> retorno.add(encodeEffectChange(message, CommonCause.ACTIVE_EFFECT)));
+		messages.get(CommonCause.DISABLE_EFFECT).forEach(message -> retorno.add(encodeEffectChange(message, CommonCause.DISABLE_EFFECT)));
+
+		return retorno;
+	}
+
+	private MidiMessage encodeMultistompChange(Message message) {
+		int patch = message.details().patch;
+
+		try {
+			return new ShortMessage(SET_PATH, 0, patch, 0);
 		} catch (InvalidMidiDataException e) {
 			throw new RuntimeException(e);
 		}
-
-		return null;
-	}
-
-	private List<MidiMessage> encodeMultistompChange(ChangeMessage<Multistomp> message) throws InvalidMidiDataException {
-		List<MidiMessage> mensagens = new ArrayList<>();		
-		mensagens.add(new ShortMessage(SET_PATH, 0, message.causer().getIdCurrentPatch(), 0));
-		
-		return mensagens;
 	}
 	
-	private List<MidiMessage> encodeEffectChange(ChangeMessage<Multistomp> message) throws InvalidMidiDataException {
-		ChangeMessage<Effect> effectMessage = (ChangeMessage<Effect>) message.nextMessage().nextMessage();
+	private MidiMessage encodeEffectChange(Message message, Cause cause) {
+		int effect = message.details().effect;
 
-		int index = effectMessage.causer().getMidiId();
-		boolean actived = effectMessage.causer().hasActived();
+		boolean actived = cause == CommonCause.ACTIVE_EFFECT;
 
 		int byteActived = actived ? STATE_ON : STATE_OFF;
 
-		List<MidiMessage> mensagens = new ArrayList<>();
-		mensagens.add(new ShortMessage(SET_STATE_EFFECT, 0, index, byteActived));
-
-		return mensagens;
+		try {
+			return new ShortMessage(SET_STATE_EFFECT, 0, effect, byteActived);
+		} catch (InvalidMidiDataException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

@@ -2,12 +2,11 @@ package br.com.srmourasilva.domain.multistomp;
 
 import java.util.Optional;
 
-import br.com.srmourasilva.architecture.exception.ParamException;
-import br.com.srmourasilva.domain.OnChangeListenner;
-import br.com.srmourasilva.domain.message.ChangeMessage;
-import br.com.srmourasilva.domain.message.CommonCause;
-import br.com.srmourasilva.domain.message.Details;
-import br.com.srmourasilva.domain.message.Details.TypeChange;
+import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
+import br.com.srmourasilva.domain.multistomp.message.Details;
+import br.com.srmourasilva.domain.multistomp.message.Details.TypeChange;
+import br.com.srmourasilva.domain.multistomp.message.MultistompCause;
+import br.com.srmourasilva.domain.multistomp.message.OnChangeListenner;
 
 public class Param {
 
@@ -33,14 +32,18 @@ public class Param {
 	}
 	
 	private void setCurrentValue(int newValue) {
-		if (!isValidValue(newValue))
-			throw new ParamException("Invalid new value: " + newValue + ". MinValue: " + minValue + " MaxValue: " + maxValue);
+		if (!isValidValue(newValue)) {
+			if (newValue > maxValue)
+				newValue = maxValue;
+			else
+				newValue = minValue;
+		}
 
 		this.currentValue = newValue;
 		
 		Details details = new Details(TypeChange.PARAM, currentValue);
 
-		ChangeMessage<Param> message = new ChangeMessage<>(CommonCause.PATCH, this, details);
+		ChangeMessage<Param> message = new ChangeMessage<>(MultistompCause.PATCH, this, details);
 		notify(message);
 	}
 
@@ -86,7 +89,7 @@ public class Param {
 
 	/*************************************************/
 
-	public void setOnChangeListenner(OnChangeListenner<Param> listenner) {
+	public void setListenner(OnChangeListenner<Param> listenner) {
 		this.listenner = Optional.of(listenner);
 	}
 	

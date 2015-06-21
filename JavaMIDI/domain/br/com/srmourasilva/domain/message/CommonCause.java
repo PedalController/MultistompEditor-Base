@@ -1,13 +1,15 @@
 package br.com.srmourasilva.domain.message;
 
+
 public enum CommonCause implements Cause {
-	/** Super has the cause */
-	SUPER,
-	/** None change detected */
-	NONE,
-	
-	MULTISTOMP,
-	PATCH,
-	EFFECT,
-	PARAM;
+	// Multistomp
+	TO_PATCH,
+	GENERAL_VOLUME,
+	// Patch
+	PATCH_VOLUME,
+	// Effect
+	ACTIVE_EFFECT,
+	DISABLE_EFFECT,
+	// Param
+	SET_PARAM;
 }

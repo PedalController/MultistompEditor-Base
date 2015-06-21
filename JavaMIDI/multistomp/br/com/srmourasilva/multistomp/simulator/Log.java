@@ -1,21 +1,22 @@
 package br.com.srmourasilva.multistomp.simulator;
 
-import br.com.srmourasilva.domain.OnChangeListenner;
-import br.com.srmourasilva.domain.message.ChangeMessage;
-import br.com.srmourasilva.domain.multistomp.Multistomp;
+import br.com.srmourasilva.domain.OnMultistompListenner;
+import br.com.srmourasilva.domain.message.Messages;
+import br.com.srmourasilva.domain.message.Messages.Message;
 
-public class Log implements OnChangeListenner<Multistomp> {
+public class Log implements OnMultistompListenner {
 	
 	private String type;
 
 	public Log(String type) {
 		this.type = type;
 	}
-	
+
 	@Override
-	public void onChange(ChangeMessage<Multistomp> message) {
-		System.err.println("LOG:: " + type);
-		System.out.println("LOG:: " + message);
-		System.out.println("LOG:: " + message.realMessage().details());
+	public void onChange(Messages messages) {
+		for (Message message : messages) {
+			System.err.println("LOG:: " + type);
+			System.out.println("LOG:: " + message);
+		}
 	}
 }

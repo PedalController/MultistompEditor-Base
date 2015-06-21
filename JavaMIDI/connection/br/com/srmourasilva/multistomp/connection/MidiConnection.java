@@ -9,7 +9,7 @@ import javax.sound.midi.MidiUnavailableException;
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
 import br.com.srmourasilva.arvore.util.BinarioUtil;
 import br.com.srmourasilva.domain.PedalType;
-import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoderFactory;
@@ -22,7 +22,7 @@ import br.com.srmourasilva.multistomp.connection.transport.MidiSender;
 public class MidiConnection implements MidiReaderListenner {
 
 	public interface OnUpdateListenner {
-		void update(ChangeMessage<Multistomp> message);
+		void update(Messages messages);
 	}
 	
 	private Multistomp multistomp;
@@ -60,13 +60,13 @@ public class MidiConnection implements MidiReaderListenner {
 
 	/*************************************************/
 
-	public void send(ChangeMessage<Multistomp> message) {
-		for (MidiMessage Midimessage : generateMidiMessages(message))
-			this.send(Midimessage);
+	public void send(Messages messages) {
+		for (MidiMessage midiMessage : generateMidiMessages(messages))
+			this.send(midiMessage);
 	}
 
-	private List<MidiMessage> generateMidiMessages(ChangeMessage<Multistomp> message) {
-		return encoder.encode(message);
+	private List<MidiMessage> generateMidiMessages(Messages messages) {
+		return encoder.encode(messages);
 	}
 
 	public void send(MidiMessage message) {
@@ -92,9 +92,9 @@ public class MidiConnection implements MidiReaderListenner {
 			return;
 		}
 
-		ChangeMessage<Multistomp> messageDecoded = decoder.decode(message, multistomp);
+		Messages messagesDecoded = decoder.decode(message, multistomp);
 
     	if (listenner.isPresent())
-			this.listenner.get().update(messageDecoded);
+			this.listenner.get().update(messagesDecoded);
 	}
 }

@@ -7,14 +7,14 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.SysexMessage;
 
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
-import br.com.srmourasilva.domain.OnChangeListenner;
-import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.OnMultistompListenner;
+import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.MidiConnection;
 import br.com.srmourasilva.multistomp.connection.MidiConnection.OnUpdateListenner;
 import br.com.srmourasilva.multistomp.simulator.Log;
 
-public class PedalController implements OnChangeListenner<Multistomp>, OnUpdateListenner {
+public class PedalController implements OnMultistompListenner, OnUpdateListenner {
 
 	private boolean started;
 
@@ -22,8 +22,8 @@ public class PedalController implements OnChangeListenner<Multistomp>, OnUpdateL
 
 	private MidiConnection connection;
 
-	private List<OnChangeListenner<Multistomp>> controllerListenners = new ArrayList<>();
-	private List<OnChangeListenner<Multistomp>> realMultistompListenners = new ArrayList<>();
+	private List<OnMultistompListenner> controllerListenners = new ArrayList<>();
+	private List<OnMultistompListenner> realMultistompListenners = new ArrayList<>();
 
 	public PedalController(Multistomp pedal) throws DeviceNotFoundException {
 		this.pedal = pedal;
@@ -47,6 +47,21 @@ public class PedalController implements OnChangeListenner<Multistomp>, OnUpdateL
 
 		started = true;
 		connection.start();
+
+		connection.send(pedal.start());
+		realChange = false; // FIXME - GAMBIARRA
+		//onChange(message)
+		//this.connection.send(message)
+		//notify(realMultistompListenners, message)
+		//sleep();
+	}
+	
+	public void sleep() {
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/** Close connection and turn off the pedal
@@ -65,7 +80,7 @@ public class PedalController implements OnChangeListenner<Multistomp>, OnUpdateL
 		return started;
 	}
 
-	protected final Multistomp getPedal() {
+	public final Multistomp multistomp() {
 		return pedal;
 	}
 
@@ -109,11 +124,11 @@ public class PedalController implements OnChangeListenner<Multistomp>, OnUpdateL
 
 	/** @return Amount of effects that the current patch has
 	 */
-	public final int getAmountEffects() {
+	public int getAmountEffects() {
 		return this.pedal.currentPatch().effects().size();
 	}
 
-	public void addListenner(OnChangeListenner<Multistomp> listenner) {
+	public void addListenner(OnMultistompListenner listenner) {
 		this.pedal.addListenner(listenner);
 	}
 
@@ -128,36 +143,41 @@ public class PedalController implements OnChangeListenner<Multistomp>, OnUpdateL
 
 	/** Multistomp Change */
 	@Override
-	public synchronized void onChange(ChangeMessage<Multistomp> message) {
+	public synchronized void onChange(Messages messages) {
 		if (realChange) {
 			realChange = false;
 			return;
 		}
 
-		connection.send(message);
-		notify(controllerListenners, message);
+		connection.send(messages);
+		notify(controllerListenners, messages);
 	}
 
 	private volatile boolean realChange = false;
 
 	/** Real multistomp Change */
 	@Override
-	public synchronized void update(ChangeMessage<Multistomp> message) {
+	public synchronized void update(Messages messages) {
 		this.realChange = true;
 
 		MultistompChanger changer = new MultistompChanger(this);
-		changer.attempt(message);
+		messages.forEach(message -> changer.attempt(message));
 
-		notify(realMultistompListenners, message);
+		notify(realMultistompListenners, messages);
 	}
 
-	private void notify(List<OnChangeListenner<Multistomp>> controllerListenners, ChangeMessage<Multistomp> message) {
-		for (OnChangeListenner<Multistomp> listenner : controllerListenners)
-			listenner.onChange(message);
+	private void notify(List<OnMultistompListenner> listenners, Messages messages) {
+		for (OnMultistompListenner listenner : listenners)
+			listenner.onChange(messages);
 	}
 
 	@Deprecated
 	public void sendMessage(SysexMessage sysexMessage) {
 		this.connection.send(sysexMessage);
+	}
+	
+	public void sendMessage(Messages messages) {
+		this.connection.send(messages);
+		this.realChange = true;
 	}
 }

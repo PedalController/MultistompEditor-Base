@@ -2,7 +2,8 @@ package br.com.srmourasilva.multistomp.zoom.gseries.decoder;
 
 import javax.sound.midi.MidiMessage;
 
-import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.message.Messages;
+import br.com.srmourasilva.domain.message.Messages.Details;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.util.MidiMessageTester;
@@ -11,7 +12,7 @@ import br.com.srmourasilva.util.MidiMessageTester;
  * f0 52 00 5a 31   05    02   02   00 f7
  * f0 52 00 5a 31 Pedal Param Value 00 f7
  */
-public abstract class ZoomGSeriesEffectParamDecoder implements MessageDecoder {
+public abstract class AbstractZoomGSeriesEffectParamDecoder implements MessageDecoder {
 	protected static final int EFFECT = 5;
 	protected static final int PARAM = 6;
 	protected static final int VALUE = 7;
@@ -36,16 +37,18 @@ public abstract class ZoomGSeriesEffectParamDecoder implements MessageDecoder {
 	}
 
 	@Override
-	public ChangeMessage<Multistomp> decode(MidiMessage message, Multistomp multistomp) {
-		int effect = message.getMessage()[EFFECT];
-		int param = message.getMessage()[PARAM] - 2;
-		int value = 0;
-		if (message.getMessage()[VALUE + 1] != 00)
-			value += 128;
-		value += message.getMessage()[VALUE];
+	public final Messages decode(MidiMessage message, Multistomp multistomp) {
+		Details details = new Details();
 
-		return decode(multistomp, effect, param, value);
+		details.effect = message.getMessage()[EFFECT];
+		details.param = message.getMessage()[PARAM] - 2;
+		details.value = 0;
+		if (message.getMessage()[VALUE + 1] != 00)
+			details.value += 128;
+		details.value += message.getMessage()[VALUE];
+
+		return decode(multistomp, details);
 	}
 
-	protected abstract ChangeMessage<Multistomp> decode(Multistomp multistomp, int effect, int param, int value);
+	protected abstract Messages decode(Multistomp multistomp, Details details);
 }

@@ -1,11 +1,8 @@
 package br.com.srmourasilva.multistomp.controller;
 
-import br.com.srmourasilva.domain.message.ChangeMessage;
 import br.com.srmourasilva.domain.message.CommonCause;
-import br.com.srmourasilva.domain.message.Details;
-import br.com.srmourasilva.domain.multistomp.Effect;
-import br.com.srmourasilva.domain.multistomp.Multistomp;
-import br.com.srmourasilva.domain.multistomp.Param;
+import br.com.srmourasilva.domain.message.Messages.Details;
+import br.com.srmourasilva.domain.message.Messages.Message;
 
 // FIXME - Fazer SimpleInterface utilizar também um genérico deste
 class MultistompChanger {
@@ -16,41 +13,28 @@ class MultistompChanger {
 		this.controller = controller;
 	}
 
-	public void attempt(ChangeMessage<Multistomp> message) {
-		ChangeMessage<?> real = message.realMessage();
+	public void attempt(Message message) {
+		if (message.is(CommonCause.TO_PATCH))
+			controller.toPatch(message.details().patch);
 
-		if (message.is(CommonCause.NONE))
-			return;
+		else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details().patch == Details.NULL)
+			controller.activeEffect(message.details().effect);
+		
+		else if (message.is(CommonCause.ACTIVE_EFFECT) && message.details().patch != Details.NULL)
+			controller.multistomp().patchs().get(message.details().patch).effects().get(message.details().effect).active();
 
-		else if (message.is(CommonCause.MULTISTOMP))
-			update((Multistomp) real.causer(), real.details());
-		else if (message.is(CommonCause.PATCH))
-			throw new RuntimeException();
-		else if (message.is(CommonCause.EFFECT))
-			update(message, (Effect) real.causer(), real.details());
-		else if (message.is(CommonCause.PARAM))
-			update(message, (Param) real.causer(), real.details());
-	}
+		else if (message.is(CommonCause.DISABLE_EFFECT) && message.details().patch == Details.NULL)
+			controller.disableEffect(message.details().effect);
+		
+		else if (message.is(CommonCause.DISABLE_EFFECT) && message.details().patch != Details.NULL)
+			controller.multistomp().patchs().get(message.details().patch).effects().get(message.details().effect).disable();
 
-	private void update(Multistomp multistomp, Details details) {
-		if (details.type() == Details.TypeChange.PATCH_NUMBER)
-			controller.toPatch(details.newValue());
-	}
+		else if (message.is(CommonCause.SET_PARAM)) {
+			int idEffect = message.details().effect;
+			int idParam  = message.details().param;
+			int newValue = message.details().value;
 
-	private void update(ChangeMessage<Multistomp> message, Effect effect, Details details) {
-		int idEffect = message.causer().currentPatch().effects().indexOf(effect);
-
-		if (details.type() == Details.TypeChange.PEDAL_STATUS)
-			controller.toogleEffect(idEffect);
-	}
-
-	private void update(ChangeMessage<Multistomp> message, Param param, Details details) {
-		Effect effect = (Effect) message.nextMessage().nextMessage().causer();
-
-		int idEffect = message.causer().currentPatch().effects().indexOf(effect);
-		int idParam = effect.params().indexOf(param);
-
-		if (details.type() == Details.TypeChange.PARAM)
-			controller.setEffectParam(idEffect, idParam, details.newValue());
+			controller.setEffectParam(idEffect, idParam, newValue);
+		}
 	}
 }

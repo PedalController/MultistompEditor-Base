@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import br.com.srmourasilva.architecture.exception.ParamException;
 import br.com.srmourasilva.domain.multistomp.Param;
 
 public class ParamTest {
@@ -24,22 +23,24 @@ public class ParamTest {
 		assertEquals(DEFAULT_VALUE_3, param3.getValue());
 	}
 	
-	@Test(expected=ParamException.class)
+	@Test
 	public void invalidDefaultValueMinusTest() {
 		final int DEFAULT_VALUE_1 = -1;
+		final int MINUS_VALUE = 0;
 
-		Param param1 = new Param("Volume", 0, 10, DEFAULT_VALUE_1, 1);
+		Param param1 = new Param("Volume", MINUS_VALUE, 10, DEFAULT_VALUE_1, 1);
 		
-		assertEquals(DEFAULT_VALUE_1, param1.getValue());
+		assertEquals(MINUS_VALUE, param1.getValue());
 	}
 	
-	@Test(expected=ParamException.class)
+	@Test
 	public void invalidDefaultValueTestPlus() {
 		final int DEFAULT_VALUE_2 = 11;
+		final int MAX_VALUE = 10;
 
-		Param param2 = new Param("Volume", 0, 10, DEFAULT_VALUE_2, 1);
+		Param param2 = new Param("Volume", 0, MAX_VALUE, DEFAULT_VALUE_2, 1);
 		
-		assertEquals(DEFAULT_VALUE_2, param2.getValue());
+		assertEquals(MAX_VALUE, param2.getValue());
 	}
 
 	@Test
@@ -113,19 +114,25 @@ public class ParamTest {
 		assertEquals(10, param.getValue());
 	}
 	
-	@Test(expected=ParamException.class)
+	@Test
 	public void setInvalidValueMinusTest() {
 		final int STEP_BY_STEP = 2;
-		Param param = new Param("Volume", 0, 10, 0, STEP_BY_STEP);
+		final int MINUS_VALUE = 0;
+		Param param = new Param("Volume", MINUS_VALUE, 10, 0, STEP_BY_STEP);
 
 		param.setValue(-1);
+		
+		assertEquals(MINUS_VALUE, param.getValue());
 	}
 	
-	@Test(expected=ParamException.class)
+	@Test
 	public void setInvalidValuePlusTest() {
 		final int STEP_BY_STEP = 2;
-		Param param = new Param("Volume", 0, 10, 0, STEP_BY_STEP);
+		final int PLUS_VALUE = 10;
+		Param param = new Param("Volume", 0, PLUS_VALUE, 0, STEP_BY_STEP);
 
 		param.setValue(11);
+		
+		assertEquals(PLUS_VALUE, param.getValue());		
 	}
 }

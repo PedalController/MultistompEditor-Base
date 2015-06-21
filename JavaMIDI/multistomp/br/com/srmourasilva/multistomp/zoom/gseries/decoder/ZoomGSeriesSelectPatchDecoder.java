@@ -2,9 +2,9 @@ package br.com.srmourasilva.multistomp.zoom.gseries.decoder;
 
 import javax.sound.midi.MidiMessage;
 
-import br.com.srmourasilva.domain.message.ChangeMessage;
-import br.com.srmourasilva.domain.message.Details;
-import br.com.srmourasilva.domain.message.Details.TypeChange;
+import br.com.srmourasilva.domain.message.CommonCause;
+import br.com.srmourasilva.domain.message.Messages;
+import br.com.srmourasilva.domain.message.Messages.Details;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.util.MidiMessageTester;
@@ -29,11 +29,13 @@ public class ZoomGSeriesSelectPatchDecoder implements MessageDecoder {
 	}
 
 	@Override
-	public ChangeMessage<Multistomp> decode(MidiMessage message, Multistomp multistomp) {
-		int patch = message.getMessage()[PATCH];
+	public Messages decode(MidiMessage message, Multistomp multistomp) {
+		Details details = new Details();
+		details.patch = message.getMessage()[PATCH];
 
-		Details details = new Details(TypeChange.PATCH_NUMBER, patch);
+		Messages messages = new Messages();
+		messages.add(CommonCause.TO_PATCH, details);
 
-		return ChangeMessage.For(multistomp, details);
+		return messages;
 	}
 }

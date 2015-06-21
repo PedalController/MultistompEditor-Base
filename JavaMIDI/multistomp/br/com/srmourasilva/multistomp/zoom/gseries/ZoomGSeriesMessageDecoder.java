@@ -6,13 +6,14 @@ import java.util.Optional;
 
 import javax.sound.midi.MidiMessage;
 
-import br.com.srmourasilva.domain.message.ChangeMessage;
+import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesActiveEffectDecoder;
-import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSetValueParamDecoder;
-import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSelectPatchDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesDisableEffectDecoder;
+import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesPatchDecoder;
+import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSelectPatchDecoder;
+import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSetValueParamDecoder;
 
 public class ZoomGSeriesMessageDecoder implements MessageDecoder {
 
@@ -21,6 +22,7 @@ public class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	public ZoomGSeriesMessageDecoder() {
 		decoders = new ArrayList<>();
 
+		decoders.add(new ZoomGSeriesPatchDecoder());
 		decoders.add(new ZoomGSeriesActiveEffectDecoder());
 		decoders.add(new ZoomGSeriesDisableEffectDecoder());
 		decoders.add(new ZoomGSeriesSelectPatchDecoder());
@@ -33,7 +35,7 @@ public class ZoomGSeriesMessageDecoder implements MessageDecoder {
 	}
 
 	@Override
-	public ChangeMessage<Multistomp> decode(MidiMessage message, Multistomp multistomp) {
+	public Messages decode(MidiMessage message, Multistomp multistomp) {
 		Optional<MessageDecoder> decoder = decodeFor(message);
 		
 		if (decoder.isPresent())

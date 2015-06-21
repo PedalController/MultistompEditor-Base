@@ -4,13 +4,12 @@ import java.util.List;
 
 import javax.sound.midi.MidiMessage;
 
-import br.com.srmourasilva.domain.message.ChangeMessage;
-import br.com.srmourasilva.domain.multistomp.Multistomp;
+import br.com.srmourasilva.domain.message.Messages;
 
 /** 
  * Generate the MidiMessage based in the changes
  * described in ChangeMessage<Multistomp>
  */
 public interface MessageEncoder {
-	List<MidiMessage> encode(ChangeMessage<Multistomp> message);
+	List<MidiMessage> encode(Messages messages);
 }

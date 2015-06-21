@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.srmourasilva.domain.PedalType;
+import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Patch;
@@ -20,6 +21,7 @@ public class ZoomGSeries extends Multistomp {
 
 	private final int TOTAL_PATCHS;
 	private final int TOTAL_EFFECTS;
+	@Deprecated
 	private final int SIZE_PARAMS;
 
 	/**
@@ -59,6 +61,11 @@ public class ZoomGSeries extends Multistomp {
 			effects.add(ZoomGSeriesEffect.COMP.generate());
 
 		return effects;
+	}
+
+	@Override
+	public Messages start() {
+		return new Messages();
 	}
 
 	@Override

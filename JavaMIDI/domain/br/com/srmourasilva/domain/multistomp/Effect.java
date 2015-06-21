@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import br.com.srmourasilva.domain.OnChangeListenner;
-import br.com.srmourasilva.domain.message.ChangeMessage;
-import br.com.srmourasilva.domain.message.CommonCause;
-import br.com.srmourasilva.domain.message.Details;
-import br.com.srmourasilva.domain.message.Details.TypeChange;
+import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
+import br.com.srmourasilva.domain.multistomp.message.Details;
+import br.com.srmourasilva.domain.multistomp.message.Details.TypeChange;
+import br.com.srmourasilva.domain.multistomp.message.MultistompCause;
+import br.com.srmourasilva.domain.multistomp.message.OnChangeListenner;
 
 public class Effect implements OnChangeListenner<Param> {
 
@@ -54,7 +54,7 @@ public class Effect implements OnChangeListenner<Param> {
 		
 		Details details = new Details(TypeChange.PEDAL_STATUS, state ? 1 : 0);
 
-		ChangeMessage<Effect> message = new ChangeMessage<>(CommonCause.EFFECT, this, details);
+		ChangeMessage<Effect> message = new ChangeMessage<>(MultistompCause.EFFECT, this, details);
 		notify(message);
 	}
 
@@ -64,7 +64,7 @@ public class Effect implements OnChangeListenner<Param> {
 	
 	public void addParam(Param param) {
 		this.params.add(param);
-		param.setOnChangeListenner(this);
+		param.setListenner(this);
 	}
 
 	public List<Param> params() {
@@ -86,16 +86,16 @@ public class Effect implements OnChangeListenner<Param> {
 
 	/*************************************************/
 
-	public void setOnChangeListenner(OnChangeListenner<Effect> listenner) {
+	public void setListenner(OnChangeListenner<Effect> listenner) {
 		this.listenner = Optional.of(listenner);
 	}
 
 	@Override
 	public void onChange(ChangeMessage<Param> message) {
-		ChangeMessage<Effect> newMessage = new ChangeMessage<>(CommonCause.SUPER, this, message);
+		ChangeMessage<Effect> newMessage = new ChangeMessage<>(MultistompCause.SUPER, this, message);
 		notify(newMessage);	
 	}
-	
+
 	private void notify(ChangeMessage<Effect> message) {
 		if (!listenner.isPresent())
 			return;

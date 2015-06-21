@@ -42,6 +42,7 @@ public class KeyboardController {
 		try {
 			//this.pedal = PedalControllerFactory.getPedal(PedalType.G2Nu);
 			pedal = PedalControllerFactory.searchPedal();
+			//pedal.addListenner(message -> System.out.println(message));
 			pedal.on();
 
 		} catch (DeviceNotFoundException e) {
@@ -65,6 +66,8 @@ public class KeyboardController {
 		System.out.println(" - 'C': Get Number of Current Patch");
 		System.out.println(" - 'I': Get Current Patch info");
 		System.out.println(" - 'IO': Pedal info of 'number' patch");
+		System.out.println(" - '?': Set type effect for [number] effect");
+
 		System.out.println(" - 'Exit': To exit");
 	}
 
@@ -126,7 +129,16 @@ public class KeyboardController {
 			};
 			
 			pedal.sendMessage(customMessage(CURRENT_PATCH));
-		}	
+		} else if (action.equals("?")) {
+			byte[] SET_EFFECT_TYPE = {
+				(byte) 0xF0, (byte) 0x52, (byte) 0x00,
+				(byte) 0x5A, (byte) 0x31, (byte) Integer.parseInt(commands[1]),
+				(byte) 0x01, (byte) 0x15, (byte) 0x00,
+				(byte) 0xf7         // |- 0 a 117
+			};
+			
+			pedal.sendMessage(customMessage(SET_EFFECT_TYPE));
+		}
 	}
 
 	private SysexMessage customMessage(byte[] message) {

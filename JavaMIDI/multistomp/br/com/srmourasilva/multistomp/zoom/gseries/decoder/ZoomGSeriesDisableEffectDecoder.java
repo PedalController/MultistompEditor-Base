@@ -2,14 +2,12 @@ package br.com.srmourasilva.multistomp.zoom.gseries.decoder;
 
 import javax.sound.midi.MidiMessage;
 
-import br.com.srmourasilva.domain.message.ChangeMessage;
-import br.com.srmourasilva.domain.message.Details;
-import br.com.srmourasilva.domain.message.Details.TypeChange;
-import br.com.srmourasilva.domain.multistomp.Effect;
+import br.com.srmourasilva.domain.message.CommonCause;
+import br.com.srmourasilva.domain.message.Messages;
+import br.com.srmourasilva.domain.message.Messages.Details;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
-import br.com.srmourasilva.domain.multistomp.Patch;
 
-public class ZoomGSeriesDisableEffectDecoder extends ZoomGSeriesEffectParamDecoder {
+public class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectParamDecoder {
 
 	@Override
 	public boolean isForThis(MidiMessage message) {
@@ -18,12 +16,12 @@ public class ZoomGSeriesDisableEffectDecoder extends ZoomGSeriesEffectParamDecod
 	}
 
 	@Override
-	protected ChangeMessage<Multistomp> decode(Multistomp multistomp, int effect, int param, int value) {
-		Patch patch = multistomp.currentPatch();
-		Effect efeito = multistomp.currentPatch().effects().get(effect);
+	protected Messages decode(Multistomp multistomp, Details details) {
+		details.param = Details.NULL;
+		details.value = Details.NULL;
 
-		Details details = new Details(TypeChange.PEDAL_STATUS, 0);
-	
-		return ChangeMessage.For(multistomp, patch, efeito, details);
+		Messages messages = new Messages();
+		messages.add(CommonCause.DISABLE_EFFECT, details);
+		return messages;
 	}
 }
