@@ -7,10 +7,14 @@ This ambitious project aims to provide a single API for MIDI control pedal ANY m
 
 Example: https://www.youtube.com/watch?v=yWB6dpbQ1xc
 
+Test:
+--------
+Execute EasyEditShare.jar (DoubleClick or java -jar EasyEditShare.jar). Open when the real multistomp has gone be connected on PC.
+ 
 Support:
 --------
 * PedalCompany.ZoomCorp
- * PedalType.G2Nu
+ * ~~PedalType.G2Nu~~
  * PedalType.G3
 
 How to use:

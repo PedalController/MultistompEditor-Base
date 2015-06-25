@@ -1,4 +1,4 @@
-package br.com.srmourasilva.editshare;
+package br.com.srmourasilva.simplepedalcontroller.presenter;
 
 import javax.sound.midi.MidiUnavailableException;
 
@@ -10,15 +10,17 @@ import br.com.srmourasilva.domain.message.Messages.Message;
 import br.com.srmourasilva.multistomp.controller.PedalController;
 import br.com.srmourasilva.multistomp.controller.PedalControllerFactory;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessages;
+import br.com.srmourasilva.simplepedalcontroller.controller.PedalInterface;
 
-public class EasyEditSharePresenter implements OnMultistompListenner {
 
-	private EasyEditShare view;
+public class Presenter implements OnMultistompListenner {
+	private PedalInterface view;
 
-	private PedalController pedal;	
-
-	public EasyEditSharePresenter(EasyEditShare view) {
+	private PedalController pedal;
+	
+	public Presenter(PedalInterface view) {
 		this.view = view;
+		view.setPresenter(this);
 	}
 
 	public void start() {
@@ -41,6 +43,10 @@ public class EasyEditSharePresenter implements OnMultistompListenner {
 		pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
 	}
 
+	/**
+	 * Not usable yet
+	 */
+	@Deprecated
 	public void stop() {
 		if (pedal != null)
 			pedal.off();
@@ -76,16 +82,26 @@ public class EasyEditSharePresenter implements OnMultistompListenner {
 		pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
 	}
 
+	/////////////////////////////////////////////////////
+
 	public void toogleEffectOf(int effect) {
 		this.pedal.toogleEffect(effect);
 	}
 	
 	/////////////////////////////////////////////////////
 
+	/**
+	 * Not usable yet
+	 */
+	@Deprecated
 	public void nextPatch() {
 		this.pedal.nextPatch();
 	}
 	
+	/**
+	 * Not usable yet
+	 */
+	@Deprecated
 	public void beforePatch() {
 		this.pedal.beforePatch();
 	}

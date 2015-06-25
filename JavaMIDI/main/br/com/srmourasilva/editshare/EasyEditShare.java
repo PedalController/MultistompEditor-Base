@@ -28,8 +28,8 @@ public class EasyEditShare extends Application implements EventHandler<ActionEve
 	private EasyEditSharePresenter presenter;
 
 	@Override
-	public void start(Stage primaryStage) {
-		this.stage = primaryStage;
+	public void start(Stage stage) {
+		this.stage = stage;
 
 		GridPane grid = new GridPane();
 
@@ -44,9 +44,11 @@ public class EasyEditShare extends Application implements EventHandler<ActionEve
 		
 		Scene scene = new Scene(grid, 450, 250);
 
-		primaryStage.setTitle("Pedals Status");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		stage.setTitle("Pedals Status");
+		stage.setScene(scene);
+		stage.show();
+		
+		stage.setOnCloseRequest(windowEvent -> this.presenter.stop());
 		
 		this.presenter = new EasyEditSharePresenter(this);
 		this.presenter.start();
