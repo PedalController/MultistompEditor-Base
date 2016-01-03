@@ -1,7 +1,6 @@
 package br.com.srmourasilva.multistomp.zoom.gseries.decoder;
 
 
-
 public class ZoomGSeriesActiveEffectDecoder extends AbstractZoomGSeriesPatchDecoder {
 
 	@Override

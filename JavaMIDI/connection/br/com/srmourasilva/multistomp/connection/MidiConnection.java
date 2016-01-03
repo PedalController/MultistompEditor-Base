@@ -1,6 +1,5 @@
 package br.com.srmourasilva.multistomp.connection;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.sound.midi.MidiMessage;
@@ -10,18 +9,19 @@ import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
 import br.com.srmourasilva.arvore.util.BinarioUtil;
 import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.message.Messages;
+import br.com.srmourasilva.domain.message.MidiMessages;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoderFactory;
 import br.com.srmourasilva.multistomp.connection.codification.MessageEncoder;
 import br.com.srmourasilva.multistomp.connection.codification.MessageEncoderFactory;
 import br.com.srmourasilva.multistomp.connection.transport.MidiReader;
-import br.com.srmourasilva.multistomp.connection.transport.MidiReader.MidiReaderListenner;
+import br.com.srmourasilva.multistomp.connection.transport.MidiReader.MidiReaderListener;
 import br.com.srmourasilva.multistomp.connection.transport.MidiSender;
 
-public class MidiConnection implements MidiReaderListenner {
+public class MidiConnection implements MidiReaderListener {
 
-	public interface OnUpdateListenner {
+	public interface OnUpdateListener {
 		void update(Messages messages);
 	}
 	
@@ -33,14 +33,14 @@ public class MidiConnection implements MidiReaderListenner {
 	private MessageEncoder encoder;
 	private MessageDecoder decoder;	
 
-	private Optional<OnUpdateListenner> listenner = Optional.empty();
+	private Optional<OnUpdateListener> listener = Optional.empty();
 
 	public MidiConnection(Multistomp multistomp, PedalType pedalType) throws DeviceNotFoundException {
 		this.multistomp = multistomp;
 
 		this.sender = new MidiSender(pedalType);
 		this.reader = new MidiReader(pedalType);
-		reader.setListenner(this);
+		reader.setListener(this);
 
 		this.encoder = MessageEncoderFactory.For(pedalType);
 		this.decoder = MessageDecoderFactory.For(pedalType);
@@ -65,7 +65,7 @@ public class MidiConnection implements MidiReaderListenner {
 			this.send(midiMessage);
 	}
 
-	private List<MidiMessage> generateMidiMessages(Messages messages) {
+	private MidiMessages generateMidiMessages(Messages messages) {
 		return encoder.encode(messages);
 	}
 
@@ -78,8 +78,8 @@ public class MidiConnection implements MidiReaderListenner {
 
 	/*************************************************/
 
-	public void setListenner(OnUpdateListenner listenner) {
-		this.listenner = Optional.of(listenner);
+	public void setListener(OnUpdateListener listener) {
+		this.listener = Optional.of(listener);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class MidiConnection implements MidiReaderListenner {
 
 		Messages messagesDecoded = decoder.decode(message, multistomp);
 
-    	if (listenner.isPresent())
-			this.listenner.get().update(messagesDecoded);
+    	if (listener.isPresent())
+			this.listener.get().update(messagesDecoded);
 	}
 }

@@ -13,6 +13,8 @@ public class Messages implements Iterable<Messages.Message> {
 		public int effect = NULL;
 		public int param  = NULL;
 		public int value  = NULL;
+		@Deprecated //FIXME - Futricar no value
+		public Object other = NULL;
 		
 		@Override
 		public String toString() {
@@ -25,6 +27,8 @@ public class Messages implements Iterable<Messages.Message> {
 				retorno += " param=" + param;
 			if (value != NULL)
 				retorno += " value=" + value;
+			if (!other.equals(NULL))
+				retorno += " other=" + other;
 
 			return retorno;
 		}
@@ -98,8 +102,10 @@ public class Messages implements Iterable<Messages.Message> {
 		messages.add(message);
 	}
 
-	public void concatWith(Messages messages) {
+	public Messages concatWith(Messages messages) {
 		messages.forEach(message -> this.add(message));
+
+		return this;
 	}
 
 	@Override
@@ -107,7 +113,7 @@ public class Messages implements Iterable<Messages.Message> {
 		return messages.iterator();
 	}
 
-	public Messages get(Cause cause) {
+	public Messages getBy(Cause cause) {
 		Messages returned = new Messages();
 		
 		for (Message message : this)

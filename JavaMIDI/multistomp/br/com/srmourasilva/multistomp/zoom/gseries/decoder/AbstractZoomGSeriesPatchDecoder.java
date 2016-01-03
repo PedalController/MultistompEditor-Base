@@ -107,12 +107,12 @@ public abstract class AbstractZoomGSeriesPatchDecoder implements MessageDecoder 
 		List<Effect> effects = multistomp.currentPatch().effects();
 
 		Messages messages = Messages.Empty(); 
-		for (int i = 0; i < PATCHES.length; i++) {
-			int patch = PATCHES[i];
+		for (int idPedal = 0; idPedal < PATCHES.length; idPedal++) {
+			int patch = PATCHES[idPedal];
 
 			boolean actived = hasActived(message, patch);
-			if (refressAll() || (actived && !effects.get(i).hasActived()))
-				messages.add(generateMessageFor(actived, i));
+			if (refressAll() || (actived && !effects.get(idPedal).hasActived()))
+				messages.add(generateMessageFor(actived, idPedal));
 		}
 
 		return messages;

@@ -7,34 +7,37 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.SysexMessage;
 
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
-import br.com.srmourasilva.domain.OnMultistompListenner;
+import br.com.srmourasilva.domain.OnMultistompListener;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.MidiConnection;
-import br.com.srmourasilva.multistomp.connection.MidiConnection.OnUpdateListenner;
+import br.com.srmourasilva.multistomp.connection.MidiConnection.OnUpdateListener;
 import br.com.srmourasilva.multistomp.simulator.Log;
 
-public class PedalController implements OnMultistompListenner, OnUpdateListenner {
+public class PedalController implements OnMultistompListener, OnUpdateListener {
 
 	private boolean started;
+	private boolean notifyChangesToDevice = true;
 
 	private Multistomp pedal;
 
 	private MidiConnection connection;
 
-	private List<OnMultistompListenner> controllerListenners = new ArrayList<>();
-	private List<OnMultistompListenner> realMultistompListenners = new ArrayList<>();
+	private List<OnMultistompListener> controllerListeners = new ArrayList<>();
+	private List<OnMultistompListener> realMultistompListeners = new ArrayList<>();
 
 	public PedalController(Multistomp pedal) throws DeviceNotFoundException {
+		this.started = false;
+
 		this.pedal = pedal;
 		
 		this.connection = new MidiConnection(pedal, pedal.getPedalType());
-		this.connection.setListenner(this);
+		this.connection.setListener(this);
 
-		this.pedal.addListenner(this);
+		this.pedal.addListener(this);
 
-		this.controllerListenners.add(new Log("Controller"));
-		this.realMultistompListenners.add(new Log("Real Multistomp"));
+		this.controllerListeners.add(new Log("Controller"));
+		this.realMultistompListeners.add(new Log("Real Multistomp"));
 	}
 
 	/*************************************************/
@@ -49,19 +52,6 @@ public class PedalController implements OnMultistompListenner, OnUpdateListenner
 		connection.start();
 
 		connection.send(pedal.start());
-		realChange = false; // FIXME - GAMBIARRA
-		//onChange(message)
-		//this.connection.send(message)
-		//notify(realMultistompListenners, message)
-		//sleep();
-	}
-	
-	public void sleep() {
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/** Close connection and turn off the pedal
@@ -76,7 +66,7 @@ public class PedalController implements OnMultistompListenner, OnUpdateListenner
 
 	/*************************************************/
 
-	public final boolean getState() {
+	public final boolean hasStated() {
 		return started;
 	}
 
@@ -128,11 +118,20 @@ public class PedalController implements OnMultistompListenner, OnUpdateListenner
 		return this.pedal.currentPatch().effects().size();
 	}
 
-	public void addListenner(OnMultistompListenner listenner) {
-		this.pedal.addListenner(listenner);
+	public void addListener(OnMultistompListener listener) {
+		this.pedal.addListener(listener);
 	}
 
 	/*************************************************/
+	public void disableNotificationChangesToDevice() {
+		this.notifyChangesToDevice = false;
+	}
+
+	public void activeNotificationChangesToDevice() {
+		this.notifyChangesToDevice = true;
+	}
+	/*************************************************/
+
 	public final String toString() {
 		String retorno = "State: ";
 		retorno += started ? "On" : "Off";
@@ -144,31 +143,25 @@ public class PedalController implements OnMultistompListenner, OnUpdateListenner
 	/** Multistomp Change */
 	@Override
 	public synchronized void onChange(Messages messages) {
-		if (realChange) {
-			realChange = false;
+		if (!this.notifyChangesToDevice)
 			return;
-		}
 
 		connection.send(messages);
-		notify(controllerListenners, messages);
+		notify(controllerListeners, messages);
 	}
-
-	private volatile boolean realChange = false;
 
 	/** Real multistomp Change */
 	@Override
 	public synchronized void update(Messages messages) {
-		this.realChange = true;
-
 		MultistompChanger changer = new MultistompChanger(this);
 		messages.forEach(message -> changer.attempt(message));
 
-		notify(realMultistompListenners, messages);
+		notify(realMultistompListeners, messages);
 	}
 
-	private void notify(List<OnMultistompListenner> listenners, Messages messages) {
-		for (OnMultistompListenner listenner : listenners)
-			listenner.onChange(messages);
+	private void notify(List<OnMultistompListener> listeners, Messages messages) {
+		for (OnMultistompListener listener : listeners)
+			listener.onChange(messages);
 	}
 
 	@Deprecated
@@ -178,6 +171,5 @@ public class PedalController implements OnMultistompListenner, OnUpdateListenner
 	
 	public void send(Messages messages) {
 		this.connection.send(messages);
-		this.realChange = true;
 	}
 }

@@ -9,22 +9,31 @@ Example: https://www.youtube.com/watch?v=yWB6dpbQ1xc
 
 Test:
 --------
+
+### Gui
+
 Execute EasyEditShare.jar (DoubleClick or java -jar EasyEditShare.jar). Open when the real multistomp has gone be connected on PC.
+
+### Terminal
+
+Execute br.com.srmourasilva.main.KeyboardController.java
  
 Support:
 --------
 * PedalCompany.ZoomCorp
- * ~~PedalType.G2Nu~~
+ * ~~PedalType.G2Nu~~ (basic, not tested)
  * PedalType.G3
 
 How to use:
 -----------
 
+### Changing
+
 ```java
-// Throws DeviceNotFoundException
+// Throws DeviceNotFoundException if not found
 PedalController multistomp = PedalControllerFactory.searchPedal();
 
-// Init the system, not your pedal hihi
+// Init the system (not your pedal)
 // Throws MidiUnavailableException
 multistomp.on();
 
@@ -51,25 +60,49 @@ System.out.println(pedaleira);
 multistomp.off();
 ```
 
+### Detect changes
+
+You can receive notifications directly from your pedal
+
+```java
+PedalController multistomp = PedalControllerFactory.searchPedal();
+
+pedal.addListener(messages -> {
+	messages.getBy(CommonCause.ACTIVE_EFFECT)
+			.forEach(message -> message.details().effect);
+	messages.getBy(CommonCause.DISABLE_EFFECT)
+			.forEach(message -> message.details().effect);
+
+	messages.getBy(CommonCause.TO_PATCH)
+			.forEach(message -> message.details().patch);
+
+	messages.getBy(CommonCause.PATCH_NAME)
+			.forEach(message -> (String) message.details().other);
+
+	//messages.getBy(CommonCause.SET_PARAM)
+	//		.forEach(message -> System.out.println(pedal));
+});
+```
+
 How to Collabore
 ----------------
 
 Understand the structure:
 
-* src: Classes not refactored yet;
-* Archicheture: The utils of the system;
+* Archicheture: The utils and exceptions of the system;
 * Controller: It offers a simple API to use;
+** MultistompChanger: 
 * Domain: The multistomp structure and message structure;
 * Connection: The connection with Real Multistomp and this lib;
 * Multistomp: Specific implementation for pedals;
-* Test: Junit unit tests;
+* Test: Unit tests;
 * Main: User demonstrations.
 
 ### Define
 
 1. Add PedalCompany in controller.PedalCompany.java;
 2. Add "if" for your pedal company in controller.PedalControllerFactory.java;
-3. Add your multistomp definition in src.PedalType.
+3. Add your multistomp definition in domain.PedalType.
 
 ### Implement
 
@@ -77,6 +110,7 @@ Understand the structure:
 2. Extends domain.Multistomp.java if necessary;
 3. Implements MultistompFactory.java if necessary
 4. Implements MessageEncoder.java for encript the commands in MIDI messages.
+4. Implements MessageDecoder.java for decript the MIDI messages commands.
 
 Thanks for:
 -----------

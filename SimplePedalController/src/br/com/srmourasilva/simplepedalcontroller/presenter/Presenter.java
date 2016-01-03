@@ -3,7 +3,7 @@ package br.com.srmourasilva.simplepedalcontroller.presenter;
 import javax.sound.midi.MidiUnavailableException;
 
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
-import br.com.srmourasilva.domain.OnMultistompListenner;
+import br.com.srmourasilva.domain.OnMultistompListener;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Message;
@@ -13,7 +13,7 @@ import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessages;
 import br.com.srmourasilva.simplepedalcontroller.controller.PedalInterface;
 
 
-public class Presenter implements OnMultistompListenner {
+public class Presenter implements OnMultistompListener {
 	private PedalInterface view;
 
 	private PedalController pedal;
@@ -31,7 +31,7 @@ public class Presenter implements OnMultistompListenner {
 			return;
 		}
 
-		pedal.addListenner(this);
+		pedal.addListener(this);
 
 		try {
 			pedal.on();
@@ -54,12 +54,12 @@ public class Presenter implements OnMultistompListenner {
 
 	@Override
 	public void onChange(Messages messages) {
-		messages.get(CommonCause.ACTIVE_EFFECT).forEach(message -> updateEffect(message, CommonCause.ACTIVE_EFFECT));
-		messages.get(CommonCause.DISABLE_EFFECT).forEach(message -> updateEffect(message, CommonCause.DISABLE_EFFECT));
+		messages.getBy(CommonCause.ACTIVE_EFFECT).forEach(message -> updateEffect(message, CommonCause.ACTIVE_EFFECT));
+		messages.getBy(CommonCause.DISABLE_EFFECT).forEach(message -> updateEffect(message, CommonCause.DISABLE_EFFECT));
 
-		messages.get(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
+		messages.getBy(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
 		
-		messages.get(CommonCause.SET_PARAM).forEach(message -> System.out.println(pedal));
+		messages.getBy(CommonCause.SET_PARAM).forEach(message -> System.out.println(pedal));
 	}
 
 	private void updateEffect(Message message, CommonCause cause) {

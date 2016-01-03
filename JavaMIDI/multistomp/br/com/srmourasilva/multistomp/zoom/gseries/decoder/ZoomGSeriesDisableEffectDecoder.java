@@ -6,7 +6,6 @@ import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Details;
 import br.com.srmourasilva.domain.message.Messages.Message;
-import br.com.srmourasilva.domain.multistomp.Multistomp;
 
 public class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectParamDecoder {
 
@@ -17,7 +16,7 @@ public class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectPa
 	}
 
 	@Override
-	protected Messages decode(Multistomp multistomp, Details details) {
+	protected Messages decode(Details details) {
 		details.param = Details.NULL;
 		details.value = Details.NULL;
 

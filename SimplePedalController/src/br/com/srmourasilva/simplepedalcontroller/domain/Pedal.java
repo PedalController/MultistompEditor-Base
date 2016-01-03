@@ -13,7 +13,7 @@ public class Pedal {
 		this.button = button;
 	}
 
-	public void addListenner(ButtonPressedListener ... arg0) {
+	public void addListener(ButtonPressedListener ... arg0) {
 		this.button.addListener(arg0);
 	}
 

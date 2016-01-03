@@ -6,7 +6,7 @@ import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
 import br.com.srmourasilva.domain.multistomp.message.Details;
 import br.com.srmourasilva.domain.multistomp.message.Details.TypeChange;
 import br.com.srmourasilva.domain.multistomp.message.MultistompCause;
-import br.com.srmourasilva.domain.multistomp.message.OnChangeListenner;
+import br.com.srmourasilva.domain.multistomp.message.OnChangeListener;
 
 public class Param {
 
@@ -19,7 +19,7 @@ public class Param {
 	/** Pula de TANTO em TANTO */
 	private int stepByStep = 1;
 
-	private Optional<OnChangeListenner<Param>> listenner = Optional.empty();
+	private Optional<OnChangeListener<Param>> listener = Optional.empty();
 
 	public Param(String name, int minValue, int maxValue, int defaultValue, int stepByStep) {
 		this.name = name;
@@ -41,7 +41,7 @@ public class Param {
 
 		this.currentValue = newValue;
 		
-		Details details = new Details(TypeChange.PARAM, currentValue);
+		Details<Integer> details = new Details<>(TypeChange.PARAM, currentValue);
 
 		ChangeMessage<Param> message = new ChangeMessage<>(MultistompCause.PATCH, this, details);
 		notify(message);
@@ -52,10 +52,10 @@ public class Param {
 	}
 
 	private void notify(ChangeMessage<Param> message) {
-		if (!listenner.isPresent())
+		if (!listener.isPresent())
 			return;
 
-		listenner.get().onChange(message);
+		listener.get().onChange(message);
 	}
 
 	public final String getName() {
@@ -89,8 +89,8 @@ public class Param {
 
 	/*************************************************/
 
-	public void setListenner(OnChangeListenner<Param> listenner) {
-		this.listenner = Optional.of(listenner);
+	public void setListener(OnChangeListener<Param> listener) {
+		this.listener = Optional.of(listener);
 	}
 	
 	@Override

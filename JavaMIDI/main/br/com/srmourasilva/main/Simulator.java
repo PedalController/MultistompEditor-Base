@@ -10,7 +10,7 @@ public class Simulator {
 		Log log = new Log("Test");
 		
 		Multistomp pedal = new MultistompSimulator(5);
-		pedal.addListenner(log);
+		pedal.addListener(log);
 
 		pedal.toPatch(3);
 		pedal.currentPatch().effects().get(0).active();

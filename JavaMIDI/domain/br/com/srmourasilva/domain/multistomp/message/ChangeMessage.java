@@ -11,7 +11,7 @@ public class ChangeMessage<Causer> {
 
 	private Causer causer;
 	private Cause cause;
-	private Details details;	
+	private Details<?> details;	
 
 	private ChangeMessage<?> nextMessage = null;
 
@@ -19,18 +19,18 @@ public class ChangeMessage<Causer> {
 		return new ChangeMessage<Multistomp>(MultistompCause.NONE, multistomp, Details.NONE());
 	}
 
-	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Details details) {
+	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Details<?> details) {
 		return new ChangeMessage<Multistomp>(MultistompCause.MULTISTOMP, multistomp, details);
 	}
 
-	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Patch patch, Details details) {
+	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Patch patch, Details<?> details) {
 		ChangeMessage<Patch>  patchMsg  = new ChangeMessage<Patch>(MultistompCause.PATCH, patch, details);
 		ChangeMessage<Multistomp> multistompMsg = new ChangeMessage<Multistomp>(MultistompCause.SUPER, multistomp, patchMsg);
 
 		return multistompMsg;
 	}
 
-	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Patch patch, Effect effect, Details details) {
+	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Patch patch, Effect effect, Details<?> details) {
 		ChangeMessage<Effect> effectMsg = new ChangeMessage<Effect>(MultistompCause.EFFECT, effect, details);
 		ChangeMessage<Patch>  patchMsg  = new ChangeMessage<Patch>(MultistompCause.SUPER, patch, effectMsg);
 		ChangeMessage<Multistomp> multistompMsg = new ChangeMessage<Multistomp>(MultistompCause.SUPER, multistomp, patchMsg);
@@ -38,7 +38,7 @@ public class ChangeMessage<Causer> {
 		return multistompMsg;
 	}
 
-	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Patch patch, Effect efeito, Param param, Details details) {
+	public static ChangeMessage<Multistomp> For(Multistomp multistomp, Patch patch, Effect efeito, Param param, Details<?> details) {
 		ChangeMessage<Param>  paramMsg  = new ChangeMessage<Param>(MultistompCause.PARAM, param, details);
 		ChangeMessage<Effect> effectMsg = new ChangeMessage<Effect>(MultistompCause.SUPER, efeito, paramMsg);
 		ChangeMessage<Patch>  patchMsg  = new ChangeMessage<Patch>(MultistompCause.SUPER, patch, effectMsg);
@@ -52,7 +52,7 @@ public class ChangeMessage<Causer> {
 		this.nextMessage = nextMessage;
 	}
 	
-	public ChangeMessage(Cause cause, Causer causer, Details details) {
+	public ChangeMessage(Cause cause, Causer causer, Details<?> details) {
 		this.cause = cause;
 		this.causer = causer;
 		this.details = details;
@@ -69,7 +69,7 @@ public class ChangeMessage<Causer> {
 	}
 	
 	/** Details of what has changed */
-	public Details details() {
+	public Details<?> details() {
 		return details;
 	}
 

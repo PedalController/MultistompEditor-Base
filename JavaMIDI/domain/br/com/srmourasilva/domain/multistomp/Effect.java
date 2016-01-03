@@ -8,9 +8,9 @@ import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
 import br.com.srmourasilva.domain.multistomp.message.Details;
 import br.com.srmourasilva.domain.multistomp.message.Details.TypeChange;
 import br.com.srmourasilva.domain.multistomp.message.MultistompCause;
-import br.com.srmourasilva.domain.multistomp.message.OnChangeListenner;
+import br.com.srmourasilva.domain.multistomp.message.OnChangeListener;
 
-public class Effect implements OnChangeListenner<Param> {
+public class Effect implements OnChangeListener<Param> {
 
 	private int midiId;
 	private String name;
@@ -18,7 +18,7 @@ public class Effect implements OnChangeListenner<Param> {
 
 	private List<Param> params = new ArrayList<Param>();
 
-	private Optional<OnChangeListenner<Effect>> listenner = Optional.empty();
+	private Optional<OnChangeListener<Effect>> listener = Optional.empty();
 
 	public Effect(int midiId, String name) {
 		this.midiId = midiId;
@@ -52,7 +52,7 @@ public class Effect implements OnChangeListenner<Param> {
 	private void setState(boolean state) {
 		this.state = state;
 		
-		Details details = new Details(TypeChange.PEDAL_STATUS, state ? 1 : 0);
+		Details<Integer> details = new Details<>(TypeChange.PEDAL_STATUS, state ? 1 : 0);
 
 		ChangeMessage<Effect> message = new ChangeMessage<>(MultistompCause.EFFECT, this, details);
 		notify(message);
@@ -64,7 +64,7 @@ public class Effect implements OnChangeListenner<Param> {
 	
 	public void addParam(Param param) {
 		this.params.add(param);
-		param.setListenner(this);
+		param.setListener(this);
 	}
 
 	public List<Param> params() {
@@ -86,8 +86,8 @@ public class Effect implements OnChangeListenner<Param> {
 
 	/*************************************************/
 
-	public void setListenner(OnChangeListenner<Effect> listenner) {
-		this.listenner = Optional.of(listenner);
+	public void setListener(OnChangeListener<Effect> listener) {
+		this.listener = Optional.of(listener);
 	}
 
 	@Override
@@ -97,9 +97,9 @@ public class Effect implements OnChangeListenner<Param> {
 	}
 
 	private void notify(ChangeMessage<Effect> message) {
-		if (!listenner.isPresent())
+		if (!listener.isPresent())
 			return;
 
-		listenner.get().onChange(message);
+		listener.get().onChange(message);
 	}
 }

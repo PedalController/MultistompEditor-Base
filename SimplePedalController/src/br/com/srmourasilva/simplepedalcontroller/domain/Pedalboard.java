@@ -9,30 +9,30 @@ import com.pi4j.component.button.ButtonPressedListener;
 
 public class Pedalboard implements ButtonPressedListener {
 	
-	public interface PedalboardListenner {
+	public interface PedalboardListener {
 		public void onClicked(int idPedal);
 	}
 
 	private List<Pedal> pedals;
-	private List<PedalboardListenner> listenners;
+	private List<PedalboardListener> listeners;
 
 	public Pedalboard() {
 		this.pedals = new ArrayList<Pedal>();
 		
-		this.listenners = new ArrayList<>();
+		this.listeners = new ArrayList<>();
 	}
 
 	public void add(Pedal ... pedals) {
 		for (Pedal pedal : pedals) {
 			this.pedals.add(pedal);
-			pedal.addListenner(this);
+			pedal.addListener(this);
 		}
 	}
 
 	@Override
 	public void onButtonPressed(ButtonEvent event) {
 		final int idPedal = getIdPedalBy(event.getButton());
-		listenners.forEach(listenner -> listenner.onClicked(idPedal));
+		listeners.forEach(listener -> listener.onClicked(idPedal));
 	}
 
 	private int getIdPedalBy(Button button) {
@@ -46,9 +46,9 @@ public class Pedalboard implements ButtonPressedListener {
 		return -1;
 	}
 	
-	public void add(PedalboardListenner ... listenners) {
-		for (PedalboardListenner listenner : listenners)
-			this.listenners.add(listenner);
+	public void add(PedalboardListener ... listeners) {
+		for (PedalboardListener listener : listeners)
+			this.listeners.add(listener);
 	}
 
 	public void active(int effect) {

@@ -14,11 +14,11 @@ import br.com.srmourasilva.domain.PedalType;
  */
 public class MidiReader extends MidiTransmition implements Receiver {
 
-	public static interface MidiReaderListenner {
+	public static interface MidiReaderListener {
 		void onDataReceived(MidiMessage message);
 	}
 	
-	private MidiReaderListenner listenner;
+	private MidiReaderListener listener;
 
 	public MidiReader(PedalType pedalType) throws DeviceNotFoundException {
 		super(pedalType);
@@ -51,14 +51,14 @@ public class MidiReader extends MidiTransmition implements Receiver {
 
 	/*************************************************/
 
-	public void setListenner(MidiReaderListenner listenner) {
-		this.listenner = listenner;
+	public void setListener(MidiReaderListener listener) {
+		this.listener = listener;
 	}
 
 	@Override public void close() {}
 
 	@Override
 	public void send(MidiMessage message, long arg1) {
-		listenner.onDataReceived(message);
+		listener.onDataReceived(message);
 	}
 }

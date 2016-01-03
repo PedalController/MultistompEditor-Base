@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.srmourasilva.architecture.exception.ImplemetationException;
-import br.com.srmourasilva.domain.OnMultistompListenner;
+import br.com.srmourasilva.domain.OnMultistompListener;
 import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
 import br.com.srmourasilva.domain.multistomp.message.Details;
 import br.com.srmourasilva.domain.multistomp.message.Details.TypeChange;
 import br.com.srmourasilva.domain.multistomp.message.MultistompCause;
-import br.com.srmourasilva.domain.multistomp.message.OnChangeListenner;
+import br.com.srmourasilva.domain.multistomp.message.OnChangeListener;
 
-public abstract class Multistomp implements OnChangeListenner<Patch> {
+public abstract class Multistomp implements OnChangeListener<Patch> {
 
-	private List<OnMultistompListenner> listenners = new ArrayList<>();
+	private List<OnMultistompListener> listeners = new ArrayList<>();
 
 	private List<Patch> patchs = new ArrayList<Patch>();
 
@@ -31,7 +31,7 @@ public abstract class Multistomp implements OnChangeListenner<Patch> {
 
 	protected void addPatch(Patch patch) {
 		patchs.add(patch);
-		patch.setListenner(this);
+		patch.setListener(this);
 	}
 
 	public Patch currentPatch() {
@@ -63,7 +63,7 @@ public abstract class Multistomp implements OnChangeListenner<Patch> {
 
 		idCurrentPatch = index;
 		
-		Details details = new Details(TypeChange.PATCH_NUMBER, idCurrentPatch);
+		Details<Integer> details = new Details<>(TypeChange.PATCH_NUMBER, idCurrentPatch);
 
 		ChangeMessage<Multistomp> newMessage = new ChangeMessage<>(MultistompCause.MULTISTOMP, this, details);
 		this.notify(newMessage);
@@ -90,12 +90,12 @@ public abstract class Multistomp implements OnChangeListenner<Patch> {
 
 	/*************************************************/
 
-	public void addListenner(OnMultistompListenner listenner) {
-		this.listenners.add(listenner);
+	public void addListener(OnMultistompListener listener) {
+		this.listeners.add(listener);
 	}
 	
-	public List<OnMultistompListenner> listenners() {
-		return this.listenners;
+	public List<OnMultistompListener> listeners() {
+		return this.listeners;
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public abstract class Multistomp implements OnChangeListenner<Patch> {
 	private void notify(ChangeMessage<Multistomp> message) {
 		Messages messages = MultistompMessagesConverter.convert(message);
 
-		listenners.forEach(listenner -> listenner.onChange(messages));
+		listeners.forEach(listener -> listener.onChange(messages));
 	}
 
 	/*************************************************/

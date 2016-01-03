@@ -1,8 +1,5 @@
 package br.com.srmourasilva.multistomp.zoom.g2nu;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
 import javax.sound.midi.ShortMessage;
@@ -10,8 +7,10 @@ import javax.sound.midi.ShortMessage;
 import br.com.srmourasilva.domain.message.Cause;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
-import br.com.srmourasilva.domain.message.Messages.Message;
+import br.com.srmourasilva.domain.message.MidiMessages;
 import br.com.srmourasilva.multistomp.connection.codification.MessageEncoder;
+import br.com.srmourasilva.util.MidiMessagesGenerator;
+import br.com.srmourasilva.util.MidiMessagesGenerator.MidiMessageGenerator;
 
 public class ZoomG2NuMessageEncoder implements MessageEncoder {
 	
@@ -22,38 +21,49 @@ public class ZoomG2NuMessageEncoder implements MessageEncoder {
 	private static final int SET_STATE_EFFECT= ShortMessage.CONTROL_CHANGE;
 
 	@Override
-	public List<MidiMessage> encode(Messages messages) {
-		List<MidiMessage> retorno = new ArrayList<>();
+	public MidiMessages encode(Messages messages) {
+		MidiMessagesGenerator generator = new MidiMessagesGenerator(messages);
 
-		messages.get(CommonCause.TO_PATCH).forEach(message -> retorno.add(encodeMultistompChange(message)));
+		generator.forEachOfType(CommonCause.TO_PATCH)
+				 .generate(encodeMultistompChange());
 
-		messages.get(CommonCause.ACTIVE_EFFECT).forEach(message -> retorno.add(encodeEffectChange(message, CommonCause.ACTIVE_EFFECT)));
-		messages.get(CommonCause.DISABLE_EFFECT).forEach(message -> retorno.add(encodeEffectChange(message, CommonCause.DISABLE_EFFECT)));
+		generator.forEachOfType(CommonCause.ACTIVE_EFFECT)
+		 		 .generate(encodeEffectChange(CommonCause.ACTIVE_EFFECT));
+		generator.forEachOfType(CommonCause.DISABLE_EFFECT)
+				 .generate(encodeEffectChange(CommonCause.DISABLE_EFFECT));
 
-		return retorno;
+		return generator.generateMidiMessages();
 	}
 
-	private MidiMessage encodeMultistompChange(Message message) {
-		int patch = message.details().patch;
+	private MidiMessageGenerator encodeMultistompChange() {
+		return message -> {
+			int patch = message.details().patch;
 
-		try {
-			return new ShortMessage(SET_PATH, 0, patch, 0);
-		} catch (InvalidMidiDataException e) {
-			throw new RuntimeException(e);
-		}
+			MidiMessage messageGenerated = shortMessage(SET_PATH, 0, patch, 0);
+
+			return new MidiMessages().concatWith(messageGenerated);
+		};
 	}
 	
-	private MidiMessage encodeEffectChange(Message message, Cause cause) {
-		int effect = message.details().effect;
+	private MidiMessageGenerator encodeEffectChange(Cause cause) {
+		return message -> {
+			int effect = message.details().effect;
 
-		boolean actived = cause == CommonCause.ACTIVE_EFFECT;
+			boolean actived = cause == CommonCause.ACTIVE_EFFECT;
 
-		int byteActived = actived ? STATE_ON : STATE_OFF;
+			int byteActived = actived ? STATE_ON : STATE_OFF;
 
+			MidiMessage messageGenerated = shortMessage(SET_STATE_EFFECT, 0, effect, byteActived);
+
+			return new MidiMessages().concatWith(messageGenerated);
+		};
+	}
+
+	private ShortMessage shortMessage(int command, int channel, int data1, int data2) {
 		try {
-			return new ShortMessage(SET_STATE_EFFECT, 0, effect, byteActived);
+			return new ShortMessage(command, channel, data1, data2);
 		} catch (InvalidMidiDataException e) {
 			throw new RuntimeException(e);
-		}
+		} 
 	}
 }

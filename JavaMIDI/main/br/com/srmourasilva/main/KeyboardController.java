@@ -43,7 +43,7 @@ public class KeyboardController {
 		try {
 			//this.pedal = PedalControllerFactory.getPedal(PedalType.G2Nu);
 			pedal = PedalControllerFactory.searchPedal();
-			//pedal.addListenner(message -> System.out.println(message));
+			//pedal.addListener(message -> System.out.println(message));
 			pedal.on();
 
 		} catch (DeviceNotFoundException e) {

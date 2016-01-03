@@ -44,8 +44,8 @@ public abstract class AbstractZoomGSeriesEffectParamDecoder implements MessageDe
 		details.param = message.getMessage()[PARAM] - 2;
 		details.value = 128 * message.getMessage()[VALUE + 1] + message.getMessage()[VALUE];
 
-		return decode(multistomp, details);
+		return decode(details);
 	}
 
-	protected abstract Messages decode(Multistomp multistomp, Details details);
+	protected abstract Messages decode(Details details);
 }

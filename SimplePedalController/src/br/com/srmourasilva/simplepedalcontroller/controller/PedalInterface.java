@@ -1,10 +1,10 @@
 package br.com.srmourasilva.simplepedalcontroller.controller;
 
 import br.com.srmourasilva.simplepedalcontroller.domain.Pedalboard;
-import br.com.srmourasilva.simplepedalcontroller.domain.Pedalboard.PedalboardListenner;
+import br.com.srmourasilva.simplepedalcontroller.domain.Pedalboard.PedalboardListener;
 import br.com.srmourasilva.simplepedalcontroller.presenter.Presenter;
 
-public class PedalInterface implements PedalboardListenner {
+public class PedalInterface implements PedalboardListener {
 	
 	private Pedalboard pedalboard;
 	private Presenter presenter;

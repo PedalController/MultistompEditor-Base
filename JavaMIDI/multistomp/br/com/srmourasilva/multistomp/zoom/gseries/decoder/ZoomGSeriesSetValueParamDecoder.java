@@ -6,7 +6,6 @@ import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Details;
 import br.com.srmourasilva.domain.message.Messages.Message;
-import br.com.srmourasilva.domain.multistomp.Multistomp;
 
 /**
  * f0 52 00 5a 31   05    02   02   00 f7
@@ -21,7 +20,7 @@ public class ZoomGSeriesSetValueParamDecoder extends AbstractZoomGSeriesEffectPa
 	}
 
 	@Override
-	protected Messages decode(Multistomp multistomp, Details details) {
+	protected Messages decode(Details details) {
 		return Messages.For(new Message(CommonCause.SET_PARAM, details));
 	}
 }
