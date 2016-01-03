@@ -3,7 +3,6 @@ package br.com.srmourasilva.multistomp.simulator;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
@@ -43,10 +42,5 @@ public class MultistompSimulator extends Multistomp {
 	@Override
 	public Messages start() {
 		return Messages.Empty();
-	}
-
-	@Override
-	public PedalType getPedalType() {
-		return PedalType.Null;
 	}
 }

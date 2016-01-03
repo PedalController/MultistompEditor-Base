@@ -18,7 +18,6 @@ public class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectPa
 	@Override
 	protected Messages decode(Details details) {
 		details.param = Details.NULL;
-		details.value = Details.NULL;
 
 		return Messages.For(new Message(CommonCause.DISABLE_EFFECT, details));
 	}

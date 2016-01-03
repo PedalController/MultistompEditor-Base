@@ -15,7 +15,7 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 
 	private EasyEditShare view;
 
-	private PedalController pedal;	
+	private PedalController pedal;
 
 	public EasyEditSharePresenter(EasyEditShare view) {
 		this.view = view;

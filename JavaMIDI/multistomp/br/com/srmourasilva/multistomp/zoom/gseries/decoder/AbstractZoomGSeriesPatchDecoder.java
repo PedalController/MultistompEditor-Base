@@ -111,14 +111,12 @@ public abstract class AbstractZoomGSeriesPatchDecoder implements MessageDecoder 
 			int patch = PATCHES[idPedal];
 
 			boolean actived = hasActived(message, patch);
-			if (refressAll() || (actived && !effects.get(idPedal).hasActived()))
+			if (actived && !effects.get(idPedal).hasActived())
 				messages.add(generateMessageFor(actived, idPedal));
 		}
 
 		return messages;
 	}
-
-	protected abstract boolean refressAll();
 
 	protected abstract int[] patches();
 

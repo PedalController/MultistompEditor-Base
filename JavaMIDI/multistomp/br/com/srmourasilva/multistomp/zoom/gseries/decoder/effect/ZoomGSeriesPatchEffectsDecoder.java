@@ -1,4 +1,4 @@
-package br.com.srmourasilva.multistomp.zoom.gseries.decoder.patcheffects;
+package br.com.srmourasilva.multistomp.zoom.gseries.decoder.effect;
 
 import javax.sound.midi.MidiMessage;
 

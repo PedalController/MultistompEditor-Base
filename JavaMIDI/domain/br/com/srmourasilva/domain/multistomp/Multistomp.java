@@ -5,7 +5,6 @@ import java.util.List;
 
 import br.com.srmourasilva.architecture.exception.ImplemetationException;
 import br.com.srmourasilva.domain.OnMultistompListener;
-import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.message.ChangeMessage;
 import br.com.srmourasilva.domain.multistomp.message.Details;
@@ -20,14 +19,6 @@ public abstract class Multistomp implements OnChangeListener<Patch> {
 	private List<Patch> patchs = new ArrayList<Patch>();
 
 	private int idCurrentPatch = 0;
-
-	/*************************************************/
-
-	@Deprecated
-	public abstract PedalType getPedalType();
-
-
-	/*************************************************/
 
 	protected void addPatch(Patch patch) {
 		patchs.add(patch);

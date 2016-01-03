@@ -12,9 +12,4 @@ public class ZoomGSeriesActiveEffectDecoder extends AbstractZoomGSeriesPatchDeco
 	protected int[] patches() {
 		return new int[] {6, 19, 33, 47, 60, 74};
 	}
-
-	@Override
-	protected boolean refressAll() {
-		return false;
-	}
 }

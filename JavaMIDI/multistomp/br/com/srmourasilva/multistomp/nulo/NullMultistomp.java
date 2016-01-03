@@ -1,6 +1,5 @@
 package br.com.srmourasilva.multistomp.nulo;
 
-import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Patch;
@@ -12,11 +11,6 @@ public class NullMultistomp extends Multistomp {
 	public NullMultistomp() {
 		this.addPatch(new Patch(0));
 		System.out.println(MSG_ERROR);
-	}
-
-	@Override
-	public PedalType getPedalType() {
-		return PedalType.Null;
 	}
 
 	@Override

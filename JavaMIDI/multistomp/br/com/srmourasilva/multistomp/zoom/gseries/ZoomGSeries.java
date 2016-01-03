@@ -3,14 +3,13 @@ package br.com.srmourasilva.multistomp.zoom.gseries;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.domain.multistomp.Patch;
 
 /** For:
- *  - Zoom G3
+ *  - Zoom G3v2
  *  - Zoom G5
  *  - Zoom Ms-50G
  *  - Zoom Ms-70cd
@@ -66,10 +65,5 @@ public class ZoomGSeries extends Multistomp {
 		messages.concatWith(ZoomGSeriesMessages.YOU_CAN_TALK());
 
 		return messages;
-	}
-
-	@Override
-	public PedalType getPedalType() {
-		return PedalType.G3; // FIXME
 	}
 }

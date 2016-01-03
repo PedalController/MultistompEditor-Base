@@ -18,7 +18,7 @@ public class PedalControllerFactory {
 			if (isConnected(multistomp))
 				return getPedal(multistomp);
 
-		return new PedalController(new NullMultistomp(), null);
+		throw new DeviceNotFoundException("Has a device connected in this PC?");
 	}
 	
 	private static boolean isConnected(PedalType multistomp) {

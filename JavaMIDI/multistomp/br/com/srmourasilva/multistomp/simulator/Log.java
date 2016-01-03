@@ -13,9 +13,9 @@ public class Log implements OnMultistompListener {
 	}
 
 	@Override
-	public void onChange(Messages messages) {
+	public synchronized void onChange(Messages messages) {
 		for (Message message : messages) {
-			System.err.println("LOG:: " + type);
+			System.out.println("LOG:: " + type);
 			System.out.println("LOG:: " + message);
 		}
 	}
