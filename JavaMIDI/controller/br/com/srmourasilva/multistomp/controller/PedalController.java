@@ -26,12 +26,12 @@ public class PedalController implements OnMultistompListener, OnUpdateListener {
 	private List<OnMultistompListener> controllerListeners = new ArrayList<>();
 	private List<OnMultistompListener> realMultistompListeners = new ArrayList<>();
 
-	public PedalController(Multistomp pedal) throws DeviceNotFoundException {
+	public PedalController(Multistomp pedal, MidiConnection conection) throws DeviceNotFoundException {
 		this.started = false;
 
 		this.pedal = pedal;
-		
-		this.connection = new MidiConnection(pedal, pedal.getPedalType());
+
+		this.connection = conection;
 		this.connection.setListener(this);
 
 		this.pedal.addListener(this);

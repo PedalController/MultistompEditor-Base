@@ -12,9 +12,7 @@ public class Messages implements Iterable<Messages.Message> {
 		public int patch  = NULL;
 		public int effect = NULL;
 		public int param  = NULL;
-		public int value  = NULL;
-		@Deprecated //FIXME - Futricar no value
-		public Object other = NULL;
+		public Object value    = null;
 		
 		@Override
 		public String toString() {
@@ -25,10 +23,8 @@ public class Messages implements Iterable<Messages.Message> {
 				retorno += " effect=" + effect;
 			if (param != NULL)
 				retorno += " param=" + param;
-			if (value != NULL)
+			if (value != null)
 				retorno += " value=" + value;
-			if (!other.equals(NULL))
-				retorno += " other=" + other;
 
 			return retorno;
 		}
@@ -91,7 +87,7 @@ public class Messages implements Iterable<Messages.Message> {
 	private Messages() {}
 
 	public void add(Cause cause) {
-		add(cause, new Details());		
+		add(cause, new Details());
 	}
 
 	public void add(Cause cause, Details details) {

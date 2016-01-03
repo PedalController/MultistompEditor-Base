@@ -3,6 +3,7 @@ package br.com.srmourasilva.multistomp.controller;
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
 import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
+import br.com.srmourasilva.multistomp.connection.MidiConnection;
 import br.com.srmourasilva.multistomp.connection.transport.MidiTransmition;
 import br.com.srmourasilva.multistomp.nulo.NullMultistomp;
 import br.com.srmourasilva.multistomp.zoom.ZoomMultistompFactory;
@@ -17,7 +18,7 @@ public class PedalControllerFactory {
 			if (isConnected(multistomp))
 				return getPedal(multistomp);
 
-		return new PedalController(new NullMultistomp());
+		return new PedalController(new NullMultistomp(), null);
 	}
 	
 	private static boolean isConnected(PedalType multistomp) {
@@ -40,6 +41,8 @@ public class PedalControllerFactory {
 		else
 			pedal = new NullMultistomp();
 
-		return new PedalController(pedal);
+		MidiConnection midiConnection = new MidiConnection(pedal, pedalType);
+
+		return new PedalController(pedal, midiConnection);
 	}
 }

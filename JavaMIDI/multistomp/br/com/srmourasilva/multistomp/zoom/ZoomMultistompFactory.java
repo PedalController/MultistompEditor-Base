@@ -13,8 +13,8 @@ public class ZoomMultistompFactory implements MultistompFactory {
 		if (type == PedalType.G2Nu)
 			return new ZoomG2Nu();
 		else if (type == PedalType.G3)
-			return new ZoomGSeries(100, 6, 8);
+			return new ZoomGSeries(100, 6);
 		else
-			return new ZoomGSeries(0, 5, 9);
+			return new ZoomGSeries(0, 5);
 	}
 }

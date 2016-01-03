@@ -46,7 +46,7 @@ class MultistompMessagesConverter {
 
 		Details details = new Details();
 
-		details.other = message.realMessage().details().newValue();
+		details.value = message.realMessage().details().newValue();
 
 		return new Message(CommonCause.PATCH_NAME, details);
 	}

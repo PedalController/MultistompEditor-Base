@@ -33,12 +33,12 @@ class MultistompChanger {
 		else if (message.is(CommonCause.SET_PARAM)) {
 			int idEffect = message.details().effect;
 			int idParam  = message.details().param;
-			int newValue = message.details().value;
+			int newValue = (int) message.details().value;
 
 			controller.setEffectParam(idEffect, idParam, newValue);
 
 		} else if (message.is(CommonCause.PATCH_NAME)) {
-			String name = (String) message.details().other;
+			String name = (String) message.details().value;
 			this.controller.multistomp().currentPatch().setName(name);
 		}
 

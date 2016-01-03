@@ -83,7 +83,7 @@ public class ZoomGSeriesMessageEncoder implements MessageEncoder {
 		return message -> {
 			int effect = message.details().effect;
 			int param  = message.details().param;
-			int value  = message.details().value;
+			int value  = (int) message.details().value;
 	
 			MidiMessage messageGenerated = manupuleEffect(effect, param + PARAM_EFFECT, value);
 
@@ -94,7 +94,7 @@ public class ZoomGSeriesMessageEncoder implements MessageEncoder {
 	private MidiMessageGenerator setEffect() {
 		return message -> {
 			int effect = message.details().effect;
-			int value  = message.details().value;
+			int value  = (int) message.details().value;
 			
 			MidiMessage messageGenerated = manupuleEffect(effect, CHANGE_EFFECT, value);
 	

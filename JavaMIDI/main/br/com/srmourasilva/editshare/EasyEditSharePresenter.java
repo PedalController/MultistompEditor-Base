@@ -52,7 +52,7 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 		messages.getBy(CommonCause.DISABLE_EFFECT).forEach(message -> updateEffect(message, CommonCause.DISABLE_EFFECT));
 
 		messages.getBy(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
-		messages.getBy(CommonCause.PATCH_NAME).forEach(message -> updateTitle((String) message.details().other));
+		messages.getBy(CommonCause.PATCH_NAME).forEach(message -> updateTitle((String) message.details().value));
 		
 		messages.getBy(CommonCause.SET_PARAM).forEach(message -> System.out.println(pedal));
 	}

@@ -27,7 +27,7 @@ public class ZoomGSeriesPatchNameDecoder implements MessageDecoder {
 	@Override
 	public Messages decode(MidiMessage midiMessage, Multistomp multistomp) {
 		Message message = new Message(CommonCause.PATCH_NAME);
-        message.details().other = this.getNameBy(midiMessage);
+        message.details().value = this.getNameBy(midiMessage);
 
 		return Messages.For(message);
 	}

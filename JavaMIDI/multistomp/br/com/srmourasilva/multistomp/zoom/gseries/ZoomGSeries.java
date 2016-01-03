@@ -21,17 +21,14 @@ public class ZoomGSeries extends Multistomp {
 
 	private final int TOTAL_PATCHS;
 	private final int TOTAL_EFFECTS;
-	@Deprecated
-	private final int SIZE_PARAMS;
 
 	/**
 	 * @param sizePatchs   Max Patches that Pedal may have  
 	 * @param totalEffects Max Effects that Patches may have
 	 */
-	public ZoomGSeries(int totalPatchs, int totalEffects, @Deprecated int totalParams) {
+	public ZoomGSeries(int totalPatchs, int totalEffects) {
 		TOTAL_PATCHS = totalPatchs;
 		TOTAL_EFFECTS = totalEffects;
-		SIZE_PARAMS = totalParams;
 
 		List<Patch> patchs = createPatchs(TOTAL_PATCHS);
 
@@ -57,7 +54,6 @@ public class ZoomGSeries extends Multistomp {
 		List<Effect> effects = new ArrayList<Effect>();
 
 		for (int i=0; i < totalEffects; i++)
-			//effects.add(new ZoomGenericEffect(i, "Position "+i, SIZE_PARAMS));
 			effects.add(ZoomGSeriesEffect.COMP.generate());
 
 		return effects;
