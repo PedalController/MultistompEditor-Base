@@ -4,6 +4,10 @@ import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.domain.multistomp.Param;
 import br.com.srmourasilva.multistomp.zoom.ZoomEffect;
 
+/**
+ * @deprecated Use ZoomG3V2Pedals
+ */
+@Deprecated
 public enum ZoomGSeriesEffect implements ZoomEffect {
 	COMP {
 		@Override

@@ -1,10 +1,22 @@
 package br.com.srmourasilva.multistomp.zoom.gseries;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.eclipsesource.json.JsonValue;
+
+import br.com.srmourasilva.domain.multistomp.Effect;
+import br.com.srmourasilva.domain.multistomp.Param;
+
 public class ZoomG3V2Pedals {
-	public static Map<Integer, String> getPedals() {
+	public static Map<Integer, String> getEffectsNames() {
 		Map<Integer, String> retorno = new HashMap<>();
 
 		retorno.put(0, "M-Filter");
@@ -126,5 +138,47 @@ public class ZoomG3V2Pedals {
 		retorno.put(116, "VX JMI");
 		
 		return retorno;
+	}
+
+	public static Effect getEffect(int idEffect) throws IOException {
+		String fileName = "D:\\Mateus\\JavaPedalMIDI\\JavaMIDI\\multistomp\\br\\com\\srmourasilva\\multistomp\\zoom\\gseries\\zoom-G3X-defaults-min.json";
+		Map<String, JsonObject> jsonEffects = readJsonEffectsOf(fileName);
+
+		Effect effect = new Effect(idEffect, getEffectsNames().get(idEffect));
+		
+		JsonArray controllers = jsonEffects.get(effect.getName()).get("Ctrl").asArray();
+
+		for (JsonValue controller : controllers)
+			effect.addParam(generateParam(controller.asObject()));
+
+		return effect;
+	}
+
+	private static Map<String, JsonObject> readJsonEffectsOf(String fileName) throws FileNotFoundException, IOException {
+		Reader reader = new FileReader(fileName);
+		JsonObject value = Json.parse(reader).asObject();
+		reader.close();
+
+		JsonArray effects = value.get("Effect").asArray();
+		
+		Map<String, JsonObject> jsonEffects = new HashMap<>();
+		for (JsonValue effect : effects)
+			jsonEffects.put(effect.asObject().get("name").asString(), effect.asObject());
+
+		return jsonEffects;
+	}
+
+	private static Param generateParam(JsonObject param) {
+		return new Param(
+			param.get("name").asString(),
+			0,
+			Integer.parseInt(param.get("max").asString()),
+			Integer.parseInt(param.get("default").asString()),
+			1
+		);
+	}
+
+	public static void main(String[] args) throws IOException {
+		System.out.println(getEffect(116));
 	}
 }
