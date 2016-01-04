@@ -5,7 +5,7 @@ import javax.sound.midi.MidiMessage;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
-import br.com.srmourasilva.multistomp.zoom.gseries.ZoomG3V2Pedals;
+import br.com.srmourasilva.multistomp.zoom.gseries.ZoomG3v2Pedals;
 
 public class ZoomGSeriesPatchEffectsTypeDecoder implements MessageDecoder {
 
@@ -20,13 +20,15 @@ public class ZoomGSeriesPatchEffectsTypeDecoder implements MessageDecoder {
 
 	@Override
 	public Messages decode(MidiMessage message, Multistomp multistomp) {
+		byte[] data = message.getMessage();
+		
 		System.out.println("Pedals type:");
-		System.out.println(" 1º :"  + (ZoomG3V2Pedals.getEffectsNames().get(pedal(0, message.getMessage()))));
-		System.out.println(" 2º :" + (ZoomG3V2Pedals.getEffectsNames().get(pedal(1, message.getMessage()))));
-		System.out.println(" 3º :" + (ZoomG3V2Pedals.getEffectsNames().get(pedal(2, message.getMessage()))));
-		System.out.println(" 4º :" + (ZoomG3V2Pedals.getEffectsNames().get(pedal(3, message.getMessage()))));
-		System.out.println(" 5º :" + (ZoomG3V2Pedals.getEffectsNames().get(pedal(4, message.getMessage()))));
-		System.out.println(" 6º :" + (ZoomG3V2Pedals.getEffectsNames().get(pedal(5, message.getMessage()))));
+		System.out.println(" 1º :" + ZoomG3v2Pedals.instance.getEffect(pedal(0, data)));
+		System.out.println(" 2º :" + ZoomG3v2Pedals.instance.getEffect(pedal(1, data)));
+		System.out.println(" 3º :" + ZoomG3v2Pedals.instance.getEffect(pedal(2, data)));
+		System.out.println(" 4º :" + ZoomG3v2Pedals.instance.getEffect(pedal(3, data)));
+		System.out.println(" 5º :" + ZoomG3v2Pedals.instance.getEffect(pedal(4, data)));
+		System.out.println(" 6º :" + ZoomG3v2Pedals.instance.getEffect(pedal(5, data)));
 
 		return Messages.Empty();
 	}
