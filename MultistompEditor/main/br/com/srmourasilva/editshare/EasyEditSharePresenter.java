@@ -1,4 +1,4 @@
-package br.com.srmourasilva.simplepedalcontroller.presenter;
+package br.com.srmourasilva.editshare;
 
 import javax.sound.midi.MidiUnavailableException;
 
@@ -10,17 +10,15 @@ import br.com.srmourasilva.domain.message.Messages.Message;
 import br.com.srmourasilva.multistomp.controller.PedalController;
 import br.com.srmourasilva.multistomp.controller.PedalControllerFactory;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessages;
-import br.com.srmourasilva.simplepedalcontroller.controller.PedalInterface;
 
+public class EasyEditSharePresenter implements OnMultistompListener {
 
-public class Presenter implements OnMultistompListener {
-	private PedalInterface view;
+	private EasyEditShare view;
 
 	private PedalController pedal;
-	
-	public Presenter(PedalInterface view) {
+
+	public EasyEditSharePresenter(EasyEditShare view) {
 		this.view = view;
-		view.setPresenter(this);
 	}
 
 	public void start() {
@@ -43,10 +41,6 @@ public class Presenter implements OnMultistompListener {
 		pedal.send(ZoomGSeriesMessages.REQUEST_CURRENT_PATCH_NUMBER());
 	}
 
-	/**
-	 * Not usable yet
-	 */
-	@Deprecated
 	public void stop() {
 		if (pedal != null)
 			pedal.off();
@@ -58,15 +52,19 @@ public class Presenter implements OnMultistompListener {
 		messages.getBy(CommonCause.EFFECT_DISABLE).forEach(message -> updateEffect(message, CommonCause.EFFECT_DISABLE));
 
 		messages.getBy(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
+		messages.getBy(CommonCause.PATCH_NAME).forEach(message -> updateTitle((String) message.details().value));
 		
-		messages.getBy(CommonCause.PARAM_CHANGED).forEach(message -> System.out.println(pedal));
+		//messages.getBy(CommonCause.PARAM_CHANGED).forEach(message -> System.out.println(pedal));
+
+		//messages.getBy(CommonCause.EFFECT_CHANGED).forEach(message -> System.out.println(message));
 	}
 
 	private void updateEffect(Message message, CommonCause cause) {
 		int patch  = message.details().patch;
 		int effect = message.details().effect;
 
-		if (patch != pedal.multistomp().getIdCurrentPatch())
+		boolean otherPatch = patch != pedal.multistomp().getIdCurrentPatch();
+		if (otherPatch)
 			return;
 
 		if (cause == CommonCause.EFFECT_ACTIVE)
@@ -77,12 +75,15 @@ public class Presenter implements OnMultistompListener {
 	
 	private void setPatch(Message message) {
 		int idPatch = message.details().patch;
-		view.setTitle("Patch: " + idPatch);
 
 		pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
 	}
+	
 
-	/////////////////////////////////////////////////////
+	private void updateTitle(String other) {
+		view.setTitle(pedal.multistomp().currentPatch().toString());
+	}
+
 
 	public void toogleEffectOf(int effect) {
 		this.pedal.toogleEffect(effect);
@@ -90,18 +91,10 @@ public class Presenter implements OnMultistompListener {
 	
 	/////////////////////////////////////////////////////
 
-	/**
-	 * Not usable yet
-	 */
-	@Deprecated
 	public void nextPatch() {
 		this.pedal.nextPatch();
 	}
 	
-	/**
-	 * Not usable yet
-	 */
-	@Deprecated
 	public void beforePatch() {
 		this.pedal.beforePatch();
 	}
