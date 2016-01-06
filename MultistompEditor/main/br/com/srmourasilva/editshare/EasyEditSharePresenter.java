@@ -7,6 +7,7 @@ import br.com.srmourasilva.domain.OnMultistompListener;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Message;
+import br.com.srmourasilva.domain.multistomp.Effect;
 import br.com.srmourasilva.multistomp.controller.PedalController;
 import br.com.srmourasilva.multistomp.controller.PedalControllerFactory;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessages;
@@ -56,7 +57,7 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 		
 		//messages.getBy(CommonCause.PARAM_CHANGED).forEach(message -> System.out.println(pedal));
 
-		//messages.getBy(CommonCause.EFFECT_CHANGED).forEach(message -> System.out.println(message));
+		messages.getBy(CommonCause.EFFECT_CHANGED).forEach(message -> updateEffect(message, CommonCause.EFFECT_CHANGED));
 	}
 
 	private void updateEffect(Message message, CommonCause cause) {
@@ -69,8 +70,11 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 
 		if (cause == CommonCause.EFFECT_ACTIVE)
 			view.active(effect);
-		else
+		else if (cause == CommonCause.EFFECT_DISABLE)
 			view.disable(effect);
+
+		else if (cause == CommonCause.EFFECT_CHANGED)
+			view.setPedalName(effect, pedal.multistomp().currentPatch().effects().get(effect).getName());
 	}
 	
 	private void setPatch(Message message) {
@@ -78,15 +82,18 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 
 		pedal.send(ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch));
 	}
-	
 
-	private void updateTitle(String other) {
-		view.setTitle(pedal.multistomp().currentPatch().toString());
+	private void updateTitle(String newTitle) {
+		view.setTitle(newTitle);
 	}
 
 
 	public void toogleEffectOf(int effect) {
 		this.pedal.toogleEffect(effect);
+	}
+
+	public void updateNameOf(int indexEffect, Effect effect) {
+		this.view.setPedalName(indexEffect, effect.getName());
 	}
 	
 	/////////////////////////////////////////////////////

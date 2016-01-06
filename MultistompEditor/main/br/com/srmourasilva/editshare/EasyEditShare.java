@@ -42,7 +42,7 @@ public class EasyEditShare extends Application implements EventHandler<ActionEve
 
 		createPatchButtons(grid);
 		
-		Scene scene = new Scene(grid, 450, 250);
+		Scene scene = new Scene(grid, 500, 250);
 
 		stage.setTitle("Pedals Status");
 		stage.setScene(scene);
@@ -111,6 +111,10 @@ public class EasyEditShare extends Application implements EventHandler<ActionEve
 	
 	private void effect(Color color, int effect) {
 		Platform.runLater(() -> buttons[effect].setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY))));
+	}
+	
+	public void setPedalName(int index, String name) {
+		Platform.runLater(() -> buttons[index].setText("Pedal " + index + " - " + name));
 	}
 
 	public void setTitle(String newTitle) {

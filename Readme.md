@@ -3,10 +3,6 @@ JavaMIDI
 
 This ambitious project aims to provide a single API for MIDI control pedal ANY multi-effect
 
-
-
-Example: https://www.youtube.com/watch?v=yWB6dpbQ1xc
-
 Test:
 --------
 
@@ -14,15 +10,64 @@ Test:
 
 Execute EasyEditShare.jar (DoubleClick or java -jar EasyEditShare.jar). Open when the real multistomp has gone be connected on PC.
 
+![Live example](http://url/to/img.png)
+
 ### Terminal
 
 Execute br.com.srmourasilva.main.KeyboardController.java
  
+(Old) example: https://www.youtube.com/watch?v=yWB6dpbQ1xc
+
+To control/detect what?
+-----------------------
+
+### To detect:
+
+* CommonCause.TO_PATCH : Patch changed to specific patch
+* CommonCause.GENERAL_VOLUME : General volume changed
+* CommonCause.PATCH_NUMBER : Details of a patch number
+* CommonCause.PATCH_VOLUME : Details of a patch volume
+* CommonCause.PATCH_NAME : Details of a patch name
+* CommonCause.EFFECT_ACTIVE : Specific effect actived
+* CommonCause.EFFECT_DISABLE : Specific effect disabled
+* CommonCause.EFFECT_CHANGED : Specific effect changed (type)
+* CommonCause.PARAM_CHANGED : Specific param of effect actived
+
+### To control:
+
+* Patch
+ * PedalController.nextPatch()
+ * PedalController.beforePatch()
+ * PedalController.toPatch(int index)
+* Current patch
+ * PedalController.toogleEffect(int idEffect)
+ * PedalController.hasActived(int idEffect)
+ * PedalController.activeEffect(int idEffect)
+ * PedalController.disableEffect(int idEffect)
+ * PedalController.setEffectParam(int idEffect, int idParam, int value) 
+ * PedalController.getAmountEffects()
+* All the multistomp options
+ * PedalController.multistomp()
+
+
 Support:
 --------
 * PedalCompany.ZoomCorp
  * ~~PedalType.G2Nu~~ (basic, not tested)
  * PedalType.G3
+
+| PedalType    | CommonCause    | Detects pedal change? | Request changes to pedal? |
+|--------------|----------------|-----------------------|---------------------------|
+| PedalType.G3 | TO_PATCH       | (x)                   | ( )                       |
+| PedalType.G3 | GENERAL_VOLUME | ( )                   | ( )                       |
+| PedalType.G3 | PATCH_NUMBER   | ( ) Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) | ( )                       |
+| PedalType.G3 | PATCH_VOLUME   | ( )                   | ( )                       |
+| PedalType.G3 | PATCH_NAME     | ( ) Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) | ( )                       |
+| PedalType.G3 | EFFECT_ACTIVE  | (x)                   | (x)                       |
+| PedalType.G3 | EFFECT_DISABLE | (x)                   | (x)                       |
+| PedalType.G3 | EFFECT_CHANGED | ( ) Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) | ( )                       |
+| PedalType.G3 | PARAM_CHANGED  | ( )                   | ( )                       |
+| For specific messages: ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch)||||
 
 How to use:
 -----------
