@@ -58,7 +58,7 @@ Support:
 
 | PedalType    | CommonCause    | Detects pedal change? | Request changes to pedal? |
 |--------------|----------------|-----------------------|---------------------------|
-| PedalType.G3 | TO_PATCH       | (x)                   | ( )                       |
+| PedalType.G3 | TO_PATCH       | (x)                   | (x)                       |
 | PedalType.G3 | GENERAL_VOLUME | ( )                   | ( )                       |
 | PedalType.G3 | PATCH_NUMBER   | ( ) *                 | ( )                       |
 | PedalType.G3 | PATCH_VOLUME   | ( )                   | ( )                       |
