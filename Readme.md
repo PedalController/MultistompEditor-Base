@@ -10,7 +10,7 @@ Test:
 
 Execute EasyEditShare.jar (DoubleClick or java -jar EasyEditShare.jar). Open when the real multistomp has gone be connected on PC.
 
-![Live example](http://url/to/img.png)
+![Live example](https://github.com/SrMouraSilva/JavaPedalMIDI/blob/master/example/Use_example.png?raw=true)
 
 ### Terminal
 
@@ -60,14 +60,15 @@ Support:
 |--------------|----------------|-----------------------|---------------------------|
 | PedalType.G3 | TO_PATCH       | (x)                   | ( )                       |
 | PedalType.G3 | GENERAL_VOLUME | ( )                   | ( )                       |
-| PedalType.G3 | PATCH_NUMBER   | ( ) Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) | ( )                       |
+| PedalType.G3 | PATCH_NUMBER   | ( ) *                 | ( )                       |
 | PedalType.G3 | PATCH_VOLUME   | ( )                   | ( )                       |
-| PedalType.G3 | PATCH_NAME     | ( ) Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) | ( )                       |
+| PedalType.G3 | PATCH_NAME     | ( ) *                 | ( )                       |
 | PedalType.G3 | EFFECT_ACTIVE  | (x)                   | (x)                       |
 | PedalType.G3 | EFFECT_DISABLE | (x)                   | (x)                       |
-| PedalType.G3 | EFFECT_CHANGED | ( ) Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch) | ( )                       |
+| PedalType.G3 | EFFECT_CHANGED | ( ) *                 | ( )                       |
 | PedalType.G3 | PARAM_CHANGED  | ( )                   | ( )                       |
-| For specific messages: ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch)||||
+
+* Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch)
 
 How to use:
 -----------
