@@ -5,20 +5,22 @@ import javax.sound.midi.MidiMessage;
 import br.com.srmourasilva.domain.message.CommonCause;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Details;
-import br.com.srmourasilva.domain.message.Messages.Message;
+import br.com.srmourasilva.domain.multistomp.Multistomp;
 
 public class ZoomGSeriesDisableEffectDecoder extends AbstractZoomGSeriesEffectParamDecoder {
 
 	@Override
 	public boolean isForThis(MidiMessage message) {
 		return super.isForThis(message) && 
-			   message.getMessage()[PARAM] == 0;
+			   message.getMessage()[PARAM] == 0 &&
+			   message.getMessage()[EFFECT] <= 5;
 	}
 
 	@Override
-	protected Messages decode(Details details) {
+	protected Messages decodeThe(Details details, Multistomp multistomp) {
 		details.param = Details.NULL;
+		details.value = null;
 
-		return Messages.For(new Message(CommonCause.EFFECT_DISABLE, details));
+		return Messages.Empty().add(CommonCause.EFFECT_DISABLE, details);
 	}
 }

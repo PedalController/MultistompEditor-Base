@@ -34,7 +34,7 @@ public class ZoomGSeriesPatchEffectsStatusDecoder implements MessageDecoder {
 	}
 
 	private boolean hasActived(MidiMessage message, int position) {
-		return SysexVerbal.For(message).asBoolean(position, (byte) 0x0);
+		return SysexVerbal.For(message).asBoolean(position, 0x0);
 	}
 
     private Message generateMessageFor(int effect, boolean actived) {

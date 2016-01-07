@@ -34,6 +34,7 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 
 		try {
 			pedal.on();
+			
 		} catch (MidiUnavailableException e) {
 			view.setTitle("This Pedal has been used by other process program");
 			return;
@@ -55,9 +56,9 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 		messages.getBy(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
 		messages.getBy(CommonCause.PATCH_NAME).forEach(message -> updateTitle((String) message.details().value));
 		
-		//messages.getBy(CommonCause.PARAM_CHANGED).forEach(message -> System.out.println(pedal));
+		messages.getBy(CommonCause.PARAM_VALUE).forEach(message -> System.out.println(message));
 
-		messages.getBy(CommonCause.EFFECT_CHANGED).forEach(message -> updateEffect(message, CommonCause.EFFECT_CHANGED));
+		messages.getBy(CommonCause.EFFECT_TYPE).forEach(message -> updateEffect(message, CommonCause.EFFECT_TYPE));
 	}
 
 	private void updateEffect(Message message, CommonCause cause) {
@@ -73,7 +74,7 @@ public class EasyEditSharePresenter implements OnMultistompListener {
 		else if (cause == CommonCause.EFFECT_DISABLE)
 			view.disable(effect);
 
-		else if (cause == CommonCause.EFFECT_CHANGED)
+		else if (cause == CommonCause.EFFECT_TYPE)
 			view.setPedalName(effect, pedal.multistomp().currentPatch().effects().get(effect).getName());
 	}
 	

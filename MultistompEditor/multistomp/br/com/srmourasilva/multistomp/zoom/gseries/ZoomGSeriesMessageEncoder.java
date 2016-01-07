@@ -26,7 +26,7 @@ public class ZoomGSeriesMessageEncoder implements MessageEncoder {
 		generator.forEachOfType(CommonCause.EFFECT_DISABLE)
 		 		 .generate(statusEffect(CommonCause.EFFECT_DISABLE));
 
-		generator.forEachOfType(CommonCause.PARAM_CHANGED)
+		generator.forEachOfType(CommonCause.PARAM_VALUE)
 		 		 .generate(setParam());
 		
 		generator.forEachOfType(ZoomGSeriesCause.SET_EFFECT)

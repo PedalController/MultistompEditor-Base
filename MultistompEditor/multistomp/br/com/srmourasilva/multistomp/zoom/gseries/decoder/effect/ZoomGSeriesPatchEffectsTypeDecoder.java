@@ -27,7 +27,7 @@ public class ZoomGSeriesPatchEffectsTypeDecoder implements MessageDecoder {
 		Messages messages = Messages.Empty();
 		
 		for (int i=0; i<6; i++) {
-			Message msg = new Message(CommonCause.EFFECT_CHANGED);
+			Message msg = new Message(CommonCause.EFFECT_TYPE);
 		    msg.details().effect = i;
 		    msg.details().value = ZoomG3v2Pedals.instance.getEffect(pedal(i, message));
 

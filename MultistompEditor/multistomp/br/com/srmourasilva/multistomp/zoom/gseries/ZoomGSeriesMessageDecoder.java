@@ -11,6 +11,7 @@ import br.com.srmourasilva.domain.multistomp.Multistomp;
 import br.com.srmourasilva.multistomp.connection.codification.MessageDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesActiveEffectDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesDisableEffectDecoder;
+import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesPatchNameByMultistompChangeDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSelectPatchDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.ZoomGSeriesSetValueParamDecoder;
 import br.com.srmourasilva.multistomp.zoom.gseries.decoder.patch.ZoomGSeriesPatchDecoder;
@@ -26,6 +27,7 @@ public class ZoomGSeriesMessageDecoder implements MessageDecoder {
 		
 		decoders.add(new ZoomGSeriesActiveEffectDecoder());
 		decoders.add(new ZoomGSeriesDisableEffectDecoder());
+		decoders.add(new ZoomGSeriesPatchNameByMultistompChangeDecoder());
 		
 		decoders.add(new ZoomGSeriesSelectPatchDecoder());
 		decoders.add(new ZoomGSeriesSetValueParamDecoder());

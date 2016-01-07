@@ -31,13 +31,13 @@ class MultistompChanger {
 		else if (this.isDisableEffectSpecificPatch(message))
 			controller.multistomp().patchs().get(message.details().patch).effects().get(message.details().effect).disable();
 
-		else if (message.is(CommonCause.EFFECT_CHANGED)) {
+		else if (message.is(CommonCause.EFFECT_TYPE)) {
 			int idEffect = message.details().effect;
 			Effect effect = (Effect) message.details().value;
 
 			controller.multistomp().currentPatch().setEffect(idEffect, effect);
 
-		} else if (message.is(CommonCause.PARAM_CHANGED)) {
+		} else if (message.is(CommonCause.PARAM_VALUE)) {
 			int idEffect = message.details().effect;
 			int idParam  = message.details().param;
 			int newValue = (int) message.details().value;

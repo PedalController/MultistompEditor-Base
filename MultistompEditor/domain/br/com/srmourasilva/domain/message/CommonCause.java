@@ -15,8 +15,8 @@ public enum CommonCause implements Cause {
 	// Effect
 	EFFECT_ACTIVE,
 	EFFECT_DISABLE,
-	EFFECT_CHANGED,
+	EFFECT_TYPE,
 
 	// Param
-	PARAM_CHANGED;
+	PARAM_VALUE;
 }

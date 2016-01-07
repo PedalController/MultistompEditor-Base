@@ -23,15 +23,15 @@ To control/detect what?
 
 ### To detect:
 
-* CommonCause.TO_PATCH : Patch changed to specific patch
-* CommonCause.GENERAL_VOLUME : General volume changed
-* CommonCause.PATCH_NUMBER : Details of a patch number
-* CommonCause.PATCH_VOLUME : Details of a patch volume
-* CommonCause.PATCH_NAME : Details of a patch name
-* CommonCause.EFFECT_ACTIVE : Specific effect actived
-* CommonCause.EFFECT_DISABLE : Specific effect disabled
-* CommonCause.EFFECT_CHANGED : Specific effect changed (type)
-* CommonCause.PARAM_CHANGED : Specific param of effect actived
+* **CommonCause.TO_PATCH** : Patch changed to specific patch
+* **CommonCause.GENERAL_VOLUME** : General volume changed
+* **CommonCause.PATCH_NUMBER** : Details of a patch number
+* **CommonCause.PATCH_VOLUME** : Details of a patch volume
+* **CommonCause.PATCH_NAME** : Details of a patch name
+* **CommonCause.EFFECT_ACTIVE** : Specific effect actived
+* **CommonCause.EFFECT_DISABLE** : Specific effect disabled
+* **CommonCause.EFFECT_TYPE** : Specific effect type
+* **CommonCause.PARAM_VALUE** : Specific param of effect actived
 
 ### To control:
 
@@ -60,15 +60,21 @@ Support:
 |--------------|----------------|-----------------------|---------------------------|
 | PedalType.G3 | TO_PATCH       | (x)                   | (x)                       |
 | PedalType.G3 | GENERAL_VOLUME | ( )                   | ( )                       |
-| PedalType.G3 | PATCH_NUMBER   | ( ) *                 | ( )                       |
+| PedalType.G3 | PATCH_NUMBER   | ( ) *                 | TO_PATCH equivalent       |
 | PedalType.G3 | PATCH_VOLUME   | ( )                   | ( )                       |
-| PedalType.G3 | PATCH_NAME     | ( ) *                 | ( )                       |
+| PedalType.G3 | PATCH_NAME     | (x)                   | ( )                       |
 | PedalType.G3 | EFFECT_ACTIVE  | (x)                   | (x)                       |
 | PedalType.G3 | EFFECT_DISABLE | (x)                   | (x)                       |
-| PedalType.G3 | EFFECT_CHANGED | ( ) *                 | ( )                       |
-| PedalType.G3 | PARAM_CHANGED  | ( )                   | ( )                       |
+| PedalType.G3 | EFFECT_TYPE    | ( ) *                 | ( )                       |
+| PedalType.G3 | PARAM_VALUE    | (x)                   | (x)                       |
 
-* Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch)
+* Only by ZoomGSeriesMessages.REQUEST_SPECIFIC_PATCH_DETAILS(idPatch). It inform
+ * PATCH_NUMBER
+ * PATCH_NAME
+ * EFFECT_ACTIVE
+ * EFFECT_DISABLE
+ * EFFECT_TYPE
+
 
 How to use:
 -----------

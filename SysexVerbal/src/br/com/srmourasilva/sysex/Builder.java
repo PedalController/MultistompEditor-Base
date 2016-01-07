@@ -27,7 +27,7 @@ public class Builder {
 		return this;
 	}
 
-	private Builder aByte(int pos) {
+	public Builder aByte(int pos) {
 		this.buffer.add(message[pos]);
 
 		return this;
@@ -37,7 +37,7 @@ public class Builder {
 	 * @param bytePosition
 	 * @param bitPosition [0 .. 7]
 	 */
-	public boolean asBoolean(int bytePosition, byte bitPosition) {
+	public boolean asBoolean(int bytePosition, int bitPosition) {
 		return BinaryUtils.asBoolean(message[bytePosition], bitPosition);
 	}
 	

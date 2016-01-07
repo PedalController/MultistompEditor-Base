@@ -59,7 +59,7 @@ public class Presenter implements OnMultistompListener {
 
 		messages.getBy(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
 		
-		messages.getBy(CommonCause.PARAM_CHANGED).forEach(message -> System.out.println(pedal));
+		messages.getBy(CommonCause.PARAM_VALUE).forEach(message -> System.out.println(pedal));
 	}
 
 	private void updateEffect(Message message, CommonCause cause) {

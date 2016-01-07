@@ -37,7 +37,7 @@ public class Patch implements OnMultistompListener {
 		details.effect = this.effects.size()-1;
 		details.value = effect;
 
-		onChange(Messages.Empty().add(CommonCause.EFFECT_CHANGED, details));
+		onChange(Messages.Empty().add(CommonCause.EFFECT_TYPE, details));
 	}
 
 	public final void setEffect(int index, Effect effect) {
@@ -48,7 +48,7 @@ public class Patch implements OnMultistompListener {
 		details.effect = index;
 		details.value = effect;
 
-		onChange(Messages.Empty().add(CommonCause.EFFECT_CHANGED, details));	
+		onChange(Messages.Empty().add(CommonCause.EFFECT_TYPE, details));	
 	}
 
 	public String getName() {

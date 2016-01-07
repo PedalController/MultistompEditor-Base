@@ -44,7 +44,7 @@ public class Param {
 		Details details = new Details();
 		details.value = currentValue;
 
-		notify(new Message(CommonCause.PARAM_CHANGED, details));
+		notify(new Message(CommonCause.PARAM_VALUE, details));
 	}
 
 	private boolean isValidValue(int value) {
