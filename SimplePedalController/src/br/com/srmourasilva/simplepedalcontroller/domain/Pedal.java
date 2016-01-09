@@ -5,10 +5,12 @@ import com.pi4j.component.button.ButtonPressedListener;
 import com.pi4j.component.light.Light;
 
 public class Pedal {
+	private int id;
 	private Light led;
 	private Button button;
 
-	public Pedal(Button button, Light led) {
+	public Pedal(int id, Button button, Light led) {
+		this.id = id;
 		this.led = led;
 		this.button = button;
 	}
@@ -27,5 +29,9 @@ public class Pedal {
 
 	public void disable() {
 		led.off();
+	}
+
+	public int getId() {
+		return id;
 	}
 }

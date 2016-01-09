@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import br.com.srmourasilva.util.BinarioUtil;
+
 public class Mensagem {
 	private boolean[] conteudo;
 

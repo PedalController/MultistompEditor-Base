@@ -1,10 +1,10 @@
-package br.com.srmourasilva.test;
+package br.com.srmourasilva.util;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import br.com.srmourasilva.arvore.util.BinarioUtil;
+import br.com.srmourasilva.util.BinarioUtil;
 
 public class BinarioUtilTest {
 

@@ -6,7 +6,6 @@ import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
 
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
-import br.com.srmourasilva.arvore.util.BinarioUtil;
 import br.com.srmourasilva.domain.PedalType;
 import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.MidiMessages;
@@ -18,6 +17,7 @@ import br.com.srmourasilva.multistomp.connection.codification.MessageEncoderFact
 import br.com.srmourasilva.multistomp.connection.transport.MidiReader;
 import br.com.srmourasilva.multistomp.connection.transport.MidiReader.MidiReaderListener;
 import br.com.srmourasilva.multistomp.connection.transport.MidiSender;
+import br.com.srmourasilva.util.BinarioUtil;
 
 public class MidiConnection implements MidiReaderListener {
 

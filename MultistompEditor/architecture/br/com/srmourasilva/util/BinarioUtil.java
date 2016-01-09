@@ -1,4 +1,4 @@
-package br.com.srmourasilva.arvore.util;
+package br.com.srmourasilva.util;
 
 public class BinarioUtil {
 	/**

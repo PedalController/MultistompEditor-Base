@@ -26,9 +26,9 @@ public class PedalboardBuilder {
 	}
 	
 	public Pedalboard generateFor(Multistomp multistomp) {
-		Pedal footswitch1 = createPedal(RaspiPin.GPIO_00, RaspiPin.GPIO_01);
-		Pedal footswitch2 = createPedal(RaspiPin.GPIO_02, RaspiPin.GPIO_05);
-		Pedal footswitch3 = createPedal(RaspiPin.GPIO_04, RaspiPin.GPIO_06);
+		Pedal footswitch1 = createPedal(0, RaspiPin.GPIO_17, RaspiPin.GPIO_10);
+		Pedal footswitch2 = createPedal(1, RaspiPin.GPIO_27, RaspiPin.GPIO_09);
+		Pedal footswitch3 = createPedal(2, RaspiPin.GPIO_22, RaspiPin.GPIO_11);
 		
 		Pedalboard pedalboard = new Pedalboard();
 		pedalboard.add(footswitch1, footswitch2, footswitch3);
@@ -36,11 +36,11 @@ public class PedalboardBuilder {
 		return pedalboard;
 	}
 
-	private Pedal createPedal(Pin buttonPin, Pin ledPin) {
+	private Pedal createPedal(int id, Pin buttonPin, Pin ledPin) {
 		Button button = buttonFor(buttonPin);
 		Light led = ledFor(ledPin);
-		
-		return new Pedal(button, led);
+
+		return new Pedal(id, button, led);
 	}
 
 	private Button buttonFor(Pin pin) {

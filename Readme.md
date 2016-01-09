@@ -106,7 +106,7 @@ multistomp.beforePatch();
 multistomp.nextPatch();
 multistomp.setPatch(99);
 
-System.out.println(pedaleira);
+System.out.println(multistomp);
 
 // Turn down the system, not your pedal :P
 multistomp.off();
@@ -121,18 +121,18 @@ PedalController multistomp = PedalControllerFactory.searchPedal();
 
 pedal.addListener(messages -> {
 	messages.getBy(CommonCause.ACTIVE_EFFECT)
-			.forEach(message -> message.details().effect);
+			.forEach(message -> System.out.println(message.details().effect));
 	messages.getBy(CommonCause.DISABLE_EFFECT)
-			.forEach(message -> message.details().effect);
+			.forEach(message -> System.out.println(message.details().effect));
 
 	messages.getBy(CommonCause.TO_PATCH)
-			.forEach(message -> message.details().patch);
+			.forEach(message -> System.out.println(message.details().patch));
 
 	messages.getBy(CommonCause.PATCH_NAME)
-			.forEach(message -> (String) message.details().other);
+			.forEach(message -> System.out.println((String) message.details().value));
 
-	//messages.getBy(CommonCause.SET_PARAM)
-	//		.forEach(message -> System.out.println(pedal));
+	messages.getBy(CommonCause.SET_PARAM)
+			.forEach(message -> System.out.println(pedal));
 });
 ```
 

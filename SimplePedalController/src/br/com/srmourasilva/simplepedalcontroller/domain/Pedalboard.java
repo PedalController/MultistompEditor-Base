@@ -2,6 +2,7 @@ package br.com.srmourasilva.simplepedalcontroller.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.pi4j.component.button.Button;
 import com.pi4j.component.button.ButtonEvent;
@@ -14,12 +15,12 @@ public class Pedalboard implements ButtonPressedListener {
 	}
 
 	private List<Pedal> pedals;
-	private List<PedalboardListener> listeners;
+	private Optional<PedalboardListener> listener;
 
 	public Pedalboard() {
 		this.pedals = new ArrayList<Pedal>();
 		
-		this.listeners = new ArrayList<>();
+		this.listener = Optional.empty();
 	}
 
 	public void add(Pedal ... pedals) {
@@ -31,24 +32,22 @@ public class Pedalboard implements ButtonPressedListener {
 
 	@Override
 	public void onButtonPressed(ButtonEvent event) {
-		final int idPedal = getIdPedalBy(event.getButton());
-		listeners.forEach(listener -> listener.onClicked(idPedal));
+		if (listener.isPresent()) {
+			final int idPedal = getIdPedalBy(event.getButton());
+			listener.get().onClicked(idPedal);
+		}
 	}
 
 	private int getIdPedalBy(Button button) {
-		int idPedal = 0;
 		for (Pedal pedal : pedals)
 			if (pedal.isThis(button))
-				return idPedal;
-			else
-				idPedal++;
+				return pedal.getId();
 
 		return -1;
 	}
 	
-	public void add(PedalboardListener ... listeners) {
-		for (PedalboardListener listener : listeners)
-			this.listeners.add(listener);
+	public void setListener(PedalboardListener listener) {
+		this.listener = Optional.of(listener);
 	}
 
 	public void active(int effect) {

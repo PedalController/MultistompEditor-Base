@@ -54,12 +54,13 @@ public class Presenter implements OnMultistompListener {
 
 	@Override
 	public void onChange(Messages messages) {
-		messages.getBy(CommonCause.EFFECT_ACTIVE).forEach(message -> updateEffect(message, CommonCause.EFFECT_ACTIVE));
-		messages.getBy(CommonCause.EFFECT_DISABLE).forEach(message -> updateEffect(message, CommonCause.EFFECT_DISABLE));
+		messages.getBy(CommonCause.EFFECT_ACTIVE)
+				.forEach(message -> updateEffect(message, CommonCause.EFFECT_ACTIVE));
+		messages.getBy(CommonCause.EFFECT_DISABLE)
+				.forEach(message -> updateEffect(message, CommonCause.EFFECT_DISABLE));
 
-		messages.getBy(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
-		
-		messages.getBy(CommonCause.PARAM_VALUE).forEach(message -> System.out.println(pedal));
+		messages.getBy(CommonCause.TO_PATCH)
+				.forEach(message -> setPatch(message));
 	}
 
 	private void updateEffect(Message message, CommonCause cause) {

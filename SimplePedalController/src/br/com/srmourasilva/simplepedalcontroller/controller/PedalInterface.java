@@ -11,7 +11,7 @@ public class PedalInterface implements PedalboardListener {
 
 	public PedalInterface(Pedalboard pedalboard) {
 		this.pedalboard = pedalboard;
-		this.pedalboard.add(this);
+		this.pedalboard.setListener(this);
 	}
 
 	public void setPresenter(Presenter presenter) {
@@ -19,7 +19,7 @@ public class PedalInterface implements PedalboardListener {
 	}
 
 	public void setTitle(String string) {
-		// TODO Auto-generated method stub
+		System.out.println(string);
 	}
 
 	public void active(int effect) {
