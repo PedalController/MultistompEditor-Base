@@ -53,6 +53,7 @@ public class SimplePedalController {
 			pedal = PedalControllerFactory.searchPedal();
 		} catch (DeviceNotFoundException e1) {
 			System.out.println("Pedal not found! You connected any?");
+			e1.printStackTrace();
 			return;
 		}
 

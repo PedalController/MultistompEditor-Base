@@ -73,6 +73,7 @@ public abstract class MidiTransmition {
 
 		for (int i=0; i<infos.length; i++) {
 			device = infos[i];
+			System.out.println(device);
 
 			if (device.getName().contains(type.getUSBName()))
 				devices.add(device);
