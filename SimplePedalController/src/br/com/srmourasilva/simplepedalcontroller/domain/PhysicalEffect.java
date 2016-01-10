@@ -25,10 +25,14 @@ public class PhysicalEffect {
 		this.light = light;
 	}
 	
-	public void setListener(OnFootswitchClickListener listener) {
+	public void setOnFootswitchClickListener(OnFootswitchClickListener listener) {
 		this.clicable.setListener(clicable -> listener.onClick(this.position));
 	}
 	
+	public int getPosition() {
+		return position;
+	}
+
 	public void activeLed() {
 		this.light.on();
 	}
