@@ -1,4 +1,4 @@
-package br.com.srmourasilva.simplepedalcontroller;
+package br.com.srmourasilva.pipedalcontroller;
 
 import javax.sound.midi.MidiUnavailableException;
 
@@ -9,15 +9,15 @@ import com.pi4j.io.gpio.RaspiPin;
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
 import br.com.srmourasilva.multistomp.controller.PedalController;
 import br.com.srmourasilva.multistomp.controller.PedalControllerFactory;
-import br.com.srmourasilva.simplepedalcontroller.domain.PhysicalEffect;
-import br.com.srmourasilva.simplepedalcontroller.domain.PhysicalPedalController;
-import br.com.srmourasilva.simplepedalcontroller.domain.clicable.Clicable;
+import br.com.srmourasilva.pipedalcontroller.domain.PhysicalEffect;
+import br.com.srmourasilva.pipedalcontroller.domain.PhysicalPedalController;
+import br.com.srmourasilva.pipedalcontroller.domain.clicable.Clicable;
 
 /**
  * Simple pedal controller by buttons or switchs in a
  * Raspberry Pi
  */
-public class SimplePedalController {
+public class PiPedalController {
 
 	public static void main(String[] args) {
 		GpioController gpio = GpioFactory.getInstance();

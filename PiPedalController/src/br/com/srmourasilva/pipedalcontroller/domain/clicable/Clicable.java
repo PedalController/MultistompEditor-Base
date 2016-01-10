@@ -1,4 +1,4 @@
-package br.com.srmourasilva.simplepedalcontroller.domain.clicable;
+package br.com.srmourasilva.pipedalcontroller.domain.clicable;
 
 public interface Clicable {
 	

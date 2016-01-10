@@ -1,8 +1,8 @@
-package br.com.srmourasilva.simplepedalcontroller.domain;
+package br.com.srmourasilva.pipedalcontroller.domain;
 
 import com.pi4j.component.light.LED;
 
-import br.com.srmourasilva.simplepedalcontroller.domain.clicable.Clicable;
+import br.com.srmourasilva.pipedalcontroller.domain.clicable.Clicable;
 
 public class PhysicalEffect {
 

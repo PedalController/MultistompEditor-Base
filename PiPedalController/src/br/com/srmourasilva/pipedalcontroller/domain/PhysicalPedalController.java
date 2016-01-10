@@ -1,4 +1,4 @@
-package br.com.srmourasilva.simplepedalcontroller.domain;
+package br.com.srmourasilva.pipedalcontroller.domain;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import br.com.srmourasilva.domain.message.Messages;
 import br.com.srmourasilva.domain.message.Messages.Message;
 import br.com.srmourasilva.multistomp.controller.PedalController;
 import br.com.srmourasilva.multistomp.zoom.gseries.ZoomGSeriesMessages;
-import br.com.srmourasilva.simplepedalcontroller.domain.clicable.Clicable;
+import br.com.srmourasilva.pipedalcontroller.domain.clicable.Clicable;
 
 public class PhysicalPedalController implements OnMultistompListener {
 
@@ -64,14 +64,11 @@ public class PhysicalPedalController implements OnMultistompListener {
 			return;
 
 
-		if (cause == CommonCause.EFFECT_ACTIVE) {
-			pedal.activeEffect(effect);
+		if (cause == CommonCause.EFFECT_ACTIVE)
 			pedalboard.active(effect);
 
-		} else if (cause == CommonCause.EFFECT_DISABLE) {
-			pedal.disableEffect(effect);
+		else if (cause == CommonCause.EFFECT_DISABLE)
 			pedalboard.disable(effect);
-		}
 	}
 
 	

@@ -1,4 +1,4 @@
-package br.com.srmourasilva.simplepedalcontroller;
+package br.com.srmourasilva.pipedalcontroller;
 
 import com.pi4j.component.button.impl.GpioButtonComponent;
 import com.pi4j.component.light.LED;
@@ -9,8 +9,8 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 
-import br.com.srmourasilva.simplepedalcontroller.domain.clicable.ButtonClicable;
-import br.com.srmourasilva.simplepedalcontroller.domain.clicable.MomentarySwitchClicable;
+import br.com.srmourasilva.pipedalcontroller.domain.clicable.ButtonClicable;
+import br.com.srmourasilva.pipedalcontroller.domain.clicable.MomentarySwitchClicable;
 
 public class Builder {
 	private GpioController gpio;
