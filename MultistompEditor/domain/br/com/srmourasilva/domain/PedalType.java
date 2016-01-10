@@ -5,7 +5,7 @@ import br.com.srmourasilva.multistomp.controller.PedalCompany;
 public enum PedalType {
 	Null(0, "Unknown Pedal", PedalCompany.NULL, "Pedal Unknown is unimplemented"),
 	G2Nu(1, "Zoom G2Nu",     PedalCompany.ZoomCorp, "G2Nu/G2.1Nu"),
-	G3  (2, "Zoom G3v2.0",   PedalCompany.ZoomCorp, "ZOOM G Series");
+	G3  (2, "Zoom G3v2.0",   PedalCompany.ZoomCorp, "Series");
 
     private int id;
     private String name;
