@@ -1,5 +1,6 @@
 package br.com.srmourasilva.multistomp.zoom.gseries;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -144,7 +145,7 @@ public class ZoomG3v2Pedals {
 		effectsName.put(115, "MS 1959");
 		effectsName.put(116, "VX JMI");
 		
-		String fileName = System.getProperty("user.dir") + "\\lib\\zoom-G3X-defaults.json";
+		String fileName = System.getProperty("user.dir") + File.separator + "lib" + File.separator + "zoom-G3X-defaults.json";
 		try {
 			this.jsonEffects = readJsonEffectsOf(fileName);
 		} catch (Exception e) {
