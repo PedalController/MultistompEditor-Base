@@ -43,8 +43,8 @@ public class SimplePedalController {
 		);
 
 
-		Clicable next   = builder.buildMomentarySwitch(RaspiPin.GPIO_28);
-		Clicable before = builder.buildMomentarySwitch(RaspiPin.GPIO_29);
+		//Clicable next   = builder.buildMomentarySwitch(RaspiPin.GPIO_28);
+		//Clicable before = builder.buildMomentarySwitch(RaspiPin.GPIO_29);
 
 
 		
@@ -59,8 +59,8 @@ public class SimplePedalController {
 		PhysicalPedalController multistomp = new PhysicalPedalController(pedal);
 		multistomp.vinculePedalEffects(footswitch1, footswitch2, footswitch3);
 
-		multistomp.vinculeNext(next);
-		multistomp.vinculeBefore(before);
+		//multistomp.vinculeNext(next);
+		//multistomp.vinculeBefore(before);
 
 
 		try {
