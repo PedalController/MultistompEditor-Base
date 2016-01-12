@@ -8,6 +8,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinPullResistance;
 
 import br.com.srmourasilva.pipedalcontroller.domain.clicable.ButtonClicable;
 import br.com.srmourasilva.pipedalcontroller.domain.clicable.MomentarySwitchClicable;
@@ -25,7 +26,7 @@ public class Builder {
 	}
 
 	public ButtonClicable buildButton(Pin pin) {
-		GpioPinDigitalInput inputPin = gpio.provisionDigitalInputPin(pin);
+		GpioPinDigitalInput inputPin = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
 		return new ButtonClicable(new GpioButtonComponent(inputPin));
 	}
 

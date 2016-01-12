@@ -49,6 +49,8 @@ public class PhysicalPedalController implements OnMultistompListener {
 
 	@Override
 	public void onChange(Messages messages) {
+		System.out.println(messages);
+
 		messages.getBy(CommonCause.EFFECT_ACTIVE).forEach(message -> updateEffect(message, CommonCause.EFFECT_ACTIVE));
 		messages.getBy(CommonCause.EFFECT_DISABLE).forEach(message -> updateEffect(message, CommonCause.EFFECT_DISABLE));
 
