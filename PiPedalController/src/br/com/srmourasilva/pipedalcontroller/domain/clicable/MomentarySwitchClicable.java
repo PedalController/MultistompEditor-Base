@@ -22,7 +22,7 @@ public class MomentarySwitchClicable implements Clicable {
 	private SwitchListener generateListener() {
 		return event -> {
 
-			boolean clicked = event.getNewState() == SwitchState.OFF;
+			boolean clicked = event.getNewState() == SwitchState.ON;
 
 			if (clicked && this.listener.isPresent())
 				this.listener.get().onClick(this);
