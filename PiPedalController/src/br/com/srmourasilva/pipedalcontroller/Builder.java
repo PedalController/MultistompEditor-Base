@@ -22,18 +22,17 @@ public class Builder {
 	}
 	
 	public MomentarySwitchClicable buildMomentarySwitch(Pin pin) {
-		GpioPinDigitalInput inputPin = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
+		GpioPinDigitalInput inputPin = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_UP);
 		return new MomentarySwitchClicable(new GpioMomentarySwitchComponent(inputPin));
 	}
 
 	public ButtonClicable buildButton(Pin pin) {
-		GpioPinDigitalInput inputPin = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_DOWN);
+		GpioPinDigitalInput inputPin = gpio.provisionDigitalInputPin(pin, PinPullResistance.PULL_UP);
 		return new ButtonClicable(new GpioButtonComponent(inputPin));
 	}
 
 	public LED buildLed(Pin pin) {
 		GpioPinDigitalOutput outputPin = gpio.provisionDigitalOutputPin(pin, PinState.LOW);
-		outputPin.setState(PinState.HIGH);
 		return new GpioLEDComponent(outputPin);
 	}
 }

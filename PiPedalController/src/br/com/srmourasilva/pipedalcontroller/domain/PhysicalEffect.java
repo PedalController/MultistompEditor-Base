@@ -35,16 +35,13 @@ public class PhysicalEffect {
 
 	public void activeLed() {
 		this.light.on();
-		System.out.println("Light " + position + " On");
 	}
 	
 	public void disableLed() {
 		this.light.off();
-		System.out.println("Light " + position + " Off");
 	}
 	
 	public void switchLed() {
 		this.light.toggle();
-		System.out.println("Light " + position + " toggle");
 	}
 }
