@@ -28,7 +28,10 @@ public class PhysicalPedalController implements OnMultistompListener {
 	public void vinculePedalEffects(PhysicalEffect ... effects) {
 		for (PhysicalEffect physicalEffect : effects) {
 			pedalboard.add(physicalEffect);
-			physicalEffect.setOnFootswitchClickListener(effectPosition -> this.pedal.toogleEffect(effectPosition));
+			physicalEffect.setOnFootswitchClickListener(effectPosition -> {
+				System.out.println("Effect Position clicked: " + effectPosition);
+				this.pedal.toogleEffect(effectPosition);
+			});
 		}
 	}
 
@@ -65,7 +68,7 @@ public class PhysicalPedalController implements OnMultistompListener {
 		if (otherPatch)
 			return;
 
-
+		System.out.println("Era pra acender algo...");
 		if (cause == CommonCause.EFFECT_ACTIVE)
 			pedalboard.active(effect);
 
