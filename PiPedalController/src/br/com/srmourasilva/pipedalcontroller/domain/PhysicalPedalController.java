@@ -68,7 +68,6 @@ public class PhysicalPedalController implements OnMultistompListener {
 		if (otherPatch)
 			return;
 
-		System.out.println("Era pra acender algo...");
 		if (cause == CommonCause.EFFECT_ACTIVE)
 			pedalboard.active(effect);
 
