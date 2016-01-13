@@ -35,8 +35,6 @@ public class PiPedalController {
 			builder.buildMomentarySwitch(RaspiPin.GPIO_27),
 			builder.buildLed(RaspiPin.GPIO_09)
 		);
-		
-		footswitch1.activeLed();
 
 		PhysicalEffect footswitch3 = new PhysicalEffect(
 			2,

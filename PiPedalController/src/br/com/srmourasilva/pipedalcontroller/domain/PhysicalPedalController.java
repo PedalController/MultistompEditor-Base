@@ -94,14 +94,14 @@ public class PhysicalPedalController implements OnMultistompListener {
 
 		public void active(int position) {
 			Optional<PhysicalEffect> physicalEffect = getEffect(position);
-			System.out.println(physicalEffect.isPresent());
+
 			if (physicalEffect.isPresent())
 				physicalEffect.get().activeLed();
 		}
 
 		public void disable(int position) {
 			Optional<PhysicalEffect> physicalEffect = getEffect(position);
-			System.out.println(physicalEffect.isPresent());
+
 			if (physicalEffect.isPresent())
 				physicalEffect.get().disableLed();
 		}
