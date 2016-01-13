@@ -9,6 +9,7 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.PinState;
 
 import br.com.srmourasilva.pipedalcontroller.domain.clicable.ButtonClicable;
 import br.com.srmourasilva.pipedalcontroller.domain.clicable.MomentarySwitchClicable;
@@ -31,7 +32,8 @@ public class Builder {
 	}
 
 	public LED buildLed(Pin pin) {
-		GpioPinDigitalOutput outputPin = gpio.provisionDigitalOutputPin(pin);
+		GpioPinDigitalOutput outputPin = gpio.provisionDigitalOutputPin(pin, PinState.LOW);
+		outputPin.setState(PinState.HIGH);
 		return new GpioLEDComponent(outputPin);
 	}
 }
