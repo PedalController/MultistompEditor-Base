@@ -2,10 +2,10 @@ package com.pi4j.component.display.test;
 
 import java.awt.Point;
 
-import com.pi4j.component.display.AWTDisplayComponent;
-import com.pi4j.component.display.AWTDisplayComponent.Color;
+import com.pi4j.component.display.drawer.DisplayGeometryDrawer;
+import com.pi4j.component.display.impl.AWTDisplayComponent;
+import com.pi4j.component.display.impl.AWTDisplayComponent.Color;
 import com.pi4j.component.display.Display;
-import com.pi4j.component.display.DisplayGeometryDrawer;
 
 public class Main {
 	public static void main(String[] args) throws InterruptedException {
@@ -23,7 +23,7 @@ public class Main {
 
 		System.out.println("Test: Display single pixel.\n");
 		display.setPixel(10, 10, Color.BLACK);
-		display.refresh();
+		display.redraw();
 
 		Thread.sleep(5000);
 		display.clear();
@@ -35,7 +35,7 @@ public class Main {
 		for (int i=0; i<48; i+=4)
 			drawer.drawLine(new Point(0, 0), new Point(83, i), Color.BLACK);
 
-		display.refresh();
+		display.redraw();
 		Thread.sleep(5000);
 		display.clear();
 
@@ -43,7 +43,7 @@ public class Main {
 		for (int i=0; i<48; i+=2)
 			drawer.drawRect(new Point(i, i), 96-i, 48-i, Color.BLACK);
 
-		display.refresh();
+		display.redraw();
 		Thread.sleep(5000);
 		display.clear();
 
@@ -54,7 +54,7 @@ public class Main {
 			drawer.fillRect(new Point(i, i), 84-i, 48-i, color);
 		}
 
-		display.refresh();
+		display.redraw();
 		Thread.sleep(5000);
 		display.clear();
 
@@ -62,7 +62,7 @@ public class Main {
 		for (int i=0; i<48; i+=2)
 			drawer.drawCircle(new Point(41, 23), i, Color.BLACK);
 
-		display.refresh();
+		display.redraw();
 		Thread.sleep(5000);
 		display.clear();
 

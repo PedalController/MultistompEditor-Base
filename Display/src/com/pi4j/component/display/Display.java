@@ -11,7 +11,7 @@ public interface Display<C extends Display.Color> {
 	/**
 	 * Repaint the display, updating changes caused by use of setPixel method  
 	 */
-	void refresh();
+	void redraw();
 	
 	/**
 	 * Change the Display for initial stage

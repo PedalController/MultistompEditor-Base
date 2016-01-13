@@ -2,6 +2,7 @@ package com.jpcd8544;
 
 import java.awt.Point;
 
+import com.pi4j.component.display.Display;
 import com.pi4j.component.display.WhiteBlackDisplay.Color;
 
 public class Jpcd8544Drawer {
@@ -268,7 +269,7 @@ public class Jpcd8544Drawer {
 	};
 
 
-	public static void drawBitmap(JPCD8544DisplayComponent display, Point position, int[] bitmap, int w, int h, Color color) {
+	public static void drawBitmap(Display display, Point position, int[] bitmap, int w, int h, Color color) {
 		int x = position.x;
 		int y = position.y;
 
@@ -277,7 +278,9 @@ public class Jpcd8544Drawer {
 			for (i=0; i<w; i++)
 				if ((bitmap[i + (j/8)*w] & _BV(j%8)) == 1)
 					display.setPixel(x+i, y+j, color);
-
-		display.updateBoundingBox(x, y, x+w, y+h);
+	}
+	
+	private static byte _BV(int bit) {
+		return (byte) (0x1 << (bit));
 	}
 }
