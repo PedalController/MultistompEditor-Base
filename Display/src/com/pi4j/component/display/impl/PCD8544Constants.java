@@ -71,19 +71,9 @@ class PCD8544Constants {
 		public static final int HEIGHT = 48;
 	}
 
-	interface RamSize {
-		public static final int DDRAM_WIDTH  = DisplaySize.WIDTH;
-		public static final int DDRAM_HEIGHT = DisplaySize.HEIGHT / 8;
-		public static final int DDRAM_SIZE   = DDRAM_WIDTH * DDRAM_HEIGHT;
-	}
-
+	@Deprecated
 	enum BitOrderFirst {
 		LSB,
 		MSB
-	}
-
-	public static void setAllValues(Object[] objects, Object value) {
-		for (int i = 0; i < objects.length; i++)
-			objects[i] = value;
 	}
 }

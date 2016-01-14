@@ -1,11 +1,11 @@
 package com.pi4j.component.display.impl;
 
-import static com.pi4j.component.display.impl.PCD8544Constants.setAllValues;
+import java.awt.Point;
+import java.util.Iterator;
 
 import com.pi4j.component.display.WhiteBlackDisplay;
 import com.pi4j.component.display.impl.PCD8544Constants.BitOrderFirst;
 import com.pi4j.component.display.impl.PCD8544Constants.DisplaySize;
-import com.pi4j.component.display.impl.PCD8544Constants.RamSize;
 import com.pi4j.component.display.impl.PCD8544Constants.Setting;
 import com.pi4j.component.display.impl.PCD8544Constants.SysCommand;
 import com.pi4j.component.display.utils.ByteCommand;
@@ -14,10 +14,14 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 
 /* 
-	Title --- display/pcd8544.cpp
-	
-	Copyright (C) 2013 Giacomo Trudu - wicker25[at]gmail[dot]com
-	Raspberry Pi 2 Java version by Paulo Mateus Moura da Silva, 2016, mateus.moura@hotmail.com
+	Raspberry Pi 2 Java version
+	Copyright (C) 2015 by Paulo Mateus Moura da Silva, 2016, mateus.moura[at]hotmail[dot]com
+
+	Based in 2013 Giacomo Trudu - wicker25[at]gmail[dot]com
+	Based in 2010 Limor Fried, Adafruit Industries
+	Based in CORTEX-M3 version by Le Dang Dung, 2011 LeeDangDung@gmail.com (tested on LPC1769)
+	Based in  Raspberry Pi version by Andre Wussow, 2012, desk@binerry.de
+	Based in  Raspberry Pi Java version by Cleverson dos Santos Assis, 2013, tecinfcsa@yahoo.com.br
 	
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -36,9 +40,8 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	private static final int CLOCK_TIME_DELAY = 10;//ms
 	private static final int RESET_DELAY = 10^-3;//ms
-	
-	private byte[] buffer     = new byte[RamSize.DDRAM_SIZE];
-	private Boolean[] updates = new Boolean[RamSize.DDRAM_SIZE];
+
+	private PCB8544DDRam DDRAM;
 
 	/** Serial data input. */
 	private GpioPinDigitalOutput DIN;
@@ -72,7 +75,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 			byte contrast,
 			boolean inverse) {
 
-		setAllValues(this.updates, true); 
+		this.DDRAM = new PCB8544DDRam(this, Color.BLACK);
 
 		this.DIN = din;
 		this.SCLK = sclk;
@@ -127,14 +130,6 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 		SCE.high();
 	}
 
-	private void sendData(byte data) {
-		DC.high();
-
-		SCE.low();
-		writeData(data);
-		SCE.high();
-	}
-
 	private void writeData(byte data) {
 		BitOrderFirst order = BitOrderFirst.MSB;
 		if (order == BitOrderFirst.MSB)
@@ -179,68 +174,51 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	@Override
 	public void setPixel(int x, int y, Color color) {
-		if (!isPositionExists(x, y))
-			throw new IndexOutOfBoundsException("Position ("+x+", "+y+") don't exists");
-
-		// Calculate the bit position
-		byte index = (byte) (y % 8);
-
-		byte position = getPixelPosition(x, y);
-
-		// Set the color of the pixel
-		if (color == Color.BLACK)
-			buffer[position] = (byte) (buffer[position] | 1 << index);
-		else
-			buffer[position] = (byte) (buffer[position] & ~(1 << index));
-
-		updates[position] = true;
+		this.DDRAM.setPixel(x, y, color);
 	}
-	
+
 	public boolean isPositionExists(int x, int y) {
 		return !(x < 0 || y < 0 || x >= getWidth() || y >= getHeight());
 	}
 
 	public Color getPixel(int x, int y) { 
-		if (!isPositionExists(x, y))
-			throw new IndexOutOfBoundsException("Position ("+x+", "+y+") don't exists");
-
-		byte index = (byte) (y % 8);
-		byte block = getPixelPosition(x, y);
-		
-		return (buffer[block] | 1 << index) == 1 ? Color.BLACK : Color.WHITE;
-		//return utils::get_bit( m_buffer, block, 7 - ( y % 8 ) );
-	}
-	
-	/**
-	 * @return The byte then contains the pixel
-	 */
-	private byte getPixelPosition(int x, int y) {
-		return (byte) ((byte) x + ((byte) y / 8) * getWidth());
+		return this.DDRAM.getPixel(x, y);
 	}
 
-	// FIXME - Refactor
 	@Override
 	public void redraw() {
-		// Flag indicating that a block is skipped
-		boolean jump = true;
+		Point cursor = new Point(-1, -1);
 
-		int k = 0;
-
-		// Update the pixels in the bounding box
-		for (int y = 0; y < RamSize.DDRAM_HEIGHT; ++y) {
-			setCursorY(y);
-
-			for (int x = 0; x < RamSize.DDRAM_WIDTH; ++x, ++k) {
-				if (updates[k]) {
-					if (jump) {
-						setCursorX(x);
-						jump = false;
-					}
-	
-					sendData(buffer[k]);
-					updates[k] = false;
-				} else jump = true;
+		for (PCB8544DDramBank bank : this.DDRAM.getChanges()) {
+			if (cursor.y != bank.y()) {
+				cursor.y = bank.y();
+				setCursorY(cursor.y);
 			}
+
+			if (cursor.x != bank.x()) {
+				cursor.x = bank.x();
+				setCursorX(cursor.x);
+			}
+
+			sendData(bank);
+		}
+	}
+
+	private void sendData(PCB8544DDramBank bankData) {
+		DC.high();
+
+		SCE.low();
+		writeData(bankData);
+		SCE.high();
+	}
+
+	private void writeData(PCB8544DDramBank bank) {
+		Iterator<Color> iterator = bank.msbIterator();
+		while (iterator.hasNext()) {
+			Color color = iterator.next();
+			DIN.setState(color == Color.BLACK ? true : false);
+
+			toggleClock();
 		}
 	}
 
@@ -253,9 +231,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 	}
 
 	public void clear() {
-		this.buffer = new byte[RamSize.DDRAM_SIZE];
-
-		setAllValues(this.updates, true);
+		this.DDRAM.clear();
 
 		setCursorX(0);
 		setCursorY(0);

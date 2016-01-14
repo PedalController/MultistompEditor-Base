@@ -26,25 +26,25 @@ public class PiPedalController {
 		PhysicalEffect footswitch1 = new PhysicalEffect(
 			0,
 			//builder.buildButton(RaspiPin.GPIO_00, gpio),
-			builder.buildMomentarySwitch(RaspiPin.GPIO_00),
-			builder.buildLed(RaspiPin.GPIO_12)
+			builder.buildMomentarySwitch(RaspiPin.GPIO_23),
+			builder.buildLed(RaspiPin.GPIO_27)
 		);
 
 		PhysicalEffect footswitch2 = new PhysicalEffect(
 			1,
-			builder.buildMomentarySwitch(RaspiPin.GPIO_02),
-			builder.buildLed(RaspiPin.GPIO_13)
+			builder.buildMomentarySwitch(RaspiPin.GPIO_24),
+			builder.buildLed(RaspiPin.GPIO_28)
 		);
 
 		PhysicalEffect footswitch3 = new PhysicalEffect(
 			2,
-			builder.buildMomentarySwitch(RaspiPin.GPIO_03),
-			builder.buildLed(RaspiPin.GPIO_14)
+			builder.buildMomentarySwitch(RaspiPin.GPIO_25),
+			builder.buildLed(RaspiPin.GPIO_29)
 		);
 
 
-		//Clicable next   = builder.buildMomentarySwitch(RaspiPin.GPIO_28);
-		//Clicable before = builder.buildMomentarySwitch(RaspiPin.GPIO_29);
+		Clicable next   = builder.buildMomentarySwitch(RaspiPin.GPIO_16);
+		Clicable before = builder.buildMomentarySwitch(RaspiPin.GPIO_01);
 
 
 		
