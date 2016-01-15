@@ -63,7 +63,7 @@ class PCB8544DDramBank {
 
 		@Override
 		public Color next() {
-			return PCB8544DisplayDDramBank.getPixel(count++);
+			return PCB8544DisplayDDramBank.getPixel(count--);
 		}
 
 		@Override
