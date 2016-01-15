@@ -39,18 +39,18 @@ class PCB8544DDRam {
 		if (!bank.hasChanged())
 			this.changes.add(bank);
 
-		bank.setPixel(y, color);
+		bank.setPixel(y%8, color);
 		bank.setChanged(true);
 	}
 
 	private PCB8544DDramBank getBank(int x, int y) {
-		PCB8544DDramBank ank = buffer[x][y/8];
-		if (ank == null) {
-			ank = new PCB8544DDramBank(x, y/8, this.initialColor);
-			buffer[x][y%8] = ank;
+		PCB8544DDramBank bank = buffer[x][y/8];
+		if (bank == null) {
+			bank = new PCB8544DDramBank(x, y/8, this.initialColor);
+			buffer[x][y/8] = bank;
 		}
 
-		return ank;
+		return bank;
 	}
 
 	public Color getPixel(int x, int y) {
