@@ -108,7 +108,7 @@ public class Main {
 			DC,
 			RST,
 			SCE,
-			(byte) 1,
+			(byte) 0xB0,
 			false
 		);
 	}
