@@ -39,7 +39,8 @@ import com.pi4j.io.gpio.PinState;
 public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	private static final int CLOCK_TIME_DELAY = 10;//ms
-	private static final int RESET_DELAY = 10^-3;//ms
+	//http://stackoverflow.com/questions/11498585/how-to-suspend-a-java-thread-for-a-small-period-of-time-like-100-nanoseconds
+	private static final int RESET_DELAY = 1;//10^-3ms
 
 	private PCB8544DDRam DDRAM;
 

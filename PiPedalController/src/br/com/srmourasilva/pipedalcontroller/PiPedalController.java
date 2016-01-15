@@ -60,8 +60,8 @@ public class PiPedalController {
 		PhysicalPedalController multistomp = new PhysicalPedalController(pedal);
 		multistomp.vinculePedalEffects(footswitch1, footswitch2, footswitch3);
 
-		//multistomp.vinculeNext(next);
-		//multistomp.vinculeBefore(before);
+		multistomp.vinculeNext(next);
+		multistomp.vinculeBefore(before);
 
 
 		try {

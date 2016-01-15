@@ -15,6 +15,7 @@ public class MomentarySwitchClicable implements Clicable {
 	private Optional<OnClickListener> listener;
 
 	public MomentarySwitchClicable(GpioMomentarySwitchComponent momentarySwitch) {
+		this.listener = Optional.empty();
 		this.momentarySwitch = momentarySwitch;
 		this.momentarySwitch.addListener(generateListener());
 	}
