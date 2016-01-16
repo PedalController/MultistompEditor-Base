@@ -32,12 +32,13 @@ public class Main {
 		//Thread.sleep(5000);
 		//System.out.println("Dando um Clear");
 		//display.clear();
+		Thread.sleep(5000);
 
 		System.out.println("Test: Display single pixel.\n");
 		display.setPixel(10, 10, WhiteBlackDisplay.Color.BLACK);
 		display.redraw();
 
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 		display.clear();
 
 		System.out.println("Test: Draw many lines.\n");
@@ -48,7 +49,7 @@ public class Main {
 			drawer.drawLine(new Point(0, 0), new Point(83, i), WhiteBlackDisplay.Color.BLACK);
 
 		display.redraw();
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 		display.clear();
 
 		System.out.println("Test: Draw rectangles.\n");
@@ -56,7 +57,7 @@ public class Main {
 			drawer.drawRect(new Point(i, i), 83-i, 47-i, WhiteBlackDisplay.Color.BLACK);
 
 		display.redraw();
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 		display.clear();
 
 
@@ -67,7 +68,7 @@ public class Main {
 		}
 
 		display.redraw();
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 		display.clear();
 
 		System.out.println("Test: Draw multiple circles.\n");
@@ -75,7 +76,7 @@ public class Main {
 			drawer.drawCircle(new Point(41, 23), i, WhiteBlackDisplay.Color.BLACK);
 
 		display.redraw();
-		Thread.sleep(3000);
+		Thread.sleep(5000);
 		display.clear();
 
 		/*
@@ -111,7 +112,7 @@ public class Main {
 			DC,
 			RST,
 			SCE,
-			(byte) 80/*0xB0*/,
+			(byte) 60/*0xB0*/,
 			false
 		);
 	}
