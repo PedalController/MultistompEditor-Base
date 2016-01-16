@@ -21,7 +21,7 @@ class PCB8544DDramBank {
 	}
 
 	public void setPixel(int y, Color color) {
-		if (colors[y] == color)
+		if (colors[y] != color)
 			this.changed = true;
 
 		colors[y] = color;
