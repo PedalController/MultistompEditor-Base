@@ -189,6 +189,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 		Point cursor = new Point(-1, -1);
 
 		Queue<PCB8544DDramBank> changes = this.DDRAM.getChanges();
+		System.out.println("Start redraw: " + changes.size() + " changes");
 		while (!changes.isEmpty()) {
 			PCB8544DDramBank bank = changes.remove();
 			if (cursor.y != bank.y()) {
@@ -203,6 +204,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 			sendData(bank);
 		}
+		System.out.println("End redraw");
 	}
 
 	private void sendData(PCB8544DDramBank bankData) {
