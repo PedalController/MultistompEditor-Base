@@ -40,7 +40,7 @@ import com.pi4j.wiringpi.Gpio;
 */
 public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
-	private static final int CLOCK_TIME_DELAY = 10;//micro seconds
+	private static final int CLOCK_TIME_DELAY = 10;//micro seconds // 10 nanosseconds is the correct 
 	//http://stackoverflow.com/questions/11498585/how-to-suspend-a-java-thread-for-a-small-period-of-time-like-100-nanoseconds
 	private static final int RESET_DELAY = 1;//10^-3ms
 
@@ -161,7 +161,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	private void toggleClock() {
 		SCLK.high();
-		Gpio.delayMicroseconds(CLOCK_TIME_DELAY);
+		//Gpio.delayMicroseconds(CLOCK_TIME_DELAY);
 		SCLK.low();
 	}
 
