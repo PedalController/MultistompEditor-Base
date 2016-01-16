@@ -161,7 +161,10 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	private void toggleClock() {
 		SCLK.high();
-		Gpio.delayMicroseconds(CLOCK_TIME_DELAY);
+		// The changes usign wiring pi are 20ns
+		// its necessary only 10ns
+		// Not comment :D
+		//Gpio.delayMicroseconds(CLOCK_TIME_DELAY);
 		SCLK.low();
 	}
 
