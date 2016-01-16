@@ -38,7 +38,6 @@ public class Main {
 		display.redraw();
 
 		Thread.sleep(3000);
-		System.out.println("Dando um Clear");
 		display.clear();
 
 		System.out.println("Test: Draw many lines.\n");
