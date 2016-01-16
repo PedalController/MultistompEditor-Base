@@ -77,7 +77,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 			byte contrast,
 			boolean inverse) {
 
-		this.DDRAM = new PCB8544DDRam(this, Color.BLACK);
+		this.DDRAM = new PCB8544DDRam(this, Color.WHITE);
 
 		this.DIN = din;
 		this.SCLK = sclk;
@@ -166,7 +166,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	public void setContrast(byte value) {
 		sendCommand(SysCommand.FUNC, Setting.FUNC_H);
-		sendCommand(SysCommand.VOP, new ByteCommand(value & 0x7f ));
+		sendCommand(SysCommand.VOP, new ByteCommand(value & 0x7f));
 		sendCommand(SysCommand.FUNC);
 	}
 

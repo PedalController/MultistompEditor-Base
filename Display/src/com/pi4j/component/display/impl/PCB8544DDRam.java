@@ -1,12 +1,10 @@
 package com.pi4j.component.display.impl;
 
-
 import java.util.LinkedList;
 import java.util.Queue;
 
 import com.pi4j.component.display.WhiteBlackDisplay.Color;
 import com.pi4j.component.display.impl.PCD8544Constants.DisplaySize;
-
 
 class PCB8544DDRam {
 
