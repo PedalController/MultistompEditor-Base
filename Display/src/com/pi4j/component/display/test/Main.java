@@ -18,16 +18,19 @@ import com.pi4j.component.display.WhiteBlackDisplay;
 
 public class Main {
 	public static void main(String[] args) throws InterruptedException {
+		System.out.println("Inicializando");
 		Display<WhiteBlackDisplay.Color> display = getDisplayComponent();
 
 		DisplayGeometryDrawer<WhiteBlackDisplay.Color> drawer = new DisplayGeometryDrawer<WhiteBlackDisplay.Color>(display); 
 
+		System.out.println("Dando um Clear");
 		display.clear();
 					
 
-		System.out.println("Test: Display logo.\n");
-		System.out.println("I'm Cleaned, huahuahu.\n");
-		Thread.sleep(5000);
+		//System.out.println("Test: Display logo.\n");
+		//System.out.println("I'm Cleaned, huahuahu.\n");
+		//Thread.sleep(5000);
+		System.out.println("Dando um Clear");
 		display.clear();
 
 		System.out.println("Test: Display single pixel.\n");

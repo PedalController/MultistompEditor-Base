@@ -225,7 +225,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 	}
 
 	private void setCursorY(int y) {
-		sendCommand(SysCommand.YADDR, new ByteCommand(7));
+		sendCommand(SysCommand.YADDR, new ByteCommand(y));
 	}
 
 	public void clear() {
