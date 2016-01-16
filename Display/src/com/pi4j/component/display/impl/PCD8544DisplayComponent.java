@@ -192,15 +192,15 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 		System.out.println("Start redraw: " + changes.size() + " changes");
 		while (!changes.isEmpty()) {
 			PCB8544DDramBank bank = changes.remove();
-			if (cursor.y != bank.y()) {
+			//if (cursor.y != bank.y()) {
 				cursor.y = bank.y();
 				setCursorY(cursor.y);
-			}
+			//}
 
-			if (cursor.x != bank.x()) {
+			//if (cursor.x != bank.x()) {
 				cursor.x = bank.x();
 				setCursorX(cursor.x);
-			}
+			//}
 
 			sendData(bank);
 		}
