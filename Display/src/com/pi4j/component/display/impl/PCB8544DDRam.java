@@ -28,14 +28,12 @@ class PCB8544DDRam {
 		
 		this.changes = new LinkedList<>();
 
-		System.out.println("Criando ram");
 		for (int x = 0; x < DDRamSize.DDRAM_WIDTH; x++) {
 			for (int y = 0; y < DDRamSize.DDRAM_HEIGHT; y++) {
 				buffer[x][y] = new PCB8544DDramBank(x, y, initialColor);
 				this.changes.add(buffer[x][y]);
 			}
 		}
-		System.out.println("Terminando criação");
 	}
 
 	public void setPixel(int x, int y, Color color) {
