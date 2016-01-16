@@ -1,23 +1,23 @@
 package com.pi4j.component.display;
 
-import com.pi4j.component.display.Display.Color;
+import java.awt.Color;
 
-public class PixelBuffer<C extends Color> {
+public class PixelBuffer {
 	public final int x;
 	public final int y;
-	private C color;
+	private Color color;
 	
-	public PixelBuffer(final int x, final int y, C color) {
+	public PixelBuffer(final int x, final int y, Color color) {
 		this.x = x;
 		this.y = y;
 		this.color = color;
 	}
 
-	public C getColor() {
+	public Color getColor() {
 		return color;
 	}
 
-	public void setColor(C color) {
+	public void setColor(Color color) {
 		this.color = color;
 	}
 	

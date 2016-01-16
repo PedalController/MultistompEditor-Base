@@ -50,7 +50,7 @@ public class ZoomG3v2Pedals {
 		effectsName.put(20, "Comp+AWah");
 		effectsName.put(21, "FLG+VCho");
 		effectsName.put(22, "Comp+OD");
-		effectsName.put(23, "COMP");
+		effectsName.put(23, "Comp");
 		effectsName.put(24, "RackComp");
 		effectsName.put(25, "M Comp");
 		effectsName.put(26, "SlowATTCK");

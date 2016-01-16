@@ -1,8 +1,7 @@
 package com.pi4j.component.display.impl;
 
+import java.awt.Color;
 import java.util.Iterator;
-
-import com.pi4j.component.display.WhiteBlackDisplay.Color;
 
 class PCB8544DDramBank {
 	private final int x;

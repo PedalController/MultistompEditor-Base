@@ -1,9 +1,9 @@
 package com.jpcd8544;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import com.pi4j.component.display.Display;
-import com.pi4j.component.display.WhiteBlackDisplay.Color;
 
 public class Jpcd8544Drawer {
 

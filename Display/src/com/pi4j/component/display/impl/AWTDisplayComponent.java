@@ -1,49 +1,33 @@
 package com.pi4j.component.display.impl;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Queue;
 
-import com.pi4j.component.display.Display;
 import com.pi4j.component.display.DisplayBuffer;
 import com.pi4j.component.display.PixelBuffer;
-import com.pi4j.component.display.Display.Color;
 
 
 /**
  * Based in Erkki 22-Jul-2014
  * https://raw.githubusercontent.com/noxo/SnakePI4J/master/src/org/noxo/devices/AWTDisplay.java
  */
-public class AWTDisplayComponent implements com.pi4j.component.display.Display<AWTDisplayComponent.Color> {
-
-	public enum Color implements Display.Color {
-		BLACK(0xFF000000),
-		WHITE(0xFFFFFFFF);
-		
-		private int color;
-
-		Color(int color) {
-			this.color = color;
-		}
-		
-		public int getColor() {
-			return color;
-		}
-	}
+public class AWTDisplayComponent implements com.pi4j.component.display.Display {
 
 	private Frame screen;
 	private int width;
 	private int height;
 	
-	private DisplayBuffer<Color> buffer;
+	private DisplayBuffer buffer;
 	
 	public AWTDisplayComponent(int width, int height) {
 		this.width = width;
 		this.height = height;
 		
-		this.buffer = new DisplayBuffer<>(width, height, Color.WHITE);
+		this.buffer = new DisplayBuffer(width, height, Color.WHITE);
 
 		screen = new java.awt.Frame();
 		screen.setSize(width, height);
@@ -62,13 +46,13 @@ public class AWTDisplayComponent implements com.pi4j.component.display.Display<A
 
 	@Override
 	public void redraw() {
-		Queue<PixelBuffer<Color>> pixelsChanged = buffer.getChanges();
+		Queue<PixelBuffer> pixelsChanged = buffer.getChanges();
 
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
 		while (!pixelsChanged.isEmpty()) {
-			PixelBuffer<Color> pixel = pixelsChanged.remove();
-			img.setRGB(pixel.x, pixel.y, pixel.getColor().getColor());
+			PixelBuffer pixel = pixelsChanged.remove();
+			img.setRGB(pixel.x, pixel.y, pixel.getColor().getRGB());
 		}
 
 		try {

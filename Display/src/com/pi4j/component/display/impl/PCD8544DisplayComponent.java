@@ -1,6 +1,6 @@
 package com.pi4j.component.display.impl;
 
-import java.awt.Point;
+import java.awt.Color;
 import java.util.Iterator;
 import java.util.Queue;
 
@@ -13,7 +13,6 @@ import com.pi4j.component.display.utils.ByteCommand;
 import com.pi4j.component.display.utils.Command;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
-import com.pi4j.wiringpi.Gpio;
 
 /* 
 	Raspberry Pi 2 Java version
@@ -22,8 +21,8 @@ import com.pi4j.wiringpi.Gpio;
 	Based in 2013 Giacomo Trudu - wicker25[at]gmail[dot]com
 	Based in 2010 Limor Fried, Adafruit Industries
 	Based in CORTEX-M3 version by Le Dang Dung, 2011 LeeDangDung@gmail.com (tested on LPC1769)
-	Based in  Raspberry Pi version by Andre Wussow, 2012, desk@binerry.de
-	Based in  Raspberry Pi Java version by Cleverson dos Santos Assis, 2013, tecinfcsa@yahoo.com.br
+	Based in Raspberry Pi version by Andre Wussow, 2012, desk@binerry.de
+	Based in Raspberry Pi Java version by Cleverson dos Santos Assis, 2013, tecinfcsa@yahoo.com.br
 	
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Lesser General Public
@@ -44,7 +43,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 	//http://stackoverflow.com/questions/11498585/how-to-suspend-a-java-thread-for-a-small-period-of-time-like-100-nanoseconds
 	private static final int RESET_DELAY = 1;//10^-3ms
 
-	private PCB8544DDRam DDRAM;
+	private PCB8544DisplayDataRam DDRAM;
 
 	/** Serial data input. */
 	private GpioPinDigitalOutput DIN;
@@ -78,7 +77,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 			byte contrast,
 			boolean inverse) {
 
-		this.DDRAM = new PCB8544DDRam(this, Color.WHITE);
+		this.DDRAM = new PCB8544DisplayDataRam(this, Color.WHITE);
 
 		this.DIN = din;
 		this.SCLK = sclk;
@@ -161,9 +160,10 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	private void toggleClock() {
 		SCLK.high();
-		// The changes usign wiring pi are 20ns
-		// its necessary only 10ns
-		// Not comment :D
+		// The pin changes usign wiring pi are 20ns?
+		// The pi4j in Snapshot 1.1.0 are 1MHz ~ 1 microssecond in Raspberry 2      http://www.savagehomeautomation.com/projects/raspberry-pi-with-java-programming-the-internet-of-things-io.html#follow_up_pi4j
+		// Its necessary only 10ns    Pag 22 - https://www.sparkfun.com/datasheets/LCD/Monochrome/Nokia5110.pdf
+		// Not discoment :D
 		//Gpio.delayMicroseconds(CLOCK_TIME_DELAY);
 		SCLK.low();
 	}
@@ -211,7 +211,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 		Iterator<Color> iterator = bank.msbIterator();
 		while (iterator.hasNext()) {
 			Color color = iterator.next();
-			DIN.setState(color == Color.BLACK ? true : false);
+			DIN.setState(color.equals(Color.BLACK) ? true : false);
 
 			toggleClock();
 		}

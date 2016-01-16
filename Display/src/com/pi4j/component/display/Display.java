@@ -1,12 +1,10 @@
 package com.pi4j.component.display;
 
-public interface Display<C extends Display.Color> {
-	
-	public interface Color {
-		
-	}
+import java.awt.Color;
 
-	void setPixel(int x, int y, C color);
+public interface Display {
+
+	void setPixel(int x, int y, Color color);
 	
 	/**
 	 * Repaint the display, updating changes caused by use of setPixel method  

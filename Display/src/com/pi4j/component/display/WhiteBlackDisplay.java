@@ -1,8 +1,8 @@
 package com.pi4j.component.display;
 
-public interface WhiteBlackDisplay extends Display<WhiteBlackDisplay.Color> {
-	public enum Color implements Display.Color {
-		BLACK,
-		WHITE;
-	}
+import java.awt.Color;
+
+public interface WhiteBlackDisplay extends Display {
+	public final static Color BLACK = Color.BLACK;
+	public final static Color WHITE = Color.WHITE;
 }

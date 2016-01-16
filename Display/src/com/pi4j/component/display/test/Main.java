@@ -1,60 +1,99 @@
 package com.pi4j.component.display.test;
 
-import java.awt.Point;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
-import com.pi4j.component.display.drawer.DisplayGeometryDrawer;
+import javax.imageio.ImageIO;
+
+import com.pi4j.component.display.Display;
+import com.pi4j.component.display.WhiteBlackDisplay;
+import com.pi4j.component.display.drawer.DisplayGraphics;
 import com.pi4j.component.display.impl.AWTDisplayComponent;
 import com.pi4j.component.display.impl.PCD8544DisplayComponent;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.wiringpi.Gpio;
-import com.pi4j.component.display.Display;
-import com.pi4j.component.display.WhiteBlackDisplay;
 
 public class Main {
 	public static void main(String[] args) throws InterruptedException {
 		System.out.println("Inicializando");
-		Display<WhiteBlackDisplay.Color> display = getDisplayComponent();
+		Display display = getDisplayComponent();
 
-		DisplayGeometryDrawer<WhiteBlackDisplay.Color> drawer = new DisplayGeometryDrawer<WhiteBlackDisplay.Color>(display); 
+		Graphics graphics = new DisplayGraphics(display, Color.WHITE);
+		graphics.setColor(WhiteBlackDisplay.BLACK); 
 
 		System.out.println("Dando um Clear");
 		display.clear();
-					
 
-		//System.out.println("Test: Display logo.\n");
-		//System.out.println("I'm Cleaned, huahuahu.\n");
-		//Thread.sleep(5000);
-		//System.out.println("Dando um Clear");
-		//display.clear();
 		Thread.sleep(5000);
 
 		System.out.println("Test: Display single pixel.\n");
-		display.setPixel(10, 10, WhiteBlackDisplay.Color.BLACK);
+		display.setPixel(10, 10, Color.BLACK);
 		display.redraw();
 
 		Thread.sleep(5000);
 		display.clear();
 
-		System.out.println("Test: Draw many lines.\n");
-		for (int i=0; i<84; i+=4)
-			drawer.drawLine(new Point(0, 0), new Point(i, 47), WhiteBlackDisplay.Color.BLACK);
 
-		for (int i=0; i<48; i+=4)
-			drawer.drawLine(new Point(0, 0), new Point(83, i), WhiteBlackDisplay.Color.BLACK);
+		System.out.println("Test: Draw image.\n");
+		String baseName = System.getProperty("user.dir") + File.separator + "lib" + File.separator;
+		String imageName = baseName + "pi4j-header-small3.png";
+
+		try {
+			Image image = ImageIO.read(new File(imageName));
+
+			graphics.drawImage(image, 0, 0, null);
+			display.redraw();
+			Thread.sleep(5000);
+			display.clear();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		/*
+		// Monochomatic
+		try {
+			Image image = ImageIO.read(new File(imageName));
+			BufferedImage bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_BYTE_BINARY);
+
+			Graphics2D bGr = bimage.createGraphics();
+			bGr.drawImage(image, 0, 0, null);
+			bGr.dispose();
+
+			graphics.drawImage(bimage, 0, 0, null);
+			display.redraw();
+			Thread.sleep(5000);
+			display.clear();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		*/
+
+		System.out.println("Test: Draw many lines.\n");
+		for (int i=0; i<84; i+=4) {
+			graphics.drawLine(0, 0, i, 47);
+			display.redraw();
+		}
+
+		for (int i=0; i<48; i+=4) {
+			graphics.drawLine(0, 0, 83, i);
+			display.redraw();
+		}
 
 		display.redraw();
 		Thread.sleep(5000);
 		display.clear();
 
 		System.out.println("Test: Draw rectangles.\n");
-		for (int i=0; i<48; i+=2)
-			drawer.drawRect(new Point(i, i), 83-i, 47-i, WhiteBlackDisplay.Color.BLACK);
+		for (int i=0; i<48; i+=2) {
+			graphics.drawRect(i, i, 83-i, 47-i);
+			display.redraw();
+		}
 
 		display.redraw();
 		Thread.sleep(5000);
@@ -63,8 +102,10 @@ public class Main {
 
 		System.out.println("Test: Draw multiple rectangles.\n");
 		for (int i=0; i<48; i++) {
-			WhiteBlackDisplay.Color color = i%2 == 0 ? WhiteBlackDisplay.Color.BLACK : WhiteBlackDisplay.Color.WHITE;
-			drawer.fillRect(new Point(i, i), 83-i, 47-i, color);
+			Color color = i%2 == 0 ? Color.BLACK : Color.WHITE;
+			graphics.setColor(color);
+			graphics.fillRect(i, i, 83-i, 47-i);
+			display.redraw();
 		}
 
 		display.redraw();
@@ -72,13 +113,16 @@ public class Main {
 		display.clear();
 
 		System.out.println("Test: Draw multiple circles.\n");
-		for (int i=0; i<48; i+=2)
-			drawer.drawCircle(new Point(41, 23), i, WhiteBlackDisplay.Color.BLACK);
+		for (int i=0; i<48; i+=2) {
+			graphics.drawOval(41, 23, i, i);
+			display.redraw();
+		}
 
 		display.redraw();
 		Thread.sleep(5000);
 		display.clear();
-
+		
+		
 		/*
 		System.out.println("Test: Draw the first ~120 chars.\n");
 		for (int i=0; i < 64; i++) {
@@ -95,9 +139,10 @@ public class Main {
 		*/
 	}
 
-	private static Display<WhiteBlackDisplay.Color> getDisplayComponent() {
-		//return new AWTDisplayComponent(84, 48);
+	private static Display getDisplayComponent() {
+		return new AWTDisplayComponent(500, 400);
 		
+		/* * /
 		GpioController gpio = GpioFactory.getInstance();
 
 		GpioPinDigitalOutput RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
@@ -112,8 +157,9 @@ public class Main {
 			DC,
 			RST,
 			SCE,
-			(byte) 60/*0xB0*/,
+			(byte) 60/*0xB0* /,
 			false
 		);
+		/**/
 	}
 }
