@@ -28,12 +28,14 @@ class PCB8544DDRam {
 		
 		this.changes = new LinkedList<>();
 
+		System.out.println("Criando ram");
 		for (int x = 0; x < DDRamSize.DDRAM_WIDTH; x++) {
 			for (int y = 0; y < DDRamSize.DDRAM_HEIGHT; y++) {
 				buffer[x][y] = new PCB8544DDramBank(x, y, initialColor);
 				this.changes.add(buffer[x][y]);
 			}
 		}
+		System.out.println("Terminando criação");
 	}
 
 	public void setPixel(int x, int y, Color color) {
@@ -50,10 +52,10 @@ class PCB8544DDRam {
 
 	private PCB8544DDramBank getBank(int x, int y) {
 		PCB8544DDramBank bank = buffer[x][y/8];
-		if (bank == null) {
-			bank = new PCB8544DDramBank(x, y/8, this.initialColor);
-			buffer[x][y/8] = bank;
-		}
+		//if (bank == null) {
+			//bank = new PCB8544DDramBank(x, y/8, this.initialColor);
+			//buffer[x][y/8] = bank;
+		//}
 
 		return bank;
 	}
@@ -70,12 +72,9 @@ class PCB8544DDRam {
 	}
 
 	public void clear() {
-		for (int x = 0; x < DDRamSize.DDRAM_WIDTH; x++)
-			for (int y = 0; y < DDRamSize.DDRAM_HEIGHT; y++) {
-				PCB8544DDramBank bank = buffer[x][y];
-				for (int yBank = 0; yBank < 6; yBank++)
-					bank.setPixel(yBank, initialColor);
-			}
+		for (int x = 0; x < PCD8544Constants.DisplaySize.WIDTH; x++)
+			for (int y = 0; y < PCD8544Constants.DisplaySize.HEIGHT; y++)
+				setPixel(x, y, initialColor);
 	}
 	
 	public Queue<PCB8544DDramBank> getChanges() {
