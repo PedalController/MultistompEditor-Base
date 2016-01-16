@@ -12,6 +12,7 @@ import com.pi4j.component.display.utils.ByteCommand;
 import com.pi4j.component.display.utils.Command;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
+import com.pi4j.wiringpi.Gpio;
 
 /* 
 	Raspberry Pi 2 Java version
@@ -38,7 +39,7 @@ import com.pi4j.io.gpio.PinState;
 */
 public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
-	private static final int CLOCK_TIME_DELAY = 10;//ms
+	private static final int CLOCK_TIME_DELAY = 100;//micro seconds
 	//http://stackoverflow.com/questions/11498585/how-to-suspend-a-java-thread-for-a-small-period-of-time-like-100-nanoseconds
 	private static final int RESET_DELAY = 1;//10^-3ms
 
@@ -159,11 +160,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 	private void toggleClock() {
 		SCLK.high();
-		try {
-			Thread.sleep(CLOCK_TIME_DELAY);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Gpio.delayMicroseconds(CLOCK_TIME_DELAY);
 		SCLK.low();
 	}
 
