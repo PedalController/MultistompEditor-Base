@@ -50,7 +50,7 @@ public class Main {
 
 		System.out.println("Test: Draw rectangles.\n");
 		for (int i=0; i<48; i+=2)
-			drawer.drawRect(new Point(i, i), 96-i, 48-i, WhiteBlackDisplay.Color.BLACK);
+			drawer.drawRect(new Point(i, i), 83-i, 47-i, WhiteBlackDisplay.Color.BLACK);
 
 		display.redraw();
 		Thread.sleep(5000);
@@ -60,7 +60,7 @@ public class Main {
 		System.out.println("Test: Draw multiple rectangles.\n");
 		for (int i=0; i<48; i++) {
 			WhiteBlackDisplay.Color color = i%2 == 0 ? WhiteBlackDisplay.Color.BLACK : WhiteBlackDisplay.Color.WHITE;
-			drawer.fillRect(new Point(i, i), 84-i, 48-i, color);
+			drawer.fillRect(new Point(i, i), 83-i, 47-i, color);
 		}
 
 		display.redraw();
@@ -108,7 +108,7 @@ public class Main {
 			DC,
 			RST,
 			SCE,
-			(byte) 0xB0,
+			(byte) 50/*0xB0*/,
 			false
 		);
 	}
