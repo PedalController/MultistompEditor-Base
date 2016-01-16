@@ -70,7 +70,12 @@ class PCB8544DDRam {
 	}
 
 	public void clear() {
-		this.buffer = new PCB8544DDramBank[DDRamSize.DDRAM_WIDTH][DDRamSize.DDRAM_HEIGHT];
+		for (int x = 0; x < DDRamSize.DDRAM_WIDTH; x++)
+			for (int y = 0; y < DDRamSize.DDRAM_HEIGHT; y++) {
+				PCB8544DDramBank bank = buffer[x][y];
+				for (int yBank = 0; yBank < 6; yBank++)
+					bank.setPixel(yBank, initialColor);
+			}
 	}
 	
 	public Queue<PCB8544DDramBank> getChanges() {

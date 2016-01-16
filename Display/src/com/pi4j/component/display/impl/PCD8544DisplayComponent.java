@@ -2,6 +2,7 @@ package com.pi4j.component.display.impl;
 
 import java.awt.Point;
 import java.util.Iterator;
+import java.util.Queue;
 
 import com.pi4j.component.display.WhiteBlackDisplay;
 import com.pi4j.component.display.impl.PCD8544Constants.BitOrderFirst;
@@ -187,7 +188,9 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 	public void redraw() {
 		Point cursor = new Point(-1, -1);
 
-		for (PCB8544DDramBank bank : this.DDRAM.getChanges()) {
+		Queue<PCB8544DDramBank> changes = this.DDRAM.getChanges();
+		while (!changes.isEmpty()) {
+			PCB8544DDramBank bank = changes.element();
 			if (cursor.y != bank.y()) {
 				cursor.y = bank.y();
 				setCursorY(cursor.y);
