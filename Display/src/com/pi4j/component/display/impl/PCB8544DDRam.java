@@ -41,11 +41,12 @@ class PCB8544DDRam {
 			throw new IndexOutOfBoundsException("Position ("+x+", "+y+") don't exists");
 
 		PCB8544DDramBank bank = getBank(x, y);
-		if (!bank.hasChanged())
-			this.changes.add(bank);
+		boolean changedAnotherTime = bank.hasChanged(); 
 
 		bank.setPixel(y%8, color);
-		bank.setChanged(true);
+
+		if (bank.hasChanged() && !changedAnotherTime)
+			this.changes.add(bank);
 	}
 
 	private PCB8544DDramBank getBank(int x, int y) {

@@ -223,6 +223,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
 			toggleClock();
 		}
+		bank.setChanged(false);
 	}
 
 	private void setCursorX(int x) {
