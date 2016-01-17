@@ -54,8 +54,14 @@ public class ImageUtils {
 		final int height = bufferedImage.getHeight();
 
 		Color[][] result = new Color[height][width];
-		System.out.println(pixels.length);
-		
+		//System.out.println(pixels.length);
+
+		for (int x = 0; x < width; x++)
+			for (int y = 0; y < height; y++)
+				result[y][x] = new Color(bufferedImage.getRGB(x, y));
+				//color == 0 ? Color.BLACK : Color.WHITE
+
+		/*
 		int x = 0;
 		int y = 0;
 		for (byte pixel : pixels) {
@@ -72,7 +78,7 @@ public class ImageUtils {
 				if (y == height)
 					return result;
 			}
-		}
+		}*/
 
 		return result;
 	}

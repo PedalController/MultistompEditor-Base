@@ -2,7 +2,9 @@ package com.pi4j.component.display.test;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -42,7 +44,8 @@ public class Main {
 
 		System.out.println("Test: Draw image.\n");
 		String baseName = System.getProperty("user.dir") + File.separator + "lib" + File.separator;
-		String imageName = baseName + "pi4j-header-small3.png";
+		String imageName = baseName + "Aco.Sim.bmp";
+		//String imageName = baseName + "pi4j-header-small3.png";
 
 		try {
 			Image image = ImageIO.read(new File(imageName));
@@ -55,7 +58,6 @@ public class Main {
 			e.printStackTrace();
 		}
 
-		/*
 		// Monochomatic
 		try {
 			Image image = ImageIO.read(new File(imageName));
@@ -72,7 +74,7 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		*/
+
 
 		System.out.println("Test: Draw many lines.\n");
 		for (int i=0; i<84; i+=4) {
