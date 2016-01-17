@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.pi4j.component.display.Display;
 import com.pi4j.component.display.WhiteBlackDisplay;
 import com.pi4j.component.display.drawer.DisplayGraphics;
+import com.pi4j.component.display.drawer.DisplayGraphics.ColorType;
 import com.pi4j.component.light.LED;
 
 import br.com.srmourasilva.pipedalcontroller.domain.clicable.Clicable;
@@ -20,6 +21,7 @@ public class PhysicalEffect {
 	private Clicable clicable;
 	private LED light;
 	private Optional<Display> display = Optional.empty();
+	private DisplayGraphics graphics;
 	
 	/**
 	 * @param position 0 is the first
@@ -30,6 +32,7 @@ public class PhysicalEffect {
 	public PhysicalEffect(int position, Clicable clicable, LED led, Display display) {
 		this(position, clicable, led);
 		this.display = Optional.of(display);
+		this.graphics = new DisplayGraphics(display, WhiteBlackDisplay.WHITE, ColorType.BINARY);
 	}
 
 	/**
@@ -67,8 +70,8 @@ public class PhysicalEffect {
 		if (!display.isPresent())
 			return;
 
-		DisplayGraphics graphics = new DisplayGraphics(display.get(), WhiteBlackDisplay.WHITE);
+		graphics.clear();
 		graphics.drawImage(image, 0, 0, null);
-		display.get().redraw();
+		graphics.dispose();
 	}
 }

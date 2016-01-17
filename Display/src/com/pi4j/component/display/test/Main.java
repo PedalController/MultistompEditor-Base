@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import com.pi4j.component.display.Display;
 import com.pi4j.component.display.WhiteBlackDisplay;
 import com.pi4j.component.display.drawer.DisplayGraphics;
+import com.pi4j.component.display.drawer.DisplayGraphics.ColorType;
 import com.pi4j.component.display.impl.AWTDisplayComponent;
 import com.pi4j.component.display.impl.PCD8544DisplayComponent;
 import com.pi4j.io.gpio.GpioController;
@@ -23,29 +24,35 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class Main {
 	public static void main(String[] args) throws InterruptedException {
-		System.out.println("Inicializando");
+		System.out.println("Init");
 		Display display = getDisplayComponent();
 
-		Graphics graphics = new DisplayGraphics(display, Color.WHITE);
-		graphics.setColor(WhiteBlackDisplay.BLACK); 
 
-		System.out.println("Dando um Clear");
-		display.clear();
+		DisplayGraphics graphics = new DisplayGraphics(display, Color.BLACK, ColorType.BINARY);
+
+		System.out.println("Clear");
+		graphics.clear();
 
 		Thread.sleep(5000);
 		
-		System.out.println("Test: Tentando imprimir algo\n");
+
+		//System.out.println("Test: Display single pixel.\n");
+		//display.setPixel(10, 10, Color.BLACK);
+		//display.redraw();
+
+		//Thread.sleep(5000);
+		//graphics.clear();
+
+		
+		System.out.println("Test: Writing text\n");
 		graphics.drawString("Macarronada", 0, 20);
-		display.redraw();
-		Thread.sleep(5000);
-		display.clear();
+		graphics.dispose();
+		graphics.clear();
 
-		System.out.println("Test: Display single pixel.\n");
-		display.setPixel(10, 10, Color.BLACK);
-		display.redraw();
-
+		//Font font = new Font("Serif", Font.PLAIN, 15);
+		//graphics.setFont(font);
+		
 		Thread.sleep(5000);
-		display.clear();
 
 
 		System.out.println("Test: Draw image.\n");
@@ -57,78 +64,61 @@ public class Main {
 			Image image = ImageIO.read(new File(imageName));
 
 			graphics.drawImage(image, 0, 0, null);
-			display.redraw();
-			Thread.sleep(5000);
-			display.clear();
+			graphics.dispose();
+			graphics.clear();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		// Monochomatic
-		try {
-			Image image = ImageIO.read(new File(imageName));
-			BufferedImage bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_BYTE_BINARY);
-
-			Graphics2D bGr = bimage.createGraphics();
-			bGr.drawImage(image, 0, 0, null);
-			bGr.dispose();
-
-			graphics.drawImage(bimage, 0, 0, null);
-			display.redraw();
-			Thread.sleep(5000);
-			display.clear();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		Thread.sleep(5000);
+		
 
 		System.out.println("Test: Draw many lines.\n");
 		for (int i=0; i<84; i+=4) {
 			graphics.drawLine(0, 0, i, 47);
-			display.redraw();
+			graphics.dispose();
 		}
 
 		for (int i=0; i<48; i+=4) {
 			graphics.drawLine(0, 0, 83, i);
-			display.redraw();
+			graphics.dispose();
 		}
 
-		display.redraw();
+		graphics.clear();
 		Thread.sleep(5000);
-		display.clear();
 
 		System.out.println("Test: Draw rectangles.\n");
 		for (int i=0; i<48; i+=2) {
 			graphics.drawRect(i, i, 83-i, 47-i);
-			display.redraw();
+			graphics.dispose();
 		}
 
-		display.redraw();
+		graphics.clear();
 		Thread.sleep(5000);
-		display.clear();
+
 
 
 		System.out.println("Test: Draw multiple rectangles.\n");
-		for (int i=0; i<48; i++) {
+		for (int i=0; i<48; i+=1) {
 			Color color = i%2 == 0 ? Color.BLACK : Color.WHITE;
 			graphics.setColor(color);
 			graphics.fillRect(i, i, 83-i, 47-i);
-			display.redraw();
+			graphics.dispose();
 		}
 
-		display.redraw();
+		graphics.clear();
 		Thread.sleep(5000);
-		display.clear();
+		
 
 		System.out.println("Test: Draw multiple circles.\n");
-		for (int i=0; i<48; i+=2) {
-			graphics.drawOval(41, 23, i, i);
-			display.redraw();
+		graphics.setColor(Color.BLACK);
+		for (int i=0; i<48; i+=4) {
+			graphics.drawOval(41-i/2, 23-i/2, i, i);
+			graphics.dispose();
 		}
 
-		display.redraw();
+		graphics.clear();
 		Thread.sleep(5000);
-		display.clear();
 		
 		
 		/*
@@ -143,14 +133,14 @@ public class Main {
 
 		display.refresh();
 		Thread.sleep(5000);
-		display.clear();
+		graphics.clear();
 		*/
 	}
 
 	private static Display getDisplayComponent() {
-		return new AWTDisplayComponent(500, 400);
+		//return new AWTDisplayComponent(500, 400);
 		
-		/** /
+		/**/
 		GpioController gpio = GpioFactory.getInstance();
 
 		GpioPinDigitalOutput RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
@@ -165,7 +155,7 @@ public class Main {
 			DC,
 			RST,
 			SCE,
-			(byte) 60/*0xB0* /,
+			(byte) 60/*0xB0*/,
 			false
 		);
 		/**/

@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
 public class TextUtils {
+	/*
 	public static Color[][] writeText(String string, int x, int y) {
 		int width = 84;
 		int height = 48;
@@ -29,4 +30,5 @@ public class TextUtils {
 		
 		return ImageUtils.getPixelsOf(image);
 	}
+	*/
 }

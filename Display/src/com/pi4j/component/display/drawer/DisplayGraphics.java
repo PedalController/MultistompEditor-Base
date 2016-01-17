@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
 
@@ -19,276 +21,243 @@ import com.pi4j.component.display.Display;
 public class DisplayGraphics extends Graphics {
 	
 	private Display display;
-	private Color currentColor;
-	private Color initialColor;
-	private Font font = new Font("Serif", Font.PLAIN, 12);
 
-	public DisplayGraphics(Display display, Color initialColor) {
+	private BufferedImage bufferedImage;
+	private Graphics2D graphics;
+	
+	public enum ColorType { 
+		BINARY(BufferedImage.TYPE_BYTE_BINARY),
+		RGB(BufferedImage.TYPE_3BYTE_BGR),
+		ARGB(BufferedImage.TYPE_4BYTE_ABGR);
+		
+		private final int type;
+
+		private ColorType(int type) {
+			this.type = type;
+		}
+		
+		public int getType() {
+			return type;
+		}
+	}
+
+	public DisplayGraphics(Display display, Color initialColor, ColorType type) {
 		this.display = display;
+
+		this.bufferedImage = new BufferedImage(display.getWidth(), display.getHeight(), type.getType());
+		this.graphics = initGraphics(bufferedImage.createGraphics(), initialColor);
+		
 		this.setColor(initialColor);
 	}
 
-	@Override
-	public void clearRect(int x, int y, int width, int height) {
-		this.fillRect(x, y, width, height);
-	}
+	private Graphics2D initGraphics(Graphics2D graphics, Color initialColor) {
+		graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 
-	@Override
-	public void clipRect(int arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void copyArea(int x, int y, int width, int height, int dx, int dy) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public Graphics create() {
-		DisplayGraphics graphics = new DisplayGraphics(display, initialColor);
-		graphics.setColor(currentColor);
+		graphics.setBackground(Color.WHITE);
+		graphics.fillRect(0, 0, this.display.getWidth(), this.display.getHeight());
+		graphics.setColor(initialColor);
 
 		return graphics;
 	}
 
+	public void clear() {
+		this.graphics.clearRect(0, 0, display.getWidth(), display.getHeight());
+	}
+
+	@Override
+	public void clearRect(int x, int y, int width, int height) {
+		this.graphics.clearRect(x, y, width, height);
+	}
+
+	@Override
+	public void clipRect(int x, int y, int width, int height) {
+		this.graphics.clipRect(x, y, width, height);
+	}
+
+	@Override
+	public void copyArea(int x, int y, int width, int height, int dx, int dy) {
+		this.graphics.copyArea(x, y, width, height, dx, dy);
+	}
+
+	@Override
+	public Graphics create() {
+		return this.graphics.create();
+	}
+
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		//this.graphics.dispose();
+
+		this.updateDisplay();
 	}
 
-	@Override
-	public void drawArc(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		// TODO Auto-generated method stub
+	private void updateDisplay() {
+		Color[][] pixels = ImageUtils.getPixelsOf(this.bufferedImage);
+		this.drawDisplay(pixels, 0, 0);
+		display.redraw();
 	}
 
-	@Override
-	public boolean drawImage(Image image, int x, int y, ImageObserver observer) {
-		return drawImage(ImageUtils.getPixelsOf(image), x, y);
-	}
-	
-	private boolean drawImage(Color[][] pixels, int x, int y) {
+	private void drawDisplay(Color[][] pixels, int x, int y) {
 		int height = pixels.length;
 		int width = pixels[0].length;
 
 		for (int yImage = 0; yImage < height; yImage++)
 			for (int xImage = 0; xImage < width; xImage++)
 				display.setPixel(x+xImage, y+yImage, pixels[yImage][xImage]);
-
-		return true;
 	}
 
 	@Override
-	public boolean drawImage(Image arg0, int arg1, int arg2, Color arg3, ImageObserver arg4) {
-		// TODO Auto-generated method stub
-		return false;
+	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+		this.graphics.drawArc(x, y, width, height, startAngle, arcAngle);
 	}
 
 	@Override
-	public boolean drawImage(Image arg0, int arg1, int arg2, int arg3, int arg4, ImageObserver arg5) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean drawImage(Image img, int x, int y, ImageObserver observer) {
+		return graphics.drawImage(img, x, y, observer);
 	}
 
 	@Override
-	public boolean drawImage(Image image, int arg1, int arg2, int arg3, int arg4, Color arg5, ImageObserver arg6) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-
-	@Override
-	public boolean drawImage(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, ImageObserver arg9) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean drawImage(Image img, int x, int y, Color bgcolor, ImageObserver observer) {
+		return this.graphics.drawImage(img, x, y, bgcolor, observer);
 	}
 
 	@Override
-	public boolean drawImage(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, Color arg9, ImageObserver arg10) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean drawImage(Image img, int x, int y, int width, int height, ImageObserver observer) {
+		return this.graphics.drawImage(img, x, y, width, height, observer);
 	}
 
-	/** Draw a line based in Wikipedia Bresenham's algorithm
-	 */
+	@Override
+	public boolean drawImage(Image img, int x, int y, int width, int height, Color bgcolor, ImageObserver observer) {
+		return this.graphics.drawImage(img, x, y, width, height, bgcolor, observer);
+	}
+
+	@Override
+	public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, ImageObserver observer) {
+		return this.graphics.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer);
+	}
+
+	@Override
+	public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Color bgcolor, ImageObserver observer) {
+		return this.graphics.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, bgcolor, observer);
+	}
+
 	@Override
 	public void drawLine(int x1, int y1, int x2, int y2) {
-		Point start = new Point(x1, y1);
-		Point end   = new Point(x2, y2);
-
-		boolean steep = Math.abs(end.y - start.y) > Math.abs(end.x - start.x);
-
-		if (steep) {
-			start = swapPointValues(start);
-			end = swapPointValues(end);
-		}
-
-		if (start.x > end.x){
-			swapXOf(start, end);
-			swapYOf(start, end);
-		}
-
-		int dx = end.x - start.x;
-		int dy = Math.abs(end.y - start.y);
-
-		int err = dx / 2;
-		int ystep = start.y < end.y ? 1 : -1;
-
-		for (; start.x<=end.x; start.x++) {
-			if (steep)
-				display.setPixel(start.y, start.x, currentColor);
-			else
-				display.setPixel(start.x, start.y, currentColor);
-
-			err -= dy;
-			if (err < 0){
-				start.y += ystep;
-				err += dx;
-			}
-		}
-	}
-	
-	private Point swapPointValues(Point point) {
-		return new Point(point.y, point.x);
-	}
-
-	private void swapXOf(Point p1, Point p2) {
-		int x = p1.x;
-		p1.x = p2.x;
-		p2.x = x;
-	}
-	
-	private void swapYOf(Point p1, Point p2) {
-		int y = p1.y;
-		p1.y = p2.y;
-		p2.y = y;
+		this.graphics.drawLine(x1, y1, x2, y2);
 	}
 
 	@Override
-	public void drawOval(int arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
-		
+	public void drawOval(int x, int y, int width, int height) {
+		this.graphics.drawOval(x, y, width, height);
 	}
 
 	@Override
-	public void drawPolygon(int[] arg0, int[] arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
+	public void drawPolygon(int[] xPoints, int[] yPoints, int nPoints) {
+		this.graphics.drawPolygon(xPoints, yPoints, nPoints);
 	}
 
 	@Override
-	public void drawPolyline(int[] arg0, int[] arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
+	public void drawPolyline(int[] xPoints, int[] yPoints, int nPoints) {
+		this.graphics.drawPolyline(xPoints, yPoints, nPoints);
 	}
 
 	@Override
-	public void drawRoundRect(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		// TODO Auto-generated method stub
-		
+	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+		this.graphics.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
 	}
 
 	@Override
-	public void drawString(String text, int x, int y) {
-		drawImage(TextUtils.writeText(text, x, y), 0, 0);
+	public void drawString(String str, int x, int y) {
+		this.graphics.drawString(str, x, y);
 	}
 
 	@Override
-	public void drawString(AttributedCharacterIterator arg0, int x, int y) {
-		// TODO Auto-generated method stub
+	public void drawString(AttributedCharacterIterator iterator, int x, int y) {
+		this.graphics.drawString(iterator, x, y);
 	}
 
 	@Override
-	public void fillArc(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		// TODO Auto-generated method stub
+	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+		this.graphics.fillArc(x, y, width, height, startAngle, arcAngle);
 	}
 
 	@Override
 	public void fillOval(int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
+		this.graphics.fillOval(x, y, width, height);
 	}
 
 	@Override
-	public void fillPolygon(int[] arg0, int[] arg1, int arg2) {
-		// TODO Auto-generated method stub
+	public void fillPolygon(int[] xPoints, int[] yPoints, int nPoints) {
+		this.graphics.fillPolygon(xPoints, yPoints, nPoints);
 	}
 
 	@Override
 	public void fillRect(int x, int y, int width, int height) {
-		Point position = new Point(x, y);
-
-		Point end = position.getLocation(); 
-		end.translate(width, height);
-
-		for (int i = position.x; i<end.x; i++)
-			for (int j = position.y; j<end.y; j++)
-				display.setPixel(i, j, currentColor);
+		this.graphics.fillRect(x, y, width, height);
 	}
 
 	@Override
-	public void fillRoundRect(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		// TODO Auto-generated method stub
+	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+		this.graphics.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
 	}
 
 	@Override
 	public Shape getClip() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.graphics.getClip();
 	}
 
 	@Override
 	public Rectangle getClipBounds() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.graphics.getClipBounds();
 	}
 
 	@Override
 	public Color getColor() {
-		return this.currentColor;
+		return this.graphics.getColor();
 	}
 
 	@Override
 	public Font getFont() {
-		return this.font;
+		return this.graphics.getFont();
 	}
 
 	@Override
-	public FontMetrics getFontMetrics(Font arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	public FontMetrics getFontMetrics(Font f) {
+		return this.graphics.getFontMetrics(f);
 	}
 
 	@Override
-	public void setClip(Shape arg0) {
-		// TODO Auto-generated method stub
+	public void setClip(Shape clip) {
+		this.graphics.setClip(clip);
 	}
 
 	@Override
 	public void setClip(int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
+		this.graphics.setClip(x, y, width, height);
 	}
 
 	@Override
-	public void setColor(Color color) {
-		this.currentColor = color;
+	public void setColor(Color c) {
+		this.graphics.setColor(c);
 	}
 
 	@Override
 	public void setFont(Font font) {
-		this.font = font;
+		this.graphics.setFont(font);
 	}
 
 	@Override
 	public void setPaintMode() {
-		// TODO Auto-generated method stub
+		this.graphics.setPaintMode();
 	}
 
 	@Override
-	public void setXORMode(Color arg0) {
-		// TODO Auto-generated method stub
+	public void setXORMode(Color c1) {
+		this.graphics.setXORMode(c1);
 	}
 
 	@Override
-	public void translate(int arg0, int arg1) {
-		// TODO Auto-generated method stub
+	public void translate(int x, int y) {
+		this.graphics.translate(x, y);
 	}
 }
