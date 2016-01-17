@@ -39,7 +39,7 @@ public class PiPedalController {
 			DC,
 			RST,
 			SCE,
-			(byte) 60/*0xB0*/,
+			(byte) 60,
 			false
 		);
 
