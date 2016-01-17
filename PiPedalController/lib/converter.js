@@ -14,10 +14,17 @@ for (let file of files) {
 
 	const convert = `convert "./files/${name}.${extension}" -monochrome -resize "84x48>" "./images/${name}.bmp"`;
 	const resize = `convert -size 84x48 xc:white "./images/${name}.bmp" -gravity center -composite "./images/${name}.bmp"`;
+	const convert2 = `convert "./images/${name}.bmp" -monochrome -resize "84x48>" "./images/${name}.bmp"`;
+
+	//const resize = `convert -size 84x48 xc:white "./files/${name}.${extension}" -gravity center -composite "./images/${name}.bmp"`;
+	//const convert = `convert "./images/${name}.bmp" -monochrome -resize "84x48>" "./images/${name}.bmp"`;
 
 	console.log(convert);
 	execSync(convert);
 
 	console.log(resize);
 	execSync(resize);
+
+	console.log(convert2);
+	execSync(convert2);
 }
