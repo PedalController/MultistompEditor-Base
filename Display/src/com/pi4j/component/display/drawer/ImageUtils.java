@@ -10,19 +10,20 @@ public class ImageUtils {
 
 	public static Color[][] getPixelsOf(Image image) {
 		BufferedImage bufferedImage = convertToBufferedImage(image);
-		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 
 		final boolean hasAlphaChannel = bufferedImage.getAlphaRaster() != null;
 
 		if (hasAlphaChannel)
-			return getPixelsAlpha(bufferedImage, pixels);
+			return getPixelsAlpha(bufferedImage);
 		else if (bufferedImage.getType() == BufferedImage.TYPE_BYTE_BINARY)
-			return getByteBinaryPixels(bufferedImage, pixels);
+			return getByteBinaryPixels(bufferedImage);
 		else
-			return getPixels(bufferedImage, pixels);
+			return getPixels(bufferedImage);
 	}
 
-	private static Color[][] getPixelsAlpha(BufferedImage bufferedImage, byte[] pixels) {
+	private static Color[][] getPixelsAlpha(BufferedImage bufferedImage) {
+		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+
 		final int width = bufferedImage.getWidth();
 		final int height = bufferedImage.getHeight();
 
@@ -49,7 +50,7 @@ public class ImageUtils {
 		return result;
 	}
 
-	private static Color[][] getByteBinaryPixels(BufferedImage bufferedImage, byte[] pixels) {
+	private static Color[][] getByteBinaryPixels(BufferedImage bufferedImage) {
 		final int width = bufferedImage.getWidth();
 		final int height = bufferedImage.getHeight();
 
@@ -83,7 +84,9 @@ public class ImageUtils {
 		return result;
 	}
 
-	private static Color[][] getPixels(BufferedImage bufferedImage, byte[] pixels) {
+	private static Color[][] getPixels(BufferedImage bufferedImage) {
+		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+
 		final int width = bufferedImage.getWidth();
 		final int height = bufferedImage.getHeight();
 

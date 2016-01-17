@@ -21,19 +21,16 @@ public class DisplayGraphics extends Graphics {
 	private Display display;
 	private Color currentColor;
 	private Color initialColor;
+	private Font font = new Font("Serif", Font.PLAIN, 12);
 
 	public DisplayGraphics(Display display, Color initialColor) {
 		this.display = display;
-		this.initialColor = initialColor;
+		this.setColor(initialColor);
 	}
 
 	@Override
 	public void clearRect(int x, int y, int width, int height) {
-		Color current = this.currentColor;
-
-		this.setColor(initialColor);
 		this.fillRect(x, y, width, height);
-		this.setColor(current);
 	}
 
 	@Override
@@ -66,8 +63,10 @@ public class DisplayGraphics extends Graphics {
 
 	@Override
 	public boolean drawImage(Image image, int x, int y, ImageObserver observer) {
-		Color[][] pixels = ImageUtils.getPixelsOf(image);
-
+		return drawImage(ImageUtils.getPixelsOf(image), x, y);
+	}
+	
+	private boolean drawImage(Color[][] pixels, int x, int y) {
 		int height = pixels.length;
 		int width = pixels[0].length;
 
@@ -189,13 +188,12 @@ public class DisplayGraphics extends Graphics {
 	}
 
 	@Override
-	public void drawString(String arg0, int arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
+	public void drawString(String text, int x, int y) {
+		drawImage(TextUtils.writeText(text, x, y), 0, 0);
 	}
 
 	@Override
-	public void drawString(AttributedCharacterIterator arg0, int arg1, int arg2) {
+	public void drawString(AttributedCharacterIterator arg0, int x, int y) {
 		// TODO Auto-generated method stub
 	}
 
@@ -250,8 +248,7 @@ public class DisplayGraphics extends Graphics {
 
 	@Override
 	public Font getFont() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.font;
 	}
 
 	@Override
@@ -276,8 +273,8 @@ public class DisplayGraphics extends Graphics {
 	}
 
 	@Override
-	public void setFont(Font arg0) {
-		// TODO Auto-generated method stub
+	public void setFont(Font font) {
+		this.font = font;
 	}
 
 	@Override

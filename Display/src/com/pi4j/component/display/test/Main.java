@@ -33,6 +33,12 @@ public class Main {
 		display.clear();
 
 		Thread.sleep(5000);
+		
+		System.out.println("Test: Tentando imprimir algo\n");
+		graphics.drawString("Macarronada", 0, 20);
+		display.redraw();
+		Thread.sleep(5000);
+		display.clear();
 
 		System.out.println("Test: Display single pixel.\n");
 		display.setPixel(10, 10, Color.BLACK);
@@ -44,8 +50,8 @@ public class Main {
 
 		System.out.println("Test: Draw image.\n");
 		String baseName = System.getProperty("user.dir") + File.separator + "lib" + File.separator;
-		String imageName = baseName + "Aco.Sim.bmp";
-		//String imageName = baseName + "pi4j-header-small3.png";
+		//String imageName = baseName + "Aco.Sim.bmp";
+		String imageName = baseName + "pi4j-header-small3.png";
 
 		try {
 			Image image = ImageIO.read(new File(imageName));
@@ -142,9 +148,9 @@ public class Main {
 	}
 
 	private static Display getDisplayComponent() {
-		//return new AWTDisplayComponent(500, 400);
+		return new AWTDisplayComponent(500, 400);
 		
-		/**/
+		/** /
 		GpioController gpio = GpioFactory.getInstance();
 
 		GpioPinDigitalOutput RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
@@ -159,7 +165,7 @@ public class Main {
 			DC,
 			RST,
 			SCE,
-			(byte) 60/*0xB0*/,
+			(byte) 60/*0xB0* /,
 			false
 		);
 		/**/
