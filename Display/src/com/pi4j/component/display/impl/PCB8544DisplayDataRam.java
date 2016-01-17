@@ -41,8 +41,16 @@ class PCB8544DisplayDataRam {
 		if (!isPositionExists(x, y))
 			//throw new IndexOutOfBoundsException("Position ("+x+", "+y+") don't exists");
 			return;
-		if (!color.equals(WhiteBlackDisplay.BLACK) && !color.equals(WhiteBlackDisplay.WHITE))
-			throw new IndexOutOfBoundsException("The color should be WhiteBlackDisplay.BLACK or WhiteBlackDisplay.WHITE!");
+		if (!color.equals(WhiteBlackDisplay.BLACK) && !color.equals(WhiteBlackDisplay.WHITE)) {
+			System.out.println(color);
+			System.out.println(color.getRed());
+			System.out.println(color.getGreen());
+			System.out.println(color.getBlue());
+
+			System.out.println("The color should be WhiteBlackDisplay.BLACK or WhiteBlackDisplay.WHITE!");
+			//throw new RuntimeException("The color should be WhiteBlackDisplay.BLACK or WhiteBlackDisplay.WHITE!");
+			color = WhiteBlackDisplay.BLACK;
+		}
 
 		PCB8544DDramBank bank = getBank(x, y);
 		boolean changedAnotherTime = bank.hasChanged(); 
