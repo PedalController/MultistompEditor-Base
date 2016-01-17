@@ -2,8 +2,12 @@ package br.com.srmourasilva.pipedalcontroller;
 
 import javax.sound.midi.MidiUnavailableException;
 
+import com.pi4j.component.display.Display;
+import com.pi4j.component.display.impl.PCD8544DisplayComponent;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 import br.com.srmourasilva.architecture.exception.DeviceNotFoundException;
@@ -23,11 +27,28 @@ public class PiPedalController {
 		GpioController gpio = GpioFactory.getInstance();
 		Builder builder = new Builder(gpio);
 
+		GpioPinDigitalOutput RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
+		GpioPinDigitalOutput SCE = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, PinState.LOW);
+		GpioPinDigitalOutput DC  = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
+		GpioPinDigitalOutput DIN = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
+		GpioPinDigitalOutput CLK = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW);
+
+		Display display1 = new PCD8544DisplayComponent(
+			DIN,
+			CLK,
+			DC,
+			RST,
+			SCE,
+			(byte) 60/*0xB0*/,
+			false
+		);
+
 		PhysicalEffect footswitch1 = new PhysicalEffect(
 			0,
 			//builder.buildButton(RaspiPin.GPIO_00, gpio),
 			builder.buildMomentarySwitch(RaspiPin.GPIO_23),
-			builder.buildLed(RaspiPin.GPIO_27)
+			builder.buildLed(RaspiPin.GPIO_27),
+			display1
 		);
 
 		PhysicalEffect footswitch2 = new PhysicalEffect(
@@ -45,8 +66,6 @@ public class PiPedalController {
 
 		Clicable next   = builder.buildMomentarySwitch(RaspiPin.GPIO_16);
 		Clicable before = builder.buildMomentarySwitch(RaspiPin.GPIO_01);
-
-
 		
 		PedalController pedal;
 		try {

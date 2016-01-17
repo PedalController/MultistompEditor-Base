@@ -1,9 +1,13 @@
 package br.com.srmourasilva.pipedalcontroller.domain;
 
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
 import javax.sound.midi.MidiUnavailableException;
 
 import br.com.srmourasilva.domain.OnMultistompListener;
@@ -58,6 +62,8 @@ public class PhysicalPedalController implements OnMultistompListener {
 		messages.getBy(CommonCause.EFFECT_DISABLE).forEach(message -> updateEffect(message, CommonCause.EFFECT_DISABLE));
 
 		messages.getBy(CommonCause.TO_PATCH).forEach(message -> setPatch(message));
+		
+		messages.getBy(CommonCause.EFFECT_TYPE).forEach(message -> updateEffect(message, CommonCause.EFFECT_TYPE));
 	}
 
 	private void updateEffect(Message message, CommonCause cause) {
@@ -73,6 +79,9 @@ public class PhysicalPedalController implements OnMultistompListener {
 
 		else if (cause == CommonCause.EFFECT_DISABLE)
 			pedalboard.disable(effect);
+
+		else if (cause == CommonCause.EFFECT_TYPE)
+			pedalboard.updateEffectType(effect, pedal.multistomp().currentPatch().effects().get(effect).getName());
 	}
 
 	
@@ -109,6 +118,23 @@ public class PhysicalPedalController implements OnMultistompListener {
 			PhysicalEffect physicalEffect = effects.get(position);
 
 			return physicalEffect == null ? Optional.empty() : Optional.of(physicalEffect);
+		}
+		
+		public void updateEffectType(int position, String pedalName) {
+			Optional<PhysicalEffect> effect = getEffect(position);
+			if (!effect.isPresent())
+				return;
+
+			String imageName = System.getProperty("user.dir") + File.separator + "lib" + File.separator;
+			imageName += pedalName + ".png";
+
+			try {
+				Image image = ImageIO.read(new File(imageName));
+				effect.get().updateDisplay(image);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
 		}
 	}
 }

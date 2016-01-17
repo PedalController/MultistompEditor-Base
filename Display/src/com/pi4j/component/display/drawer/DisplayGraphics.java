@@ -205,7 +205,7 @@ public class DisplayGraphics extends Graphics {
 	}
 
 	@Override
-	public void fillOval(int arg0, int arg1, int arg2, int arg3) {
+	public void fillOval(int x, int y, int width, int height) {
 		// TODO Auto-generated method stub
 	}
 

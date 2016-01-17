@@ -78,7 +78,7 @@ public class DisplayASCIIDrawer {
 		cursor.move(x, y);*/
 	}
 	
-	/*
+
 	public static void main(String[] args) {
 		AffineTransform af = new AffineTransform(5, 5, 10, 10, 20, 20);
 		FontRenderContext context = new FontRenderContext(af, false, false);
@@ -97,18 +97,19 @@ public class DisplayASCIIDrawer {
 	    Rectangle2D r2 = new Rectangle2D.Float(25,25,150,150);
 	    PathIterator pathIterator = r2.getPathIterator(af);
 	    
+	    int type;
+	    
 		//Shape shape = glyphVector.getOutline();
 		//shape.
 		//PathIterator pathIterator = shape.getPathIterator(af);
+	    //Path a;
+	    float[] coords = new float[6];
 		while (!pathIterator.isDone()) {
 			System.out.println((byte) pathIterator.getWindingRule());
+			type = pathIterator.currentSegment(coords);
+			System.out.println(type);
+			System.out.println(coords);
 			pathIterator.next();
 		}
-			
-		glyphVector.getGlyphPosition(0).ly 
-		//TextLayout tl = new TextLayout(glyphVector.toString(), font, context);
-		Teste teste = new Teste();
-		teste.dr
 	}
-	 */
 }
