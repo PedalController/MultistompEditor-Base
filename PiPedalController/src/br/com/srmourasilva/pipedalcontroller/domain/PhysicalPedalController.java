@@ -129,6 +129,7 @@ public class PhysicalPedalController implements OnMultistompListener {
 			imageName += pedalName + ".png";
 
 			try {
+				System.out.println(imageName);
 				Image image = ImageIO.read(new File(imageName));
 				effect.get().updateDisplay(image);
 			} catch (IOException e) {
