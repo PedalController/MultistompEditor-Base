@@ -14,14 +14,14 @@ public class ImageUtils {
 		final boolean hasAlphaChannel = bufferedImage.getAlphaRaster() != null;
 
 		if (hasAlphaChannel)
-			return getPixelsAlpha(bufferedImage);
-		else if (bufferedImage.getType() == BufferedImage.TYPE_BYTE_BINARY)
-			return getByteBinaryPixels(bufferedImage);
+			return getPixelsARGB(bufferedImage);
+		else if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR)
+			return getPixelsRGB(bufferedImage);
 		else
-			return getPixels(bufferedImage);
+			return getSlowBinaryPixels(bufferedImage);
 	}
 
-	private static Color[][] getPixelsAlpha(BufferedImage bufferedImage) {
+	private static Color[][] getPixelsARGB(BufferedImage bufferedImage) {
 		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 
 		final int width = bufferedImage.getWidth();
@@ -50,41 +50,20 @@ public class ImageUtils {
 		return result;
 	}
 
-	private static Color[][] getByteBinaryPixels(BufferedImage bufferedImage) {
+	private static Color[][] getSlowBinaryPixels(BufferedImage bufferedImage) {
 		final int width = bufferedImage.getWidth();
 		final int height = bufferedImage.getHeight();
 
 		Color[][] result = new Color[height][width];
-		//System.out.println(pixels.length);
 
 		for (int x = 0; x < width; x++)
 			for (int y = 0; y < height; y++)
 				result[y][x] = new Color(bufferedImage.getRGB(x, y));
-				//color == 0 ? Color.BLACK : Color.WHITE
-
-		/*
-		int x = 0;
-		int y = 0;
-		for (byte pixel : pixels) {
-			for (int i = 7; i >= 0; i--) {
-				byte color = (byte) ((pixel & 1 << i) >> i);
-
-				result[y][x] = color == 0 ? Color.BLACK : Color.WHITE;
-				x++;
-
-				if (x == width) {
-					x = 0;
-					y++;
-				}
-				if (y == height)
-					return result;
-			}
-		}*/
 
 		return result;
 	}
 
-	private static Color[][] getPixels(BufferedImage bufferedImage) {
+	private static Color[][] getPixelsRGB(BufferedImage bufferedImage) {
 		byte[] pixels = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
 
 		final int width = bufferedImage.getWidth();
@@ -99,15 +78,7 @@ public class ImageUtils {
 			int green = (pixels[pixel + 1] & 0xff);
 			int red   = (pixels[pixel + 2] & 0xff);
 
-			try {
-				result[row][col] = new Color(red, green, blue);
-			} catch (Exception e) {
-				System.out.println(Integer.toHexString(blue));
-				System.out.println(Integer.toHexString(red));
-				System.out.println(Integer.toHexString(green));
-				e.printStackTrace();
-			}
-			
+			result[row][col] = new Color(red, green, blue);
 
 			col++;
 			if (col == width) {

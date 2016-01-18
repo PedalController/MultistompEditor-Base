@@ -138,9 +138,9 @@ public class Main {
 	}
 
 	private static Display getDisplayComponent() {
-		//return new AWTDisplayComponent(500, 400);
+		return new AWTDisplayComponent(500, 400);
 		
-		/**/
+		/** /
 		GpioController gpio = GpioFactory.getInstance();
 
 		GpioPinDigitalOutput RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
@@ -155,7 +155,7 @@ public class Main {
 			DC,
 			RST,
 			SCE,
-			(byte) 60/*0xB0*/,
+			(byte) 60/*0xB0* /,
 			false
 		);
 		/**/

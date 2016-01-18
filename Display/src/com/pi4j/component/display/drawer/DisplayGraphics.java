@@ -28,7 +28,8 @@ public class DisplayGraphics extends Graphics {
 	public enum ColorType { 
 		BINARY(BufferedImage.TYPE_BYTE_BINARY),
 		RGB(BufferedImage.TYPE_3BYTE_BGR),
-		ARGB(BufferedImage.TYPE_4BYTE_ABGR);
+		ARGB(BufferedImage.TYPE_4BYTE_ABGR),
+		GRAY(BufferedImage.TYPE_BYTE_GRAY);
 		
 		private final int type;
 
