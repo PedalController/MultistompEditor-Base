@@ -19,6 +19,7 @@ public class CurrentPatchDisplayView {
 	}
 	
 	public void setPatch(int number, String name) {
+		graphics.clear();
 		view.setPatch(number, name);
 		view.paint(graphics);
 		graphics.dispose();
