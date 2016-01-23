@@ -31,7 +31,7 @@ public class PiPedalController {
 		DisplayGenerator displayGenerator = new DisplayGenerator(gpio);
 
 		Display display1     = displayGenerator.generate(RaspiPin.GPIO_07);
-		//Display displayPatch = displayGenerator.generate(RaspiPin.GPIO_12);
+		Display displayPatch = displayGenerator.generate(RaspiPin.GPIO_12);
 
 		PhysicalEffect footswitch1 = new PhysicalEffect(
 			0,
@@ -45,14 +45,13 @@ public class PiPedalController {
 			1,
 			builder.buildMomentarySwitch(RaspiPin.GPIO_24),
 			builder.buildLed(RaspiPin.GPIO_28),
-			display1
+			displayPatch
 		);
 
 		PhysicalEffect footswitch3 = new PhysicalEffect(
 			2,
 			builder.buildMomentarySwitch(RaspiPin.GPIO_25),
-			builder.buildLed(RaspiPin.GPIO_29),
-			display1
+			builder.buildLed(RaspiPin.GPIO_29)
 		);
 
 

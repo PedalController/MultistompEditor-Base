@@ -22,7 +22,7 @@ public class PhysicalPedalView {
 		effects.put(effect.getPosition(), effect);
 	}
 
-	public void updatePatchDisplay(int number, String name) {
+	public void updateCurrentPatchDisplay(int number, String name) {
 		if (!currentPatchView.isPresent())
 			return;
 

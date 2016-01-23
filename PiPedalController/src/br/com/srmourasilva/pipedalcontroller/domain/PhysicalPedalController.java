@@ -87,7 +87,7 @@ public class PhysicalPedalController implements OnMultistompListener {
 	private void updateTitle(String title) {
 		int index = pedal.multistomp().currentPatch().getId();
 
-		pedalboard.updatePatchDisplay(index, title);
+		pedalboard.updateCurrentPatchDisplay(index, title);
 	}
 
 	private void setPatch(Message message) {
