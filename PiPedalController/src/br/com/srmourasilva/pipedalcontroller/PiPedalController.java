@@ -44,8 +44,7 @@ public class PiPedalController {
 		PhysicalEffect footswitch2 = new PhysicalEffect(
 			1,
 			builder.buildMomentarySwitch(RaspiPin.GPIO_24),
-			builder.buildLed(RaspiPin.GPIO_28),
-			displayPatch
+			builder.buildLed(RaspiPin.GPIO_28)
 		);
 
 		PhysicalEffect footswitch3 = new PhysicalEffect(
@@ -73,7 +72,7 @@ public class PiPedalController {
 		multistomp.vinculeNext(next);
 		multistomp.vinculeBefore(before);
 		
-		//multistomp.vinculeDisplayPatch(displayPatch);
+		multistomp.vinculeDisplayPatch(displayPatch);
 
 
 		try {
