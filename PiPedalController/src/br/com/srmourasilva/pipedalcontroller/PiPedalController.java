@@ -7,6 +7,7 @@ import com.pi4j.component.display.impl.PCD8544DisplayComponent;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
@@ -27,21 +28,10 @@ public class PiPedalController {
 		GpioController gpio = GpioFactory.getInstance();
 		Builder builder = new Builder(gpio);
 
-		GpioPinDigitalOutput RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
-		GpioPinDigitalOutput SCE = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, PinState.LOW);
-		GpioPinDigitalOutput DC  = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
-		GpioPinDigitalOutput DIN = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
-		GpioPinDigitalOutput CLK = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW);
+		DisplayGenerator displayGenerator = new DisplayGenerator(gpio);
 
-		Display display1 = new PCD8544DisplayComponent(
-			DIN,
-			CLK,
-			DC,
-			RST,
-			SCE,
-			(byte) 60,
-			false
-		);
+		Display display1     = displayGenerator.generate(RaspiPin.GPIO_07);
+		//Display displayPatch = displayGenerator.generate(RaspiPin.GPIO_12);
 
 		PhysicalEffect footswitch1 = new PhysicalEffect(
 			0,
@@ -54,13 +44,15 @@ public class PiPedalController {
 		PhysicalEffect footswitch2 = new PhysicalEffect(
 			1,
 			builder.buildMomentarySwitch(RaspiPin.GPIO_24),
-			builder.buildLed(RaspiPin.GPIO_28)
+			builder.buildLed(RaspiPin.GPIO_28),
+			display1
 		);
 
 		PhysicalEffect footswitch3 = new PhysicalEffect(
 			2,
 			builder.buildMomentarySwitch(RaspiPin.GPIO_25),
-			builder.buildLed(RaspiPin.GPIO_29)
+			builder.buildLed(RaspiPin.GPIO_29),
+			display1
 		);
 
 
@@ -81,12 +73,45 @@ public class PiPedalController {
 
 		multistomp.vinculeNext(next);
 		multistomp.vinculeBefore(before);
+		
+		//multistomp.vinculeDisplayPatch(displayPatch);
 
 
 		try {
 			multistomp.start();
 		} catch (MidiUnavailableException e) {
 			System.out.println("This Pedal has been used by other process program");
+		}
+	}
+	
+	public static class DisplayGenerator {
+		private GpioController gpio;
+		private GpioPinDigitalOutput RST;
+		private GpioPinDigitalOutput DC;
+		private GpioPinDigitalOutput DIN;
+		private GpioPinDigitalOutput CLK;
+
+		public DisplayGenerator(GpioController gpio) {
+			this.gpio = gpio;
+
+			this.RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
+			this.DC  = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
+			this.DIN = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
+			this.CLK = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW);
+		}
+
+		public Display generate(Pin displayControllerPin) {
+			GpioPinDigitalOutput SCE = gpio.provisionDigitalOutputPin(displayControllerPin, PinState.LOW);
+
+			return new PCD8544DisplayComponent(
+				DIN,
+				CLK,
+				DC,
+				RST,
+				SCE,
+				(byte) 60,
+				false
+			);
 		}
 	}
 }

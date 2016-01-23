@@ -1,4 +1,4 @@
-package br.com.srmourasilva.ppc.mvp;
+package br.com.srmourasilva.pipedalcontroller.componentview;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -12,11 +12,11 @@ import com.pi4j.component.display.drawer.DisplayGraphics.ColorType;
 import com.pi4j.component.display.impl.AWTDisplayComponent;
 
 @SuppressWarnings("serial")
-public class CurrentPatchView extends Component {
+public class CurrentPatchComponentView extends Component {
 	private int number;
 	private String name;
 
-	public CurrentPatchView() {
+	public CurrentPatchComponentView() {
 		this.number = 0;
 		this.name = "";
 	}
@@ -93,7 +93,7 @@ public class CurrentPatchView extends Component {
 	}
 	
 	public static void main(String[] args) {
-		CurrentPatchView view = new CurrentPatchView();
+		CurrentPatchComponentView view = new CurrentPatchComponentView();
 		view.setPatch(01, "Shows EFX");
 		
 		//Display display = new AWTDisplayComponent(168, 96);
