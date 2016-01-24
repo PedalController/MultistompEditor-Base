@@ -5,14 +5,16 @@ import java.util.Iterator;
 import java.util.Queue;
 
 import com.pi4j.component.display.WhiteBlackDisplay;
-import com.pi4j.component.display.impl.PCD8544Constants.BitOrderFirst;
-import com.pi4j.component.display.impl.PCD8544Constants.DisplaySize;
-import com.pi4j.component.display.impl.PCD8544Constants.Setting;
-import com.pi4j.component.display.impl.PCD8544Constants.SysCommand;
-import com.pi4j.component.display.utils.ByteCommand;
-import com.pi4j.component.display.utils.Command;
+import com.pi4j.component.display.impl.pcd8544.PCB8544DDRamBank;
+import com.pi4j.component.display.impl.pcd8544.PCB8544DisplayDataRam;
+import com.pi4j.component.display.impl.pcd8544.PCD8544Constants.DisplaySize;
+import com.pi4j.component.display.impl.pcd8544.PCD8544Constants.Setting;
+import com.pi4j.component.display.impl.pcd8544.PCD8544Constants.SysCommand;
+import com.pi4j.component.util.ByteCommand;
+import com.pi4j.component.util.Command;
+import com.pi4j.component.util.DataTransmitionUtil;
+import com.pi4j.component.util.DataTransmitionUtil.BitOrderFirst;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
 
 /*
  * #%L
@@ -57,7 +59,7 @@ import com.pi4j.io.gpio.PinState;
  */
 public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
-    private static final int CLOCK_TIME_DELAY = 1;//micro seconds // 10 nanosseconds is the correct 
+    //private static final int CLOCK_TIME_DELAY = 1;//micro seconds // 10 nanosseconds is the correct 
     //http://stackoverflow.com/questions/11498585/how-to-suspend-a-java-thread-for-a-small-period-of-time-like-100-nanoseconds
     private static final int RESET_DELAY = 1;//10^-3ms is the correct
 
@@ -134,13 +136,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
      * @param Send command | command | command...
      */
     private void sendCommand(Command ... commands) {
-        byte result = 0;
-
-        for (Command command : commands) {
-            result |= command.cmd();
-        }
-
-        sendCommand(result);
+        sendCommand(Command.generateBy(commands));
     }
 
     private void sendCommand(byte data) {
@@ -152,30 +148,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
     }
 
     private void writeData(byte data) {
-        BitOrderFirst order = BitOrderFirst.MSB;
-        if (order == BitOrderFirst.MSB) {
-            writeDataMSBFirst(data);
-        } else {
-            writeDataLSBFirst(data);
-        }
-    }
-
-    private void writeDataLSBFirst(byte data) {
-        for (byte i = 0; i < 8; ++i) {
-            PinState bitState = (data & (1 << i)) >> i == 1 ? PinState.HIGH : PinState.LOW;
-            DIN.setState(bitState);
-
-            toggleClock();
-        }
-    }
-
-    private void writeDataMSBFirst(byte data) {
-        for (byte i = 7; i >= 0; --i) {
-            PinState bitState = (data & (1 << i)) >> i == 1 ? PinState.HIGH : PinState.LOW;
-            DIN.setState(bitState);
-
-            toggleClock();
-        }
+    	DataTransmitionUtil.shiftOut(data, DIN, SCLK, BitOrderFirst.MSB);
     }
 
     private void toggleClock() {

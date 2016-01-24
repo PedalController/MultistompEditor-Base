@@ -7,8 +7,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Queue;
 
-import com.pi4j.component.display.DisplayBuffer;
-import com.pi4j.component.display.PixelBuffer;
+import com.pi4j.component.display.drawer.buffer.DisplayBuffer;
+import com.pi4j.component.display.drawer.buffer.PixelBuffer;
 
 /*
  * #%L
