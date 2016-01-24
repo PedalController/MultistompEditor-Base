@@ -19,6 +19,11 @@ public class CurrentPatchDisplayView {
 	}
 	
 	public void setPatch(int number, String name) {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		graphics.clear();
 		view.setPatch(number, name);
 		view.paint(graphics);

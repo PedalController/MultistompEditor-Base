@@ -151,9 +151,11 @@ public class DisplayGraphics extends Graphics2D {
         int height = pixels.length;
         int width = pixels[0].length;
 
-        for (int yImage = 0; yImage < height; yImage++)
-            for (int xImage = 0; xImage < width; xImage++)
+        for (int yImage = 0; yImage < height; yImage++) {
+            for (int xImage = 0; xImage < width; xImage++) {
                 display.setPixel(x+xImage, y+yImage, pixels[yImage][xImage]);
+            }
+        }
     }
 
     @Override

@@ -50,13 +50,15 @@ class PCB8544DDRamBank {
 
         this.changed = false;
         this.colors = new Color[8];
-        for (int i = 0; i < colors.length; i++)
+        for (int i = 0; i < colors.length; i++) {
             this.colors[i] = initialColor;
+        }
     }
 
     public void setPixel(int y, Color color) {
-        if (colors[y] != color)
+        if (colors[y] != color) {
             this.changed = true;
+        }
 
         colors[y] = color;
     }

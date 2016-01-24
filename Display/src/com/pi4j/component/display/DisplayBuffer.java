@@ -87,11 +87,12 @@ public class DisplayBuffer {
     public void setPixel(int x, int y, Color color) {
         Optional<PixelBuffer> pixel = getPixel(x, y);
         
-        if (!pixel.isPresent())
+        if (!pixel.isPresent()) {
             return; // or throws?
 
-        if (pixel.get().getColor().equals(color))
+        } else if (pixel.get().getColor().equals(color)) {
             return;
+        }
 
         pixel.get().setColor(color);
         changes.add(pixel.get());
@@ -99,8 +100,9 @@ public class DisplayBuffer {
 
     private Optional<PixelBuffer> getPixel(int x, int y) {
         if (x < 0 || x > width-1
-         || y < 0 || y > height-1)
+         || y < 0 || y > height-1) {
             return Optional.empty();
+        }
 
         PixelBuffer pixel = buffer[x][y];
         if (pixel == null) {

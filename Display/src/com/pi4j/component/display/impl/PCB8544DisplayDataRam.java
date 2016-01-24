@@ -73,20 +73,23 @@ class PCB8544DisplayDataRam {
     }
 
     public void setPixel(int x, int y, Color color) {
-        if (!isPositionExists(x, y))
+        if (!isPositionExists(x, y)) {
             //throw new IndexOutOfBoundsException("Position ("+x+", "+y+") don't exists");
             return;
-        if (!color.equals(WhiteBlackDisplay.BLACK) && !color.equals(WhiteBlackDisplay.WHITE))
+        }
+        if (!color.equals(WhiteBlackDisplay.BLACK) && !color.equals(WhiteBlackDisplay.WHITE)) {
             throw new RuntimeException("The color should be WhiteBlackDisplay.BLACK or WhiteBlackDisplay.WHITE!");
             //color = WhiteBlackDisplay.BLACK;
+        }
 
         PCB8544DDRamBank bank = getBank(x, y);
         boolean changedAnotherTime = bank.hasChanged(); 
 
         bank.setPixel(y%8, color);
 
-        if (bank.hasChanged() && !changedAnotherTime)
+        if (bank.hasChanged() && !changedAnotherTime) {
             this.changes.add(bank);
+        }
     }
 
     private PCB8544DDRamBank getBank(int x, int y) {
@@ -94,8 +97,9 @@ class PCB8544DisplayDataRam {
     }
 
     public Color getPixel(int x, int y) {
-        if (!isPositionExists(x, y))
+        if (!isPositionExists(x, y)) {
             throw new IndexOutOfBoundsException("Position ("+x+", "+y+") don't exists");
+        }
 
         return this.getBank(x, y).getPixel(y);
     }
@@ -105,9 +109,11 @@ class PCB8544DisplayDataRam {
     }
 
     public void clear() {
-        for (int x = 0; x < PCD8544Constants.DisplaySize.WIDTH; x++)
-            for (int y = 0; y < PCD8544Constants.DisplaySize.HEIGHT; y++)
+        for (int x = 0; x < PCD8544Constants.DisplaySize.WIDTH; x++) {
+            for (int y = 0; y < PCD8544Constants.DisplaySize.HEIGHT; y++) {
                 setPixel(x, y, initialColor);
+            }
+        }
     }
     
     public Queue<PCB8544DDRamBank> getChanges() {

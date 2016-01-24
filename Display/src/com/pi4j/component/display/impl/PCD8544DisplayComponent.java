@@ -59,7 +59,7 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
     private static final int CLOCK_TIME_DELAY = 1;//micro seconds // 10 nanosseconds is the correct 
     //http://stackoverflow.com/questions/11498585/how-to-suspend-a-java-thread-for-a-small-period-of-time-like-100-nanoseconds
-    private static final int RESET_DELAY = 1;//10^-3ms
+    private static final int RESET_DELAY = 1;//10^-3ms is the correct
 
     private PCB8544DisplayDataRam DDRAM;
 
@@ -136,8 +136,9 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
     private void sendCommand(Command ... commands) {
         byte result = 0;
 
-        for (Command command : commands)
+        for (Command command : commands) {
             result |= command.cmd();
+        }
 
         sendCommand(result);
     }
@@ -152,10 +153,11 @@ public class PCD8544DisplayComponent implements WhiteBlackDisplay {
 
     private void writeData(byte data) {
         BitOrderFirst order = BitOrderFirst.MSB;
-        if (order == BitOrderFirst.MSB)
+        if (order == BitOrderFirst.MSB) {
             writeDataMSBFirst(data);
-        else
+        } else {
             writeDataLSBFirst(data);
+        }
     }
 
     private void writeDataLSBFirst(byte data) {

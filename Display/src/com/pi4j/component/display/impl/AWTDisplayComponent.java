@@ -105,9 +105,11 @@ public class AWTDisplayComponent implements com.pi4j.component.display.Display {
 
     @Override
     public void clear() {
-        for (int i=0; i<width; i++)
-            for (int j=0; j<height; j++)
+        for (int i=0; i<width; i++) {
+            for (int j=0; j<height; j++) {
                 buffer.setPixel(i, j, Color.WHITE);
+            }
+        }
     }
 
     @Override
