@@ -31,10 +31,9 @@ public class PiPedalController {
 		DisplayGenerator displayGenerator = new DisplayGenerator(gpio);
 
 		Thread.sleep(1000);
-		Display display1     = displayGenerator.generate(RaspiPin.GPIO_07);
+		Display display1     = displayGenerator.generate(RaspiPin.GPIO_07, RaspiPin.GPIO_15);
 		Thread.sleep(1000);
-		Display displayPatch = displayGenerator.generate(RaspiPin.GPIO_12);
-		Display test = displayGenerator.generate(RaspiPin.GPIO_13);
+		Display displayPatch = displayGenerator.generate(RaspiPin.GPIO_12, RaspiPin.GPIO_13);
 
 		PhysicalEffect footswitch1 = new PhysicalEffect(
 			0,
@@ -75,7 +74,7 @@ public class PiPedalController {
 		multistomp.vinculeNext(next);
 		multistomp.vinculeBefore(before);
 		
-		//multistomp.vinculeDisplayPatch(displayPatch);
+		multistomp.vinculeDisplayPatch(displayPatch);
 
 
 		try {
@@ -87,7 +86,6 @@ public class PiPedalController {
 	
 	public static class DisplayGenerator {
 		private GpioController gpio;
-		private GpioPinDigitalOutput RST;
 		private GpioPinDigitalOutput DC;
 		private GpioPinDigitalOutput DIN;
 		private GpioPinDigitalOutput CLK;
@@ -95,15 +93,14 @@ public class PiPedalController {
 		public DisplayGenerator(GpioController gpio) {
 			this.gpio = gpio;
 
-			this.RST = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_15, PinState.LOW);
 			this.DC  = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, PinState.LOW);
 			this.DIN = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, PinState.LOW);
 			this.CLK = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, PinState.LOW);
 		}
 
-		public Display generate(Pin displayControllerPin) {
+		public Display generate(Pin displayControllerPin, Pin resetPin) {
 			GpioPinDigitalOutput SCE = gpio.provisionDigitalOutputPin(displayControllerPin, PinState.LOW);
-			System.out.println(displayControllerPin);
+			GpioPinDigitalOutput RST = gpio.provisionDigitalOutputPin(resetPin, PinState.LOW);
 
 			return new PCD8544DisplayComponent(
 				DIN,
