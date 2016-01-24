@@ -97,7 +97,7 @@ public class CurrentPatchComponentView extends Component {
 		view.setPatch(01, "Shows EFX");
 		
 		//Display display = new AWTDisplayComponent(168, 96);
-		Display display = new AWTDisplayComponent(84, 48);
+		Display display = new AWTDisplayComponent(84, 48, false);
 		DisplayGraphics graphics = new DisplayGraphics(display, Color.WHITE, ColorType.BINARY);
 		
 		view.paint(graphics);

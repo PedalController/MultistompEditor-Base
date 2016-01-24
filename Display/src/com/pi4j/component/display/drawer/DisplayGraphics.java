@@ -26,6 +26,8 @@ import java.text.AttributedCharacterIterator;
 import java.util.Map;
 
 import com.pi4j.component.display.Display;
+import com.pi4j.component.display.drawer.buffer.DisplayBuffer;
+import com.pi4j.component.display.drawer.buffer.PixelBuffer;
 import com.pi4j.component.display.utils.ImageUtils;
 
 /*
@@ -68,6 +70,8 @@ public class DisplayGraphics extends Graphics2D {
 
     private BufferedImage bufferedImage;
     private Graphics2D graphics;
+
+    private DisplayBuffer displayBuffer;
     
     public enum ColorType { 
         BINARY(BufferedImage.TYPE_BYTE_BINARY),
@@ -91,7 +95,8 @@ public class DisplayGraphics extends Graphics2D {
 
         this.bufferedImage = new BufferedImage(display.getWidth(), display.getHeight(), type.getType());
         this.graphics = initGraphics(bufferedImage.createGraphics(), initialColor);
-        
+        this.displayBuffer = new DisplayBuffer(display.getWidth(), display.getHeight(), Color.WHITE);
+
         this.setColor(initialColor);
     }
 
@@ -153,8 +158,12 @@ public class DisplayGraphics extends Graphics2D {
 
         for (int yImage = 0; yImage < height; yImage++) {
             for (int xImage = 0; xImage < width; xImage++) {
-                display.setPixel(x+xImage, y+yImage, pixels[yImage][xImage]);
+                displayBuffer.setPixel(x+xImage, y+yImage, pixels[yImage][xImage]);
             }
+        }
+        
+        for (PixelBuffer pixel : displayBuffer) {
+            display.setPixel(pixel.x, pixel.y, pixel.getColor());
         }
     }
 

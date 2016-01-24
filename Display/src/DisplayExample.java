@@ -165,7 +165,7 @@ public class DisplayExample {
     }
 
     private static Display getDisplayComponent() {
-        return new AWTDisplayComponent(500, 400);
+        return new AWTDisplayComponent(500, 400, false);
         
         /* /
          PCD8544 example

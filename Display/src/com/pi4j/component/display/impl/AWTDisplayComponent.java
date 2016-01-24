@@ -5,8 +5,9 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
+import java.util.Queue;
 
-import com.pi4j.component.display.drawer.buffer.DisplayBuffer;
 import com.pi4j.component.display.drawer.buffer.PixelBuffer;
 
 /*
@@ -54,13 +55,16 @@ public class AWTDisplayComponent implements com.pi4j.component.display.Display {
     private int width;
     private int height;
     
-    private DisplayBuffer buffer;
+    private Queue<PixelBuffer> changesBuffer;
+    private boolean debugMode;
     
-    public AWTDisplayComponent(int width, int height) {
+    public AWTDisplayComponent(int width, int height, boolean debugMode) {
         this.width = width;
         this.height = height;
-        
-        this.buffer = new DisplayBuffer(width, height, Color.WHITE);
+
+        this.debugMode = debugMode;
+
+        this.changesBuffer = new LinkedList<>();
 
         screen = new java.awt.Frame();
         screen.setSize(width, height);
@@ -74,26 +78,36 @@ public class AWTDisplayComponent implements com.pi4j.component.display.Display {
 
     @Override
     public void setPixel(int x, int y, Color color) {
-        this.buffer.setPixel(x, y, color);
+        this.changesBuffer.add(new PixelBuffer(x, y, color));
     }
 
     @Override
     public void redraw() {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        for (PixelBuffer pixel : buffer) {
+        while (!changesBuffer.isEmpty()) {
+            PixelBuffer pixel = changesBuffer.remove();
             img.setRGB(pixel.x, pixel.y, pixel.getColor().getRGB());
+
+            if (debugMode) {
+                simulateGPIODelay();
+    
+                Graphics g = screen.getGraphics();
+                g.drawImage(img, 0, 0, screen);
+            }
         }
 
-        simulateGPIODelay();
+        if (!debugMode) {
+            simulateGPIODelay();
 
-        Graphics g = screen.getGraphics();
-        g.drawImage(img, 0, 0, screen);
+            Graphics g = screen.getGraphics();
+            g.drawImage(img, 0, 0, screen);
+        }
     }
 
     private void simulateGPIODelay() {
         try {
-            Thread.sleep(5);
+            Thread.sleep(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -101,9 +115,11 @@ public class AWTDisplayComponent implements com.pi4j.component.display.Display {
 
     @Override
     public void clear() {
-        for (int i=0; i<width; i++) {
-            for (int j=0; j<height; j++) {
-                buffer.setPixel(i, j, Color.WHITE);
+        changesBuffer.clear();
+
+        for (int x=0; x<width; x++) {
+            for (int y=0; y<height; y++) {
+                changesBuffer.add(new PixelBuffer(x, y, Color.WHITE));
             }
         }
     }

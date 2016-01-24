@@ -49,11 +49,23 @@ import java.util.Queue;
  * </p>
  * 
  * <p>
- * This buffer is a good choice for displays that 
- * is necessary send pixels colors one by one (usually a pixel
- * is a byte in this case). <br />
- * If a byte represents more than one color, this probably don't work.
- * You need create a special implementation in these cases. 
+ * This buffer is used in DisplayGraphics. 
+ * Consequently, all of it coming changes will be ONLY the pixels changed by it
+ * </p>
+ * 
+ * <p>
+ * In its Display implementations, it's necessary only to have 
+ * a queue of updated pixels, where each pixel is inserted into
+ * "display.setPixel()". And in "display.redraw()", it is only 
+ * necessary to read this queue and update the display based on 
+ * this row. 
+ * 
+ * Find class AWTDisplayComponent for an example.
+ * </p>
+ * 
+ * <p>
+ * But, if a byte represents more than one color, 
+ * you can create a special buffer implementation in these cases. 
  * Find class PCB8544DisplayDataRam for inspiration!
  * </p>
  */
