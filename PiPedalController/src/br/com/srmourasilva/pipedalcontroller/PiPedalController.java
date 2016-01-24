@@ -24,15 +24,13 @@ import br.com.srmourasilva.pipedalcontroller.domain.clicable.Clicable;
  */
 public class PiPedalController {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		GpioController gpio = GpioFactory.getInstance();
 		Builder builder = new Builder(gpio);
 
 		DisplayGenerator displayGenerator = new DisplayGenerator(gpio);
 
-		Thread.sleep(1000);
 		Display display1     = displayGenerator.generate(RaspiPin.GPIO_07, RaspiPin.GPIO_15);
-		Thread.sleep(1000);
 		Display displayPatch = displayGenerator.generate(RaspiPin.GPIO_12, RaspiPin.GPIO_13);
 
 		PhysicalEffect footswitch1 = new PhysicalEffect(
@@ -108,7 +106,7 @@ public class PiPedalController {
 				DC,
 				RST,
 				SCE,
-				(byte) 90,
+				(byte) 60,
 				false
 			);
 		}
