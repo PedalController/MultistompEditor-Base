@@ -34,6 +34,7 @@ public class PiPedalController {
 		Display display1     = displayGenerator.generate(RaspiPin.GPIO_07);
 		Thread.sleep(1000);
 		Display displayPatch = displayGenerator.generate(RaspiPin.GPIO_12);
+		Display test = displayGenerator.generate(RaspiPin.GPIO_13);
 
 		PhysicalEffect footswitch1 = new PhysicalEffect(
 			0,
