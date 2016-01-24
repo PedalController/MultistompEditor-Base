@@ -102,6 +102,7 @@ public class PiPedalController {
 
 		public Display generate(Pin displayControllerPin) {
 			GpioPinDigitalOutput SCE = gpio.provisionDigitalOutputPin(displayControllerPin, PinState.LOW);
+			System.out.println(displayControllerPin);
 
 			return new PCD8544DisplayComponent(
 				DIN,
@@ -109,7 +110,7 @@ public class PiPedalController {
 				DC,
 				RST,
 				SCE,
-				(byte) 60,
+				(byte) 90,
 				false
 			);
 		}
