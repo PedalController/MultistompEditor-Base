@@ -74,7 +74,7 @@ public class PiPedalController {
 		multistomp.vinculeNext(next);
 		multistomp.vinculeBefore(before);
 		
-		multistomp.vinculeDisplayPatch(displayPatch);
+		//multistomp.vinculeDisplayPatch(displayPatch);
 
 
 		try {
