@@ -152,8 +152,8 @@ public class DisplayExample {
 
         System.out.println("Test: Draw multiple circles.\n");
         graphics.setColor(Color.BLACK);
-        for (int i=0; i<48; i+=4) {
-            graphics.drawOval(41-i/2, 23-i/2, i, i);
+        for (int i=0; i<48; i+=6) {
+            graphics.drawOval(41-i/2, 41-i/2, i, i);
             graphics.dispose();
         }
 

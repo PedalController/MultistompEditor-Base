@@ -41,10 +41,14 @@ public class PixelBuffer {
     public final int y;
     private Color color;
     
+    /** Color of the last change */
+    private Color lastChangeColor;
+
     public PixelBuffer(final int x, final int y, Color color) {
         this.x = x;
         this.y = y;
         this.color = color;
+        this.lastChangeColor = color;
     }
 
     public Color getColor() {
@@ -55,8 +59,16 @@ public class PixelBuffer {
         this.color = color;
     }
     
+    public boolean hasRealChange() {
+		return !lastChangeColor.equals(color);
+	}
+    
+    public void updateLastChangeColor() {
+		this.lastChangeColor = color;
+	}
+    
     @Override
     public String toString() {
-        return "Pixel(x="+x+", y="+y+")";
+        return "Pixel(x="+x+", y="+y+") - " + color;
     }
 }

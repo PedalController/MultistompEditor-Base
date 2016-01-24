@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Queue;
 
 import com.pi4j.component.display.drawer.buffer.DisplayBuffer;
 import com.pi4j.component.display.drawer.buffer.PixelBuffer;
@@ -80,12 +79,9 @@ public class AWTDisplayComponent implements com.pi4j.component.display.Display {
 
     @Override
     public void redraw() {
-        Queue<PixelBuffer> pixelsChanged = buffer.getChanges();
-
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        while (!pixelsChanged.isEmpty()) {
-            PixelBuffer pixel = pixelsChanged.remove();
+        for (PixelBuffer pixel : buffer) {
             img.setRGB(pixel.x, pixel.y, pixel.getColor().getRGB());
         }
 
@@ -95,13 +91,13 @@ public class AWTDisplayComponent implements com.pi4j.component.display.Display {
         g.drawImage(img, 0, 0, screen);
     }
 
-	private void simulateGPIODelay() {
-		try {
+    private void simulateGPIODelay() {
+        try {
             Thread.sleep(5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-	}
+    }
 
     @Override
     public void clear() {

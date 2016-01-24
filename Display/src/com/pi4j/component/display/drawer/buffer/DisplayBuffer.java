@@ -1,6 +1,7 @@
 package com.pi4j.component.display.drawer.buffer;
 
 import java.awt.Color;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
@@ -56,7 +57,7 @@ import java.util.Queue;
  * Find class PCB8544DisplayDataRam for inspiration!
  * </p>
  */
-public class DisplayBuffer {
+public class DisplayBuffer implements Iterable<PixelBuffer> {
     private Queue<PixelBuffer> changes = new LinkedList<>();
 
     private PixelBuffer[][] buffer;
@@ -69,6 +70,7 @@ public class DisplayBuffer {
      * @param width Total columns
      * @param height Total rows
      * @param defaultColor Initializes the pixels with this color
+     *                     (in the initial state, is assumed that all the pixels are in the currentColor)
      */
     public DisplayBuffer(int width, int height, Color defaultColor) {
         this.width = width;
@@ -114,20 +116,53 @@ public class DisplayBuffer {
     }
 
     /**
-     * @return All changes detected<br />
+     * <p>
+     *   <strong>CAUTION</strong><br />
+     *   For any iterator.hasNext(), the element returned
+     *   should be removed in the changes queue
+     * </p>
      * 
-     * <strong>CAUTION:<strong>
-     * For clear the updates changes, call a remove method
-     * of queue returned:
-     * <pre><code>
-     * Queue<PixelBuffer> pixelsChanged = buffer.getChanges();
-     * while (!pixelsChanged.isEmpty()) {
-     *     PixelBuffer pixel = pixelsChanged.remove();
-     *     //Update the display
-     * }
-     * </pre>
+     * @return All changes detected
      */
-    public Queue<PixelBuffer> getChanges() {
-        return changes;
+    public Iterator<PixelBuffer> getChanges() {
+        return iterator();
+    }
+
+    @Override
+    public Iterator<PixelBuffer> iterator() {
+        return new DisplayBufferIterator(changes);
+    }
+    
+    public class DisplayBufferIterator implements Iterator<PixelBuffer> {
+        private Queue<PixelBuffer> changes;
+        
+        private PixelBuffer next = null;
+
+        public DisplayBufferIterator(Queue<PixelBuffer> changes) {
+            this.changes = changes;
+        }
+
+        @Override
+        public boolean hasNext() {
+            next = findNext();
+            return next != null;
+        }
+
+        private PixelBuffer findNext() {
+            PixelBuffer pixelBuffer;
+            do {
+                pixelBuffer = changes.poll();
+            } while (pixelBuffer != null && !pixelBuffer.hasRealChange());
+            
+            return pixelBuffer;
+        }
+
+        @Override
+        public PixelBuffer next() {
+            PixelBuffer pixelBuffer = next;
+            pixelBuffer.updateLastChangeColor();
+
+            return pixelBuffer;
+        }
     }
 }
